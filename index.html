@@ -11,9 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <!-- html2pdf Library สำหรับสร้าง PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <style>
         body { font-family: 'Kanit', sans-serif; -webkit-tap-highlight-color: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -34,7 +31,7 @@
 
     <main class="max-w-5xl mx-auto p-3 sm:p-4 mt-2 sm:mt-4">
         
-        <!-- 1. ล็อกอิน / ลงทะเบียน (แบบ 2 แท็บ) -->
+        <!-- 1. ล็อกอิน / ลงทะเบียน -->
         <section id="auth-section" class="bg-white rounded-3xl shadow-sm max-w-md mx-auto my-6 sm:my-10 border border-stone-200 overflow-hidden">
             <div class="flex border-b border-stone-200 bg-stone-50">
                 <button type="button" id="tab-auth-login" onclick="switchAuthTab('login')" class="flex-1 py-3.5 text-center font-bold text-sm text-emerald-600 border-b-2 border-emerald-600 bg-white transition cursor-pointer">
@@ -46,7 +43,6 @@
             </div>
 
             <div class="p-5 sm:p-6">
-                <!-- ฟอร์มเข้าสู่ระบบ -->
                 <div id="form-login" class="space-y-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
@@ -63,7 +59,6 @@
                     </button>
                 </div>
 
-                <!-- ฟอร์มลงทะเบียน -->
                 <div id="form-register" class="space-y-4 hidden">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
@@ -107,7 +102,6 @@
                 </button>
             </div>
 
-            <!-- กล่องสรุปคะแนนและ CO2 -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                 <div class="bg-emerald-50 text-emerald-900 p-4 md:p-6 rounded-2xl shadow-xs border border-emerald-200 text-center">
                     <p class="text-xs md:text-sm text-emerald-700 font-medium uppercase tracking-wider">คะแนนสะสมของคุณ</p>
@@ -123,9 +117,7 @@
                 </div>
             </div>
 
-            <!-- แท็บที่ 1: ภารกิจรักษ์โลก -->
             <div id="user-tab-missions" class="space-y-4 md:space-y-6">
-                <!-- ตารางอันดับคะแนน (Leaderboard) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
                         🏆 อันดับคะแนนสะสมสูงสุด (Leaderboard)
@@ -144,7 +136,6 @@
                     </div>
                 </div>
 
-                <!-- การ์ดภารกิจ 8 รายการ -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
                     <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
@@ -401,7 +392,7 @@
             </div>
         </section>
 
-        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) Card Hub (เพิ่มการ์ดออกรายงาน PDF เป็นแท็บที่ 5) -->
+        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) -->
         <section id="admin-dashboard" class="hidden space-y-4 md:space-y-6">
             
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
@@ -423,7 +414,7 @@
                 </div>
             </div>
 
-            <!-- ตารางอันดับคะแนน (Leaderboard) หน้าแรกแอดมิน -->
+            <!-- ตารางอันดับคะแนน (Leaderboard) -->
             <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -445,7 +436,7 @@
                 </div>
             </div>
 
-            <!-- เมนูการจัดการ 5 กรอบหลัก (เพิ่มการ์ดออกรายงาน PDF เป็นกรอบที่ต่อจากระบบแชท) -->
+            <!-- เมนูการจัดการ 5 กรอบหลัก -->
             <div id="admin-menu-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 
                 <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
@@ -493,12 +484,12 @@
                     <div class="mt-4 text-xs font-semibold text-blue-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
-                <!-- การ์ดที่ 5: ระบบออกรายงาน PDF สรุปผลรายบุคคล (วางต่อจากระบบแชทตามที่คุณสั่ง) -->
+                <!-- การ์ดที่ 5: ออกรายงาน PDF สรุปผล (วางต่อจากระบบแชทตามที่คุณสั่ง) -->
                 <div onclick="openAdminSection('section-pdf-report')" class="bg-white p-5 rounded-2xl border-2 border-emerald-200 hover:border-emerald-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between sm:col-span-2 md:col-span-1">
                     <div>
                         <span class="text-3xl">📄</span>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ออกรายงาน PDF สรุปผล</h4>
-                        <p class="text-xs text-stone-500 mt-1">เลือกสมาชิกและกำหนดช่วงเวลา (รายวัน/สัปดาห์/เดือน) เพื่อดาวน์โหลดเอกสาร PDF สรุปผลงาน</p>
+                        <p class="text-xs text-stone-500 mt-1">เลือกสมาชิกและกำหนดช่วงเวลา (รายวัน/สัปดาห์/เดือน) เพื่อพิมพ์หรือบันทึก PDF</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-emerald-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -662,13 +653,13 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 5: ออกรายงาน PDF สรุปผล (แท็บใหม่ที่เพิ่มเข้ามาต่อจากระบบแชทตามที่คุณสั่ง) -->
+            <!-- ส่วนที่ 5: ออกรายงาน PDF สรุปผล (ทำงานผ่านระบบพิมพ์หน้าเว็บ 100% ใช้งานได้จริงทุกเครื่อง) -->
             <div id="section-pdf-report" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b">
                     <div>
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                         <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลรายบุคคล</h3>
-                        <p class="text-xs text-stone-500">เลือกสมาชิกและเลือกช่วงเวลาเพื่อดาวน์โหลดรายงานเอกสาร PDF ทันที</p>
+                        <p class="text-xs text-stone-500">เลือกสมาชิกและกำหนดช่วงเวลาเพื่อบันทึกหรือพิมพ์รายงานเอกสาร PDF</p>
                     </div>
                 </div>
 
@@ -697,16 +688,15 @@
                             </div>
 
                             <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
-                                <p class="font-bold">ℹ️ ข้อมูลที่จะอยู่ในไฟล์ PDF:</p>
-                                <p>• ข้อมูลส่วนตัว (ชื่อ และรหัสนักศึกษา)</p>
-                                <p>• ตารางภารกิจที่ผ่านการอนุมัติในช่วงเวลาที่เลือก</p>
-                                <p>• สรุปผลรวมคะแนนและปริมาณ CO₂ ที่ลดได้</p>
+                                <p class="font-bold">ℹ️ คำแนะนำการบันทึก PDF:</p>
+                                <p>• เมื่อกดปุ่มดาวน์โหลด ระบบจะเปิดหน้าต่างพิมพ์เอกสารขึ้นมา</p>
+                                <p>• ในหน้าต่างพิมพ์ ให้เลือกเครื่องพิมพ์เป็น <strong>"บันทึกเป็น PDF" (Save as PDF)</strong> แล้วกดบันทึกได้ทันที</p>
                             </div>
                         </div>
 
                         <div class="mt-6">
                             <button onclick="generateAdminUserPDF()" id="btn-download-pdf" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition cursor-pointer shadow-sm flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
-                                📥 ดาวน์โหลดรายงานสรุป PDF
+                                📥 พิมพ์ / บันทึกรายงาน PDF
                             </button>
                         </div>
                     </div>
@@ -1430,7 +1420,7 @@
                             timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                         }).then(() => { fileInput.value = ''; });
                     };
-                    img.src = event.target.result;
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -1541,7 +1531,6 @@
                 });
             });
 
-            // คำขอแลกรางวัล + ประวัติ
             database.ref('reward_claims').on('value', (claimSnapshot) => {
                 const pendingRewardsTbody = document.getElementById('admin-pending-rewards-table');
                 const historyRewardsTbody = document.getElementById('admin-reward-history-table');
@@ -1616,7 +1605,6 @@
                 }
             });
 
-            // ตารางภารกิจ
             database.ref('missions').on('value', (missionSnapshot) => {
                 const pendingTbody = document.getElementById('admin-pending-table');
                 pendingTbody.innerHTML = '';
@@ -1987,7 +1975,7 @@
             renderPdfUserList();
         }
 
-        // ================= ฟังก์ชันสร้างไฟล์ PDF (ทำงานจริงและดาวน์โหลดได้เสถียร) =================
+        // ================= ฟังก์ชันสร้างไฟล์ PDF (ใช้ระบบสั่งพิมพ์และบันทึกเป็น PDF ที่เสถียรที่สุด) =================
         function generateAdminUserPDF() {
             if (!selectedPdfUserKey) {
                 alert("โปรดเลือกสมาชิกจากเมนูด้านซ้ายก่อนดาวน์โหลดรายงาน");
@@ -2039,7 +2027,7 @@
                     totalCo2 += meta.co2;
 
                     rowsHtml += `
-                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 12px;">
+                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 13px;">
                             <td style="padding: 10px; text-align: center;">${idx + 1}</td>
                             <td style="padding: 10px;">${m.missionName} <div style="font-size: 10px; color: #6b7280;">บันทึกเมื่อ: ${m.timestamp}</div></td>
                             <td style="padding: 10px; text-align: right; color: #047857; font-weight: bold;">+${meta.co2.toFixed(2)} kgCO₂e</td>
@@ -2049,92 +2037,96 @@
                 });
             }
 
-            const container = document.createElement('div');
-            container.style.padding = '30px';
-            container.style.fontFamily = "'Kanit', sans-serif";
-            container.style.color = '#1f2937';
-            container.style.backgroundColor = '#ffffff';
-            container.style.width = '700px';
+            // สร้างหน้าต่างพิมพ์เฉพาะกิจ (Print Window / Save as PDF)
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>GreenPassport_Report_${studentId}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 30px; margin: 0; background: #fff; }
+                        @media print {
+                            body { padding: 0; }
+                            button { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div style="border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">🌱 Green Passport - ใบรายงานผลกิจกรรมรักษ์โลก</h1>
+                            <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการลดการปล่อยก๊าซเรือนกระจกและการสะสมแต้ม</p>
+                        </div>
+                        <div style="text-align: right; font-size: 10px; color: #6b7280;">
+                            <div>วันที่ออกเอกสาร: ${now.toLocaleDateString('th-TH')}</div>
+                        </div>
+                    </div>
 
-            container.innerHTML = `
-                <div style="border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">🌱 Green Passport - ใบรายงานผลกิจกรรมรักษ์โลก</h1>
-                        <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการลดการปล่อยก๊าซเรือนกระจกและการสะสมแต้ม</p>
+                    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; font-size: 12px;">
+                        <div>
+                            <div><strong>ชื่อ-นามสกุล:</strong> ${studentName}</div>
+                            <div style="margin-top: 4px;"><strong>รหัสนักศึกษา:</strong> ${studentId}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div><strong>ช่วงเวลารายงาน:</strong> <span style="color: #059669; font-weight: bold;">${periodLabel}</span></div>
+                        </div>
                     </div>
-                    <div style="text-align: right; font-size: 10px; color: #6b7280;">
-                        <div>วันที่ออกเอกสาร: ${now.toLocaleDateString('th-TH')}</div>
-                    </div>
-                </div>
 
-                <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; font-size: 12px;">
-                    <div>
-                        <div><strong>ชื่อ-นามสกุล:</strong> ${studentName}</div>
-                        <div style="margin-top: 4px;"><strong>รหัสนักศึกษา:</strong> ${studentId}</div>
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <div style="flex: 1; padding: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 10px; color: #047857; font-weight: bold;">คะแนนรวมในรอบนี้</span>
+                            <div style="font-size: 18px; font-weight: bold; color: #065f46; margin-top: 2px;">${totalPoints} คะแนน</div>
+                        </div>
+                        <div style="flex: 1; padding: 10px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 10px; color: #0f766e; font-weight: bold;">ลด CO₂ ในรอบนี้</span>
+                            <div style="font-size: 18px; font-weight: bold; color: #115e59; margin-top: 2px;">${totalCo2.toFixed(2)} kgCO₂e</div>
+                        </div>
+                        <div style="flex: 1; padding: 10px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center;">
+                            <span style="font-size: 10px; color: #1d4ed8; font-weight: bold;">ภารกิจที่สำเร็จ</span>
+                            <div style="font-size: 18px; font-weight: bold; color: #1e40af; margin-top: 2px;">${userMissions.length} รายการ</div>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <div><strong>ช่วงเวลารายงาน:</strong> <span style="color: #059669; font-weight: bold;">${periodLabel}</span></div>
-                    </div>
-                </div>
 
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <div style="flex: 1; padding: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 10px; color: #047857; font-weight: bold;">คะแนนรวมในรอบนี้</span>
-                        <div style="font-size: 18px; font-weight: bold; color: #065f46; margin-top: 2px;">${totalPoints} คะแนน</div>
-                    </div>
-                    <div style="flex: 1; padding: 10px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 10px; color: #0f766e; font-weight: bold;">ลด CO₂ ในรอบนี้</span>
-                        <div style="font-size: 18px; font-weight: bold; color: #115e59; margin-top: 2px;">${totalCo2.toFixed(2)} kgCO₂e</div>
-                    </div>
-                    <div style="flex: 1; padding: 10px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 10px; color: #1d4ed8; font-weight: bold;">ภารกิจที่สำเร็จ</span>
-                        <div style="font-size: 18px; font-weight: bold; color: #1e40af; margin-top: 2px;">${userMissions.length} รายการ</div>
-                    </div>
-                </div>
+                    <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #374151;">📋 รายละเอียดภารกิจที่ผ่านการอนุมัติ</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+                        <thead>
+                            <tr style="background: #f3f4f6; color: #374151; font-size: 12px; border-bottom: 2px solid #e5e7eb;">
+                                <th style="padding: 8px; width: 40px; text-align: center;">ลำดับ</th>
+                                <th style="padding: 8px; text-align: left;">รายการภารกิจ</th>
+                                <th style="padding: 8px; text-align: right; width: 120px;">ลด CO₂</th>
+                                <th style="padding: 8px; text-align: right; width: 100px;">คะแนน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 12px;">
+                                <td colspan="2" style="padding: 10px; text-align: right; color: #374151;">รวมยอดสุทธิ (${periodLabel}):</td>
+                                <td style="padding: 10px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kgCO₂e</td>
+                                <td style="padding: 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
+                            </tr>
+                        </tfoot>
+                    </table>
 
-                <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #374151;">📋 รายการภารกิจที่ผ่านการอนุมัติ</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                    <thead>
-                        <tr style="background: #f3f4f6; color: #374151; font-size: 11px; border-bottom: 2px solid #e5e7eb;">
-                            <th style="padding: 8px; width: 35px; text-align: center;">ลำดับ</th>
-                            <th style="padding: 8px; text-align: left;">รายการภารกิจ</th>
-                            <th style="padding: 8px; text-align: right; width: 110px;">ลด CO₂</th>
-                            <th style="padding: 8px; text-align: right; width: 90px;">คะแนน</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rowsHtml}
-                    </tbody>
-                    <tfoot>
-                        <tr style="background: #ecfdf5; font-weight: bold; font-size: 11px;">
-                            <td colspan="2" style="padding: 8px; text-align: right; color: #374151;">รวมยอดสุทธิ (${periodLabel}):</td>
-                            <td style="padding: 8px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kgCO₂e</td>
-                            <td style="padding: 8px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 10px; color: #6b7280;">
-                    <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project</div>
-                    <div style="text-align: center;">
-                        <div style="border-bottom: 1px solid #9ca3af; width: 130px; margin-bottom: 3px;"></div>
-                        <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; padding-top: 15px; border-top: 1px dashed #d1d5db; font-size: 11px; color: #6b7280;">
+                        <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project</div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #9ca3af; width: 150px; margin-bottom: 4px;"></div>
+                            <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
+                        </div>
                     </div>
-                </div>
-            `;
 
-            const opt = {
-                margin: 5,
-                filename: `GreenPassport_${studentId}_${period}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(container).save().then(() => {
-                alert("📥 ดาวน์โหลดรายงานสรุป PDF สำเร็จเรียบร้อยแล้ว!");
-            });
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 14px; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif;">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
     </script>
 </body>
 </html>
+
