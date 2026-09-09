@@ -295,7 +295,7 @@
                         <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
                             📜 ประวัติการส่งภารกิจรักษ์โลกของคุณ
                         </h3>
-                        <p class="text-xs text-stone-500">ตรวจสอบสถานะการอนุมัติ คะแนน และปริมาณคาร์บอนที่ลดได้จากแต่ละกิจกรรม</p>
+                        <p class="text-xs text-stone-500">ตรวจสอบสถานะการอนุมัติ วันเวลาที่ส่ง คะแนน และปริมาณคาร์บอนที่ลดได้</p>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -303,16 +303,17 @@
                             <thead>
                                 <tr class="bg-stone-100 text-stone-700 border-b">
                                     <th class="p-3 rounded-l-lg">ภารกิจที่ส่ง</th>
+                                    <th class="p-3">วัน-เวลาที่ส่ง</th>
                                     <th class="p-3">หลักฐาน</th>
                                     <th class="p-3">สถานะ / เหตุผล</th>
-                                    <th class="p-3 text-right">ลด CO₂ ที่ได้</th>
-                                    <th class="p-3 text-right rounded-r-lg">คะแนนที่ได้รับ</th>
+                                    <th class="p-3 text-right">ลด CO₂</th>
+                                    <th class="p-3 text-right rounded-r-lg">คะแนน</th>
                                 </tr>
                             </thead>
                             <tbody id="user-history-table"></tbody>
                             <tfoot id="user-history-footer" class="bg-emerald-50/70 font-bold border-t border-emerald-200">
                                 <tr>
-                                    <td colspan="3" class="p-3 text-stone-700 text-right">รวมทั้งหมดที่อนุมัติแล้ว:</td>
+                                    <td colspan="4" class="p-3 text-stone-700 text-right">รวมทั้งหมดที่อนุมัติแล้ว:</td>
                                     <td class="p-3 text-right text-teal-800 text-sm md:text-base" id="user-total-approved-co2">0.00 kgCO₂e</td>
                                     <td class="p-3 text-right text-emerald-700 text-sm md:text-base" id="user-total-approved-points">0 คะแนน</td>
                                 </tr>
@@ -653,13 +654,13 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 5: ออกรายงาน PDF ภาพรวมองค์รวม พร้อมตัวเลือกปฏิทินจริงรายวัน/สัปดาห์/เดือน -->
+            <!-- ส่วนที่ 5: ออกรายงาน PDF ภาพรวมองค์รวม พร้อมปฏิทินจริง -->
             <div id="section-pdf-report" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500 max-w-xl mx-auto">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b">
                     <div>
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                         <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลภาพรวมองค์รวม</h3>
-                        <p class="text-xs text-stone-500">เลือกประเภทรายงานและกำหนดช่วงเวลาเพื่อสร้างเอกสารสรุปสถิติทั่วทั้งระบบ</p>
+                        <p class="text-xs text-stone-500">เลือกช่วงเวลารายงานเพื่อสร้างเอกสารสรุปสถิติทั่วทั้งระบบและรายชื่อบุคคล</p>
                     </div>
                 </div>
 
@@ -674,7 +675,6 @@
                         </select>
                     </div>
 
-                    <!-- ช่องเลือกปฏิทินจริงตามประเภทที่เลือก -->
                     <div id="container-input-date" class="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-2">
                         <label id="label-date-input" class="block text-xs font-bold text-stone-700">เลือกวันที่:</label>
                         <input type="date" id="admin-input-date" class="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs sm:text-sm font-semibold text-stone-700">
@@ -682,8 +682,8 @@
 
                     <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
                         <p class="font-bold">ℹ️ รายงานนี้ประกอบด้วย:</p>
-                        <p>• สรุปยอดผู้เข้าร่วม, ภารกิจที่อนุมัติ, คะแนนรวม และ CO₂ รวม</p>
-                        <p>• ตารางแจกแจงแยกตามประเภทภารกิจ และตารางรายชื่อบุคคลด้านล่าง</p>
+                        <p>• กล่อง Box สรุปภาพรวม (ผู้เข้าร่วม, ภารกิจ, คะแนน, CO₂)</p>
+                        <p>• ตารางแจกแจงตามประเภทภารกิจ และตารางรายชื่อบุคคลด้านล่าง</p>
                     </div>
 
                     <button onclick="generateSystemSummaryPDF()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition cursor-pointer shadow-sm flex items-center justify-center gap-2">
@@ -859,7 +859,6 @@
             if (target) {
                 target.classList.remove('hidden');
                 if (sectionId === 'section-pdf-report') {
-                    // กำหนดค่าเริ่มต้นช่องวันที่ให้เป็นวันนี้
                     const dateInput = document.getElementById('admin-input-date');
                     if (dateInput) dateInput.value = getTodayDateString();
                     toggleReportInput();
@@ -872,7 +871,6 @@
             document.getElementById('admin-menu-cards').classList.remove('hidden');
         }
 
-        // จัดการเปลี่ยนชนิด Input ตามประเภทรายงาน (รายวันใช้ date, สัปดาห์/เดือนใช้ week/month, ทั้งหมดซ่อน)
         function toggleReportInput() {
             const type = document.getElementById('admin-report-type').value;
             const container = document.getElementById('container-input-date');
@@ -1140,6 +1138,10 @@
                         
                         const compressedBase64 = canvas.toDataURL('image/jpeg', 0.45);
                         const missionId = Date.now().toString();
+                        const now = new Date();
+                        const timeStr = now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
+                        const dateFormatted = now.toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                        
                         const newMission = {
                             id: missionId,
                             userIdentifier: userIdentifier,
@@ -1148,7 +1150,7 @@
                             dateStr: todayStr,
                             image: compressedBase64,
                             status: 'รออนุมัติ',
-                            timestamp: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                            timestamp: `${dateFormatted} เวลา ${timeStr} น.`
                         };
 
                         database.ref('missions/' + missionId).set(newMission).then(() => {
@@ -1216,7 +1218,7 @@
                 }
 
                 if(!hasData) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้ส่งภารกิจใดๆ ในระบบ</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">ยังไม่ได้ส่งภารกิจใดๆ ในระบบ</td></tr>`;
                     document.getElementById('user-total-approved-points').innerText = `0 คะแนน`;
                     document.getElementById('user-total-approved-co2').innerText = `0.00 kgCO₂e`;
                     return;
@@ -1241,9 +1243,10 @@
 
                     tbody.innerHTML += `
                         <tr class="border-b border-stone-100 hover:bg-stone-50">
-                            <td class="p-3 font-medium">${m.missionName} <span class="block text-[10px] text-gray-400">${m.timestamp}</span></td>
+                            <td class="p-3 font-medium text-stone-800">${m.missionName}</td>
+                            <td class="p-3 text-stone-500 text-xs">${m.timestamp || '-'}</td>
                             <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg shadow-2xs cursor-pointer hover:opacity-80"></td>
-                            <td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold ${statusColor}">${m.status}</span>${reasonText}</td>
+                            <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusColor}">${m.status}</span>${reasonText}</td>
                             <td class="p-3 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(2) : '0.00'} kgCO₂e</td>
                             <td class="p-3 text-right font-bold ${earnedPoints > 0 ? 'text-emerald-600' : 'text-gray-400'}">${earnedPoints > 0 ? '+' + earnedPoints : '0'} คะแนน</td>
                         </tr>`;
@@ -1308,6 +1311,7 @@
                     userData.points -= cost;
                     
                     const claimId = Date.now().toString();
+                    const now = new Date();
                     const newClaim = {
                         id: claimId,
                         userIdentifier: userIdentifier,
@@ -1315,7 +1319,7 @@
                         rewardName: rewardName,
                         cost: cost,
                         status: 'รอแอดมินอนุมัติ',
-                        timestamp: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                        timestamp: now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                     };
 
                     const updates = {};
@@ -1432,12 +1436,13 @@
                         ctx.drawImage(img, 0, 0, w, h);
                         const base64 = canvas.toDataURL('image/jpeg', 0.4);
 
+                        const now = new Date();
                         const msgId = Date.now().toString();
                         database.ref(`chats/${safeKey}/${msgId}`).set({
                             sender: userIdentifier,
                             image: base64,
                             read: false,
-                            timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                            timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                         }).then(() => { fileInput.value = ''; });
                     };
                     img.src = e.target.result;
@@ -1448,12 +1453,13 @@
                 const text = input.value.trim();
                 if (!text) return;
 
+                const now = new Date();
                 const msgId = Date.now().toString();
                 database.ref(`chats/${safeKey}/${msgId}`).set({
                     sender: userIdentifier,
                     text: text,
                     read: false,
-                    timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                    timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                 }).then(() => { input.value = ''; });
             }
         }
@@ -1722,8 +1728,8 @@
             document.getElementById('admin-chat-input').placeholder = `พิมพ์ตอบกลับ ${userKey}...`;
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
-            document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('label-admin-chat-file').classList.add('opacity-50');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -1793,12 +1799,13 @@
                         ctx.drawImage(img, 0, 0, w, h);
                         const base64 = canvas.toDataURL('image/jpeg', 0.4);
 
+                        const now = new Date();
                         const msgId = Date.now().toString();
                         database.ref(`chats/${userKey}/${msgId}`).set({
                             sender: 'แอดมิน',
                             image: base64,
                             read: false,
-                            timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                            timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                         }).then(() => { fileInput.value = ''; });
                     };
                     img.src = e.target.result;
@@ -1809,12 +1816,13 @@
                 const text = input.value.trim();
                 if (!text) return;
 
+                const now = new Date();
                 const msgId = Date.now().toString();
                 database.ref(`chats/${userKey}/${msgId}`).set({
                     sender: 'แอดมิน',
                     text: text,
                     read: false,
-                    timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                    timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                 }).then(() => { input.value = ''; });
             }
         }
@@ -1898,7 +1906,7 @@
 
                 tbody.innerHTML += `
                     <tr class="border-b border-stone-100 hover:bg-stone-50">
-                        <td class="p-2 text-stone-700">${m.missionName} <span class="block text-[10px] text-gray-400">${m.timestamp}</span></td>
+                        <td class="p-2 text-stone-700">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
                         <td class="p-2"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg border cursor-pointer"></td>
                         <td class="p-2"><span class="px-2 py-0.5 rounded-sm font-semibold text-xs ${badgeStyle}">${m.status}</span>${reasonText}</td>
                         <td class="p-2 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(2) : '0.00'} kgCO₂e</td>
@@ -1949,51 +1957,45 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม พร้อมตารางรายชื่อบุคคลด้านล่าง =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
             const now = new Date();
 
-            // กรองภารกิจตามประเภทและช่วงเวลาที่เลือก
             const approvedMissions = allMissionsCache.filter(m => {
                 if (m.status !== 'อนุมัติแล้ว') return false;
-                if (!m.userIdentifier) return false; // ข้ามข้อมูลขยะเก่าที่เป็น undefined
+                if (!m.userIdentifier) return false;
 
                 if (type === 'all') return true;
 
                 const mDate = new Date(m.dateStr || m.timestamp);
 
                 if (type === 'daily') {
-                    // inputDateVal จะอยู่ในรูปแบบ YYYY-MM-DD
                     return m.dateStr === inputDateVal;
                 } else if (type === 'weekly') {
-                    // นับย้อนหลัง 7 วันจากวันที่เลือกในปฏิทิน
                     const selectedDate = new Date(inputDateVal);
                     const sevenDaysBefore = new Date(selectedDate);
                     sevenDaysBefore.setDate(selectedDate.getDate() - 7);
                     return mDate >= sevenDaysBefore && mDate <= selectedDate;
                 } else if (type === 'monthly') {
-                    // inputDateVal รูปแบบ YYYY-MM
                     const [selYear, selMonth] = inputDateVal.split('-').map(Number);
                     return mDate.getMonth() + 1 === selMonth && mDate.getFullYear() === selYear;
                 }
                 return true;
             });
 
-            // สร้างหัวข้อรายงานตามวันที่เลือก
             let periodTitle = "ภาพรวมทั้งหมด (All Time)";
             if (type === 'daily') {
-                periodTitle = `รายวัน (ประจำวันที่ ${new Date(inputDateVal).toLocaleDateString('th-TH', {year: 'numeric', month: 'long', day: 'numeric'})})`;
+                periodTitle = `รายงานประจำวัน (${new Date(inputDateVal).toLocaleDateString('th-TH', {year: 'numeric', month: 'long', day: 'numeric'})})`;
             } else if (type === 'weekly') {
-                periodTitle = `รายสัปดาห์ (ช่วง 7 วันสิ้นสุดวันที่ ${new Date(inputDateVal).toLocaleDateString('th-TH')})`;
+                periodTitle = `รายงานประจำสัปดาห์ (ย้อนหลัง 7 วัน จากวันที่ ${new Date(inputDateVal).toLocaleDateString('th-TH')})`;
             } else if (type === 'monthly') {
                 const [selYear, selMonth] = inputDateVal.split('-');
                 const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-                periodTitle = `รายเดือน (ประจำเดือน ${monthNames[parseInt(selMonth)-1]} พ.ศ. ${parseInt(selYear)+543})`;
+                periodTitle = `รายงานประจำเดือน (${monthNames[parseInt(selMonth)-1]} พ.ศ. ${parseInt(selYear)+543})`;
             }
 
-            // คำนวณสถิติ
             const activeUsersMap = {};
             let totalPoints = 0;
             let totalCo2 = 0;
@@ -2023,16 +2025,16 @@
             let breakdownRows = '';
             const missionKeys = Object.keys(breakdown);
             if (missionKeys.length === 0) {
-                breakdownRows = `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #6b7280; font-size: 12px;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
+                breakdownRows = `<tr><td colspan="4" style="padding: 14px; text-align: center; color: #6b7280; font-size: 13px;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 missionKeys.forEach(name => {
                     const item = breakdown[name];
                     breakdownRows += `
                         <tr style="border-bottom: 1px solid #e5e7eb; font-size: 12px;">
-                            <td style="padding: 8px 10px;">${name}</td>
-                            <td style="padding: 8px 10px; text-align: center;">${item.count}</td>
-                            <td style="padding: 8px 10px; text-align: center; color: #059669; font-weight: bold;">${item.points}</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)}</td>
+                            <td style="padding: 10px 12px; color: #374151; font-weight: 500;">${name}</td>
+                            <td style="padding: 10px 12px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
+                            <td style="padding: 10px 12px; text-align: center; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
+                            <td style="padding: 10px 12px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
                         </tr>
                     `;
                 });
@@ -2041,17 +2043,17 @@
             let userSummaryRows = '';
             const userKeys = Object.keys(activeUsersMap);
             if (userKeys.length === 0) {
-                userSummaryRows = `<tr><td colspan="5" style="padding: 12px; text-align: center; color: #6b7280; font-size: 12px;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
+                userSummaryRows = `<tr><td colspan="5" style="padding: 14px; text-align: center; color: #6b7280; font-size: 13px;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 userKeys.forEach((uid, idx) => {
                     const usr = activeUsersMap[uid];
                     userSummaryRows += `
-                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 11px;">
-                            <td style="padding: 6px 8px; text-align: center;">${idx + 1}</td>
-                            <td style="padding: 6px 8px;">${usr.name} (${usr.studentId})</td>
-                            <td style="padding: 6px 8px; text-align: center;">${usr.count} รายการ</td>
-                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
-                            <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
+                        <tr style="border-bottom: 1px solid #f3f4f6; font-size: 11px;">
+                            <td style="padding: 8px 10px; text-align: center; color: #6b7280;">${idx + 1}</td>
+                            <td style="padding: 8px 10px; color: #1f2937; font-weight: 500;">${usr.name} <span style="color: #6b7280; font-weight: normal;">(รหัส: ${usr.studentId})</span></td>
+                            <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
                         </tr>
                     `;
                 });
@@ -2064,7 +2066,7 @@
                     <title>GreenPassport_System_Report_${type}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 25px; margin: 0; background: #fff; }
+                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 30px; margin: 0; background: #fff; }
                         @media print {
                             body { padding: 0; }
                             button { display: none; }
@@ -2072,62 +2074,77 @@
                     </style>
                 </head>
                 <body>
-                    <div style="border-bottom: 3px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <!-- Header -->
+                    <div style="border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
-                            <h1 style="font-size: 18px; color: #065f46; margin: 0; font-weight: bold;">🌱 GREEN PASSPORT — SYSTEM REPORT</h1>
-                            <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวม</p>
+                            <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">🌱 GREEN PASSPORT — OFFICIAL REPORT</h1>
+                            <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
                         </div>
                         <div style="text-align: right; font-size: 10px; color: #6b7280;">
-                            <div>วันที่พิมพ์: ${now.toLocaleDateString('th-TH')}</div>
+                            <div>วันที่ออกรายงาน: ${now.toLocaleDateString('th-TH')}</div>
                         </div>
                     </div>
 
-                    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 12px;">
-                        <div><strong>ประเภทรายงาน:</strong> <span style="color: #059669; font-weight: bold;">${periodTitle}</span></div>
+                    <!-- Period Badge -->
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; font-size: 13px; color: #166534;">
+                        <strong>รอบรายงาน:</strong> ${periodTitle}
                     </div>
 
-                    <div style="margin-bottom: 15px;">
-                        <h3 style="font-size: 13px; font-weight: bold; color: #111827; margin-bottom: 6px;">📊 สรุปผลการดำเนินงานภาพรวม:</h3>
-                        <ul style="padding-left: 18px; font-size: 12px; line-height: 1.6; color: #374151; margin: 0;">
-                            <li><strong>ผู้เข้าร่วมกิจกรรม:</strong> ${userKeys.length} คน</li>
-                            <li><strong>ภารกิจที่อนุมัติ:</strong> ${approvedMissions.length} รายการ</li>
-                            <li><strong>คะแนนรวม:</strong> ${totalPoints} คะแนน</li>
-                            <li><strong>CO₂ ที่ลดได้:</strong> ${totalCo2.toFixed(2)} kgCO₂e</li>
-                        </ul>
+                    <!-- KPI Boxes (Boxes แบบสวยงามเป็นทางการ) -->
+                    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 10px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px;">
+                        <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 10px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #be185d; font-weight: bold; margin-bottom: 4px;">ผู้เข้าร่วมกิจกรรม</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 11px; font-weight: normal;">คน</span></div>
+                        </div>
+                        <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #b45309; font-weight: bold; margin-bottom: 4px;">ภารกิจที่อนุมัติ</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 11px; font-weight: normal;">รายการ</span></div>
+                        </div>
+                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #047857; font-weight: bold; margin-bottom: 4px;">คะแนนรวมสะสม</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 11px; font-weight: normal;">แต้ม</span></div>
+                        </div>
+                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #0f766e; font-weight: bold; margin-bottom: 4px;">CO₂ ที่ลดได้สุทธิ</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 11px; font-weight: normal;">kg</span></div>
+                        </div>
                     </div>
 
-                    <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #111827;">📈 แยกตามประเภทภารกิจ:</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <!-- Breakdown Table -->
+                    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
                         <thead>
-                            <tr style="background: #f3f4f6; color: #374151; font-size: 11px; border-bottom: 2px solid #e5e7eb;">
-                                <th style="padding: 8px; text-align: left;">ภารกิจ</th>
-                                <th style="padding: 8px; text-align: center; width: 80px;">จำนวน</th>
-                                <th style="padding: 8px; text-align: center; width: 80px;">คะแนน</th>
-                                <th style="padding: 8px; text-align: right; width: 100px;">CO₂ (kg)</th>
+                            <tr style="background: #f3f4f6; color: #374151; font-size: 12px; border-bottom: 2px solid #e5e7eb;">
+                                <th style="padding: 10px 12px; text-align: left;">ประเภทภารกิจ</th>
+                                <th style="padding: 10px 12px; text-align: center; width: 100px;">จำนวนครั้ง</th>
+                                <th style="padding: 10px 12px; text-align: center; width: 100px;">คะแนนรวม</th>
+                                <th style="padding: 10px 12px; text-align: right; width: 120px;">CO₂ (kgCO₂e)</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${breakdownRows}
                         </tbody>
                         <tfoot>
-                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 11px;">
-                                <td style="padding: 8px; text-align: left;">รวมยอดสุทธิ</td>
-                                <td style="padding: 8px; text-align: center;">${approvedMissions.length}</td>
-                                <td style="padding: 8px; text-align: center; color: #059669;">${totalPoints}</td>
-                                <td style="padding: 8px; text-align: right; color: #047857;">${totalCo2.toFixed(2)}</td>
+                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 12px;">
+                                <td style="padding: 10px 12px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
+                                <td style="padding: 10px 12px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
+                                <td style="padding: 10px 12px; text-align: center; color: #059669;">${totalPoints}</td>
+                                <td style="padding: 10px 12px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
                             </tr>
                         </tfoot>
                     </table>
 
-                    <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #111827;">👥 รายชื่อและสถิติรายบุคคล:</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+                    <!-- User Summary Table -->
+                    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 35px;">
                         <thead>
                             <tr style="background: #f3f4f6; color: #374151; font-size: 11px; border-bottom: 2px solid #e5e7eb;">
-                                <th style="padding: 6px 8px; width: 35px; text-align: center;">ลำดับ</th>
-                                <th style="padding: 6px 8px; text-align: left;">ชื่อ - นามสกุล (รหัสนักศึกษา)</th>
-                                <th style="padding: 6px 8px; text-align: center; width: 90px;">ภารกิจ</th>
-                                <th style="padding: 6px 8px; text-align: right; width: 90px;">ลด CO₂</th>
-                                <th style="padding: 6px 8px; text-align: right; width: 80px;">คะแนน</th>
+                                <th style="padding: 8px 10px; width: 40px; text-align: center;">ลำดับ</th>
+                                <th style="padding: 8px 10px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
+                                <th style="padding: 8px 10px; text-align: center; width: 100px;">ภารกิจที่ทำ</th>
+                                <th style="padding: 8px 10px; text-align: right; width: 100px;">ลด CO₂</th>
+                                <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนน</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2135,16 +2152,18 @@
                         </tbody>
                     </table>
 
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 10px; color: #6b7280;">
-                        <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project</div>
+                    <!-- Signature & Footer -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding-top: 15px; border-top: 1px dashed #d1d5db; font-size: 11px; color: #6b7280;">
+                        <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project (Official Document)</div>
                         <div style="text-align: center;">
-                            <div style="border-bottom: 1px solid #9ca3af; width: 130px; margin-bottom: 3px;"></div>
+                            <div style="border-bottom: 1px solid #9ca3af; width: 150px; margin-bottom: 4px;"></div>
                             <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
                         </div>
                     </div>
 
-                    <div style="text-align: center; margin-top: 25px;">
-                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 13px; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif;">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
+                    <!-- Print Button -->
+                    <div style="text-align: center; margin-top: 35px;">
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 12px 28px; font-size: 14px; font-weight: bold; border-radius: 10px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
                     </div>
                 </body>
                 </html>
