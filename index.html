@@ -27,41 +27,62 @@
 
     <main class="max-w-5xl mx-auto p-3 md:p-4 mt-2 md:mt-4">
         
-        <!-- 1. ล็อกอิน / ลงทะเบียน -->
-        <section id="auth-section" class="bg-white p-6 rounded-3xl shadow-sm max-w-md mx-auto my-8 md:my-12 border border-stone-200">
-            <h2 id="auth-title" class="text-2xl font-bold text-emerald-800 text-center mb-6">เข้าสู่ระบบ</h2>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs md:text-sm font-medium text-gray-700" id="label-username">ชื่อผู้ใช้ (Username / Gmail)</label>
-                    <input type="text" id="auth-username" class="w-full mt-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกชื่อผู้ใช้หรือ Gmail">
-                </div>
-
-                <div id="container-email" class="hidden">
-                    <label class="block text-xs md:text-sm font-medium text-gray-700">อีเมล (Gmail)</label>
-                    <input type="email" id="auth-email" class="w-full mt-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="example@gmail.com">
-                </div>
-
-                <div>
-                    <label class="block text-xs md:text-sm font-medium text-gray-700">รหัสผ่าน (Password)</label>
-                    <input type="password" id="auth-password" class="w-full mt-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="••••••••">
-                </div>
-
-                <button onclick="handleAuth()" id="auth-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm md:text-base">
+        <!-- 1. ล็อกอิน / ลงทะเบียน (แบบ 2 แท็บ) -->
+        <section id="auth-section" class="bg-white rounded-3xl shadow-sm max-w-md mx-auto my-8 md:my-12 border border-stone-200 overflow-hidden">
+            <!-- แถบสลับแท็บ เข้าสู่ระบบ / ลงทะเบียน -->
+            <div class="flex border-b border-stone-200 bg-stone-50">
+                <button type="button" id="tab-auth-login" onclick="switchAuthTab('login')" class="flex-1 py-3.5 text-center font-bold text-sm text-emerald-600 border-b-2 border-emerald-600 bg-white transition cursor-pointer">
                     เข้าสู่ระบบ
+                </button>
+                <button type="button" id="tab-auth-register" onclick="switchAuthTab('register')" class="flex-1 py-3.5 text-center font-bold text-sm text-stone-500 hover:text-emerald-600 transition cursor-pointer">
+                    ลงทะเบียน
                 </button>
             </div>
 
-            <div class="mt-4 text-center">
-                <p id="auth-switch-text" class="text-xs md:text-sm text-gray-600">
-                    ยังไม่มีบัญชีใช่ไหม? <a href="#" onclick="toggleAuthMode(true)" class="text-emerald-600 hover:underline font-semibold">ลงทะเบียนที่นี่</a>
-                </p>
+            <div class="p-6">
+                <!-- ฟอร์มเข้าสู่ระบบ -->
+                <div id="form-login" class="space-y-4">
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
+                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสผ่าน</label>
+                        <input type="password" id="login-password" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="••••••••">
+                    </div>
+
+                    <button type="button" onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm md:text-base mt-2">
+                        เข้าสู่ระบบ
+                    </button>
+                </div>
+
+                <!-- ฟอร์มลงทะเบียน -->
+                <div id="form-register" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
+                        <input type="text" id="reg-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium text-stone-700">ชื่อ - นามสกุล</label>
+                        <input type="text" id="reg-fullname" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="เช่น สมชาย สายเขียว">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</label>
+                        <input type="password" id="reg-password" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กำหนดรหัสผ่าน 6 ตัวขึ้นไป">
+                    </div>
+
+                    <button type="button" onclick="handleRegister()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm md:text-base mt-2">
+                        สร้างบัญชีสมาชิก
+                    </button>
+                </div>
             </div>
         </section>
 
         <!-- 2. Dashboard ผู้ใช้งาน -->
         <section id="user-dashboard" class="hidden space-y-4 md:space-y-6">
-            <!-- เมนูสลับแท็บ ยูเซอร์ -->
             <div class="flex flex-wrap items-center justify-between border-b border-stone-200 bg-white rounded-t-2xl px-2 md:px-4 pt-2 gap-2 text-xs md:text-sm">
                 <div class="flex gap-2">
                     <button onclick="switchUserTab('missions')" id="tab-btn-missions" class="py-2.5 px-3 md:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer">🚀 ทำภารกิจ & อันดับคะแนน</button>
@@ -99,7 +120,7 @@
                             <thead>
                                 <tr class="bg-stone-100 text-stone-600 border-b">
                                     <th class="p-2.5 w-16 text-center">อันดับ</th>
-                                    <th class="p-2.5">ชื่อผู้ใช้งาน (User)</th>
+                                    <th class="p-2.5">ผู้ใช้งาน (ชื่อ / รหัสนักศึกษา)</th>
                                     <th class="p-2.5 text-right">คะแนนสะสม</th>
                                 </tr>
                             </thead>
@@ -260,7 +281,7 @@
                     </div>
                 </div>
 
-                <!-- ตารางประวัติภารกิจ (เพิ่มคอลัมน์ CO2 และยอดรวม CO2 ทั้งหมด) -->
+                <!-- ตารางประวัติภารกิจ -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3">📜 ประวัติภารกิจของคุณ</h3>
                     <div class="overflow-x-auto">
@@ -270,7 +291,7 @@
                                     <th class="p-3 rounded-l-lg">ภารกิจที่ส่ง</th>
                                     <th class="p-3">หลักฐาน</th>
                                     <th class="p-3">สถานะ / เหตุผล</th>
-                                    <th class="p-3 text-right">ปริมาณ CO₂ ที่ลดได้</th>
+                                    <th class="p-3 text-right">ลด CO₂ ที่ได้</th>
                                     <th class="p-3 text-right rounded-r-lg">คะแนนที่ได้รับ</th>
                                 </tr>
                             </thead>
@@ -357,7 +378,7 @@
             </div>
         </section>
 
-        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) โครงสร้าง Card Hub -->
+        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) Card Hub -->
         <section id="admin-dashboard" class="hidden space-y-4 md:space-y-6">
             
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
@@ -379,7 +400,7 @@
                 </div>
             </div>
 
-            <!-- ตารางอันดับคะแนน (Leaderboard) หน้าแรกของแอดมิน -->
+            <!-- ตารางอันดับคะแนน (Leaderboard) หน้าแรกแอดมิน -->
             <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
@@ -392,7 +413,7 @@
                         <thead>
                             <tr class="bg-stone-100 text-stone-600 border-b">
                                 <th class="p-2.5 w-16 text-center">อันดับ</th>
-                                <th class="p-2.5">ชื่อผู้ใช้งาน (Username / Email)</th>
+                                <th class="p-2.5">ผู้ใช้งาน (ชื่อ / รหัสนักศึกษา)</th>
                                 <th class="p-2.5 text-right">คะแนนสะสม</th>
                             </tr>
                         </thead>
@@ -455,7 +476,7 @@
 
             </div>
 
-            <!-- ================= รายละเอียดของแต่ละรายการ ================= -->
+            <!-- ================= หน้ารายละเอียด ================= -->
 
             <!-- ส่วนที่ 1: ภารกิจรอตรวจสอบ -->
             <div id="section-pending-missions" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-amber-500">
@@ -464,7 +485,7 @@
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                         <h3 class="text-lg md:text-xl font-bold text-amber-800">📥 รายการภารกิจที่รอตรวจสอบอนุมัติ</h3>
                     </div>
-                    <input type="text" id="search-pending-missions" oninput="listenToAdminData()" placeholder="🔍 ค้นหา Username / Email..." class="p-2 border border-stone-300 rounded-xl text-xs w-full sm:w-64 bg-stone-50">
+                    <input type="text" id="search-pending-missions" oninput="listenToAdminData()" placeholder="🔍 ค้นหา รหัสนักศึกษา / ชื่อ..." class="p-2 border border-stone-300 rounded-xl text-xs w-full sm:w-64 bg-stone-50">
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
@@ -481,9 +502,8 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 2: รวมคำขอแลกรางวัลค้างตรวจ + ประวัติการแลกทั้งหมด -->
+            <!-- ส่วนที่ 2: คำขอแลกรางวัล & ประวัติทั้งหมด -->
             <div id="section-rewards-hub" class="admin-detail-view hidden space-y-6">
-                <!-- ตารางบน: คำขอแลกของรางวัลที่รออนุมัติ -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-purple-500">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 pb-3 border-b">
                         <div>
@@ -508,7 +528,6 @@
                     </div>
                 </div>
 
-                <!-- ตารางล่าง: ประวัติการแลกรางวัลทั้งหมด -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-teal-500">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 pb-3 border-b">
                         <div>
@@ -534,7 +553,7 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 3: จัดการสมาชิก & ประวัติรายบุคคล (แสดง CO2 และยอดรวม CO2 รายคน) -->
+            <!-- ส่วนที่ 3: จัดการสมาชิก & ประวัติรายบุคคล -->
             <div id="section-user-management" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-stone-500">
                 <div class="mb-3 pb-3 border-b">
                     <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
@@ -544,7 +563,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                     <div class="border border-stone-200 rounded-xl p-3 bg-stone-50 max-h-96 overflow-y-auto">
-                        <input type="text" id="search-user-list" oninput="listenToAdminData()" placeholder="🔍 ค้นหา Username..." class="p-2 mb-2 border border-stone-300 rounded-xl text-xs w-full bg-white">
+                        <input type="text" id="search-user-list" oninput="listenToAdminData()" placeholder="🔍 ค้นหา รหัสนักศึกษา / ชื่อ..." class="p-2 mb-2 border border-stone-300 rounded-xl text-xs w-full bg-white">
                         <div id="admin-user-list" class="space-y-1.5"></div>
                     </div>
 
@@ -660,10 +679,9 @@
         }
         const database = firebase.database();
 
-        let isSignUpMode = false;
         let currentUser = null;
-        let selectedAdminChatEmail = null;
-        let selectedAdminViewUserEmail = null;
+        let selectedAdminChatId = null;
+        let selectedAdminViewUserId = null;
         let isUserChatOpen = false;
 
         function getMissionMeta(name) {
@@ -678,6 +696,106 @@
             return { points: 0, co2: 0, id: '' };
         }
 
+        // สลับแท็บ เข้าสู่ระบบ / ลงทะเบียน
+        function switchAuthTab(tab) {
+            const btnLogin = document.getElementById('tab-auth-login');
+            const btnRegister = document.getElementById('tab-auth-register');
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+
+            if (tab === 'login') {
+                btnLogin.className = "flex-1 py-3.5 text-center font-bold text-sm text-emerald-600 border-b-2 border-emerald-600 bg-white transition cursor-pointer";
+                btnRegister.className = "flex-1 py-3.5 text-center font-bold text-sm text-stone-500 hover:text-emerald-600 transition cursor-pointer";
+                formLogin.classList.remove('hidden');
+                formRegister.classList.add('hidden');
+            } else {
+                btnRegister.className = "flex-1 py-3.5 text-center font-bold text-sm text-emerald-600 border-b-2 border-emerald-600 bg-white transition cursor-pointer";
+                btnLogin.className = "flex-1 py-3.5 text-center font-bold text-sm text-stone-500 hover:text-emerald-600 transition cursor-pointer";
+                formRegister.classList.remove('hidden');
+                formLogin.classList.add('hidden');
+            }
+        }
+
+        // ฟังก์ชันเข้าสู่ระบบ: รหัสนักศึกษา + รหัสผ่าน
+        function handleLogin() {
+            const studentId = document.getElementById('login-studentid').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!studentId || !password) {
+                alert('กรุณากรอกรหัสนักศึกษาและรหัสผ่าน');
+                return;
+            }
+
+            // ตรวจสอบสิทธิ์แอดมิน
+            if ((studentId === "admin" || studentId === "admin@greenpassport.com") && password === "Green2026!Master") {
+                currentUser = { studentId: "admin", name: "ผู้ดูแลระบบ (Admin)", role: 'admin' };
+                localStorage.setItem('green_passport_session', JSON.stringify(currentUser));
+                showDashboard();
+                return;
+            }
+
+            // ค้นหาใน Firebase Users
+            database.ref('users').once('value', (snapshot) => {
+                const users = snapshot.val() || {};
+                let foundUser = null;
+
+                Object.entries(users).forEach(([key, u]) => {
+                    const uStudentId = u.studentId || u.username || key;
+                    if (uStudentId === studentId && u.password === password) {
+                        foundUser = { ...u, studentId: uStudentId };
+                    }
+                });
+
+                if (foundUser) {
+                    currentUser = { role: 'user', ...foundUser };
+                    localStorage.setItem('green_passport_session', JSON.stringify(currentUser));
+                    showDashboard();
+                } else {
+                    alert('รหัสนักศึกษา หรือ รหัสผ่านไม่ถูกต้อง');
+                }
+            });
+        }
+
+        // ฟังก์ชันลงทะเบียน: รหัสนักศึกษา + ชื่อ-นามสกุล + รหัสผ่าน >= 6 ตัว
+        function handleRegister() {
+            const studentId = document.getElementById('reg-studentid').value.trim();
+            const fullName = document.getElementById('reg-fullname').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            if (!studentId || !fullName || !password) {
+                alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('⚠️ รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษรขึ้นไป');
+                return;
+            }
+
+            const safeKey = studentId.replace(/[.#$[\]]/g, '_');
+
+            database.ref('users/' + safeKey).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    alert('⚠️ รหัสนักศึกษานี้เคยลงทะเบียนไว้แล้วในระบบ');
+                    return;
+                }
+
+                database.ref('users/' + safeKey).set({
+                    studentId: studentId,
+                    name: fullName,
+                    username: fullName,
+                    password: password,
+                    points: 0,
+                    co2: 0.0
+                }).then(() => {
+                    alert('🎉 ลงทะเบียนสมาชิกสำเร็จแล้ว! สามารถเข้าสู่ระบบได้ทันที');
+                    document.getElementById('login-studentid').value = studentId;
+                    document.getElementById('login-password').value = '';
+                    switchAuthTab('login');
+                });
+            });
+        }
+
         function openAdminSection(sectionId) {
             document.getElementById('admin-menu-cards').classList.add('hidden');
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
@@ -690,99 +808,8 @@
             document.getElementById('admin-menu-cards').classList.remove('hidden');
         }
 
-        function toggleAuthMode(mode) {
-            isSignUpMode = mode;
-            document.getElementById('auth-title').innerText = mode ? 'ลงทะเบียนสมาชิกใหม่' : 'เข้าสู่ระบบ';
-            document.getElementById('auth-submit-btn').innerText = mode ? 'สมัครสมาชิก' : 'เข้าสู่ระบบ';
-            document.getElementById('label-username').innerText = mode ? 'ตั้งชื่อผู้ใช้ (Username)' : 'ชื่อผู้ใช้ (Username / Gmail)';
-            document.getElementById('auth-username').placeholder = mode ? 'ตั้งชื่อผู้ใช้ของคุณ' : 'กรอกชื่อผู้ใช้หรือ Gmail';
-            
-            const emailContainer = document.getElementById('container-email');
-            if (mode) emailContainer.classList.remove('hidden');
-            else emailContainer.classList.add('hidden');
-
-            document.getElementById('auth-switch-text').innerHTML = mode ? 
-                'มีบัญชีอยู่แล้วใช่ไหม? <a href="#" onclick="toggleAuthMode(false)" class="text-emerald-600 hover:underline font-semibold">เข้าสู่ระบบที่นี่</a>' :
-                'ยังไม่มีบัญชีใช่ไหม? <a href="#" onclick="toggleAuthMode(true)" class="text-emerald-600 hover:underline font-semibold">ลงทะเบียนที่นี่</a>';
-        }
-
-        function handleAuth() {
-            const usernameInput = document.getElementById('auth-username').value.trim();
-            const password = document.getElementById('auth-password').value.trim();
-
-            if (!usernameInput || !password) {
-                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
-                return;
-            }
-
-            if (!isSignUpMode && (usernameInput === "admin@greenpassport.com" || usernameInput === "admin") && password === "Green2026!Master") {
-                currentUser = { email: "admin@greenpassport.com", username: "Admin", role: 'admin' };
-                localStorage.setItem('green_passport_session', JSON.stringify(currentUser));
-                showDashboard();
-                return;
-            }
-
-            if (isSignUpMode) {
-                const emailInput = document.getElementById('auth-email').value.trim();
-                if (!emailInput) { alert('กรุณากรอกอีเมล (Gmail)'); return; }
-
-                const safeKey = emailInput.replace(/\./g, ',');
-
-                database.ref('users').once('value', (snapshot) => {
-                    const usersData = snapshot.val() || {};
-                    let isUsernameTaken = false;
-
-                    Object.values(usersData).forEach(u => {
-                        if (u.username && u.username.toLowerCase() === usernameInput.toLowerCase()) {
-                            isUsernameTaken = true;
-                        }
-                    });
-
-                    if (isUsernameTaken) {
-                        alert(`⚠️ ชื่อผู้ใช้ (Username) "${usernameInput}" มีผู้ใช้งานแล้ว โปรดใช้ชื่ออื่น`);
-                        return;
-                    }
-
-                    if (usersData[safeKey]) {
-                        alert('⚠️ อีเมลนี้เคยลงทะเบียนไว้แล้วในระบบ');
-                        return;
-                    }
-
-                    database.ref('users/' + safeKey).set({
-                        username: usernameInput,
-                        email: emailInput,
-                        password: password,
-                        points: 0,
-                        co2: 0.0
-                    }).then(() => {
-                        alert('🎉 ลงทะเบียนสมาชิกสำเร็จแล้ว! กรุณาเข้าสู่ระบบ');
-                        toggleAuthMode(false);
-                    });
-                });
-            } else {
-                database.ref('users').once('value', (snapshot) => {
-                    const users = snapshot.val() || {};
-                    let foundUser = null;
-
-                    Object.values(users).forEach(u => {
-                        if ((u.username === usernameInput || u.email === usernameInput) && u.password === password) {
-                            foundUser = u;
-                        }
-                    });
-
-                    if (foundUser) {
-                        currentUser = { email: foundUser.email, username: foundUser.username, role: 'user', ...foundUser };
-                        localStorage.setItem('green_passport_session', JSON.stringify(currentUser));
-                        showDashboard();
-                    } else {
-                        alert('ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง');
-                    }
-                });
-            }
-        }
-
         function handleGlobalClick(event) {
-            if (currentUser && currentUser.role === 'admin' && selectedAdminChatEmail) {
+            if (currentUser && currentUser.role === 'admin' && selectedAdminChatId) {
                 const chatSection = document.getElementById('section-chat');
                 if (chatSection && !chatSection.contains(event.target)) {
                     closeAdminChat();
@@ -791,7 +818,7 @@
         }
 
         function closeAdminChat() {
-            selectedAdminChatEmail = null;
+            selectedAdminChatId = null;
             document.getElementById('admin-chat-input').disabled = true;
             document.getElementById('admin-chat-input').value = '';
             document.getElementById('admin-chat-input').placeholder = 'เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ...';
@@ -811,10 +838,10 @@
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 if (currentUser.role === 'user') {
-                    const safeKey = currentUser.email.replace(/\./g, ',');
+                    const safeKey = (currentUser.studentId || currentUser.email || '').replace(/[.#$[\]]/g, '_');
                     database.ref('users/' + safeKey).on('value', (snapshot) => {
                         if(snapshot.exists()) {
-                            currentUser = { email: currentUser.email, username: currentUser.username, role: 'user', ...snapshot.val() };
+                            currentUser = { ...currentUser, ...snapshot.val() };
                             updateUserStats();
                             fetchUserMissions();
                             fetchUserRewardHistory();
@@ -859,7 +886,7 @@
 
         function showDashboard() {
             document.getElementById('auth-section').classList.add('hidden');
-            const displayName = currentUser.username || currentUser.email;
+            const displayName = currentUser.name || currentUser.studentId || currentUser.username || 'ผู้ใช้';
             document.getElementById('nav-auth').innerHTML = `
                 <span class="self-center bg-emerald-700 px-2.5 py-1 rounded-full border border-emerald-500 text-xs md:text-sm">👤 ${displayName}</span>
                 <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2.5 rounded-lg transition cursor-pointer text-xs md:text-sm">ออกจากระบบ</button>
@@ -886,7 +913,7 @@
             document.getElementById('admin-dashboard').classList.add('hidden');
             document.getElementById('auth-section').classList.remove('hidden');
             document.getElementById('nav-auth').innerHTML = '';
-            toggleAuthMode(false);
+            switchAuthTab('login');
         }
 
         function updateUserStats() {
@@ -899,10 +926,10 @@
             database.ref('users').on('value', (snapshot) => {
                 const usersData = snapshot.val() || {};
                 const list = [];
-                Object.values(usersData).forEach(u => {
+                Object.entries(usersData).forEach(([key, u]) => {
                     list.push({
-                        username: u.username || u.email,
-                        email: u.email,
+                        studentId: u.studentId || key,
+                        name: u.name || u.username || key,
                         points: u.points || 0
                     });
                 });
@@ -918,13 +945,13 @@
                         if (index === 1) rankBadge = '🥈 2';
                         if (index === 2) rankBadge = '🥉 3';
 
-                        const isCurrent = currentUser && (user.username === currentUser.username || user.email === currentUser.email);
+                        const isCurrent = currentUser && (user.studentId === currentUser.studentId);
                         const rowHighlight = isCurrent ? 'bg-emerald-50/70 font-semibold' : 'hover:bg-stone-50';
 
                         userTbody.innerHTML += `
                             <tr class="border-b border-stone-100 ${rowHighlight}">
                                 <td class="p-2.5 text-center font-bold text-stone-600">${rankBadge}</td>
-                                <td class="p-2.5 text-stone-800">${user.username} ${isCurrent ? '<span class="text-[10px] text-emerald-600 font-bold">(คุณ)</span>' : ''}</td>
+                                <td class="p-2.5 text-stone-800">${user.name} <span class="text-xs text-stone-400">(${user.studentId})</span> ${isCurrent ? '<span class="text-[10px] text-emerald-600 font-bold">(คุณ)</span>' : ''}</td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -943,7 +970,7 @@
                         adminTbody.innerHTML += `
                             <tr class="border-b border-stone-100 hover:bg-stone-50">
                                 <td class="p-2.5 text-center font-bold text-stone-600">${rankBadge}</td>
-                                <td class="p-2.5 font-medium text-stone-800">${user.username} <span class="text-xs text-stone-400">(${user.email})</span></td>
+                                <td class="p-2.5 font-medium text-stone-800">${user.name} <span class="text-xs text-stone-400">(รหัส: ${user.studentId})</span></td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -965,12 +992,13 @@
             if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
 
             const todayStr = getTodayDateString();
+            const userIdentifier = currentUser.studentId || currentUser.email;
             
             database.ref('missions').once('value', (snapshot) => {
                 let alreadyDoneToday = false;
                 snapshot.forEach(child => {
                     const m = child.val();
-                    if (m.userEmail === currentUser.email && m.missionName === missionName && m.dateStr === todayStr) {
+                    if ((m.userIdentifier === userIdentifier || m.userEmail === userIdentifier) && m.missionName === missionName && m.dateStr === todayStr) {
                         alreadyDoneToday = true;
                     }
                 });
@@ -1003,8 +1031,8 @@
                         const missionId = Date.now().toString();
                         const newMission = {
                             id: missionId,
-                            userEmail: currentUser.email,
-                            username: currentUser.username || currentUser.email,
+                            userIdentifier: userIdentifier,
+                            userName: currentUser.name || currentUser.username || userIdentifier,
                             missionName: missionName,
                             dateStr: todayStr,
                             image: compressedBase64,
@@ -1025,8 +1053,8 @@
             });
         }
 
-        // ดึงประวัติภารกิจของผู้ใช้ พร้อมคำนวณและแสดงผล CO2 รวม
         function fetchUserMissions() {
+            const userIdentifier = currentUser.studentId || currentUser.email;
             database.ref('missions').on('value', (snapshot) => {
                 const tbody = document.getElementById('user-history-table');
                 tbody.innerHTML = '';
@@ -1040,7 +1068,7 @@
 
                 snapshot.forEach(child => {
                     const m = child.val();
-                    if(m.userEmail === currentUser.email) {
+                    if(m.userIdentifier === userIdentifier || m.userEmail === userIdentifier) {
                         list.push(m);
                         hasData = true;
 
@@ -1116,6 +1144,7 @@
         }
 
         function fetchUserRewardHistory() {
+            const userIdentifier = currentUser.studentId || currentUser.email;
             database.ref('reward_claims').on('value', (snapshot) => {
                 const tbody = document.getElementById('user-reward-history-table');
                 tbody.innerHTML = '';
@@ -1124,7 +1153,7 @@
 
                 snapshot.forEach(child => {
                     const item = child.val();
-                    if(item.userEmail === currentUser.email) {
+                    if(item.userIdentifier === userIdentifier || item.userEmail === userIdentifier) {
                         list.push(item);
                         hasData = true;
                     }
@@ -1155,7 +1184,8 @@
         }
 
         function claimReward(cost, rewardName) {
-            const safeKey = currentUser.email.replace(/\./g, ',');
+            const userIdentifier = currentUser.studentId || currentUser.email;
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             if ((currentUser.points || 0) < cost) { 
                 alert(`คะแนนสะสมของคุณยังไม่พอ (ต้องใช้ ${cost} คะแนน)`); 
                 return; 
@@ -1169,8 +1199,8 @@
                     const claimId = Date.now().toString();
                     const newClaim = {
                         id: claimId,
-                        userEmail: currentUser.email,
-                        username: currentUser.username || currentUser.email,
+                        userIdentifier: userIdentifier,
+                        userName: currentUser.name || currentUser.username || userIdentifier,
                         rewardName: rewardName,
                         cost: cost,
                         status: 'รอแอดมินอนุมัติ',
@@ -1203,7 +1233,8 @@
 
         function markAdminMessagesAsRead() {
             if(!currentUser || currentUser.role !== 'user') return;
-            const safeKey = currentUser.email.replace(/\./g, ',');
+            const userIdentifier = currentUser.studentId || currentUser.email;
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             database.ref('chats/' + safeKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
                 const updates = {};
@@ -1217,7 +1248,8 @@
         }
 
         function listenToUserChat() {
-            const safeKey = currentUser.email.replace(/\./g, ',');
+            const userIdentifier = currentUser.studentId || currentUser.email;
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             database.ref('chats/' + safeKey).on('value', (snapshot) => {
                 const chatBox = document.getElementById('user-chat-box');
                 const unreadBadge = document.getElementById('user-unread-badge');
@@ -1245,7 +1277,7 @@
                 }
 
                 Object.values(messages).forEach(msg => {
-                    const isMe = msg.sender === currentUser.email;
+                    const isMe = msg.sender === userIdentifier;
                     const readText = (isMe && msg.read) ? ' ✓ อ่านแล้ว' : '';
                     
                     let msgContent = msg.image 
@@ -1269,7 +1301,8 @@
         }
 
         function sendUserChatMessage(isImage = false) {
-            const safeKey = currentUser.email.replace(/\./g, ',');
+            const userIdentifier = currentUser.studentId || currentUser.email;
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
 
             if (isImage) {
                 const fileInput = document.getElementById('user-chat-file');
@@ -1290,7 +1323,7 @@
 
                         const msgId = Date.now().toString();
                         database.ref(`chats/${safeKey}/${msgId}`).set({
-                            sender: currentUser.email,
+                            sender: userIdentifier,
                             image: base64,
                             read: false,
                             timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
@@ -1306,7 +1339,7 @@
 
                 const msgId = Date.now().toString();
                 database.ref(`chats/${safeKey}/${msgId}`).set({
-                    sender: currentUser.email,
+                    sender: userIdentifier,
                     text: text,
                     read: false,
                     timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
@@ -1324,7 +1357,6 @@
 
             listenToLeaderboard();
 
-            // ดึงแชท
             database.ref('chats').on('value', (chatSnapshot) => {
                 const allChats = chatSnapshot.val() || {};
                 
@@ -1344,9 +1376,9 @@
 
                     Object.entries(usersData).forEach(([key, u]) => {
                         totalPoints += (u.points || 0);
-                        const email = key.replace(/,/g, '.');
-                        const username = u.username || email;
-                        const displayName = `${username} (${email})`;
+                        const studentId = u.studentId || key;
+                        const name = u.name || u.username || studentId;
+                        const displayName = `${name} (${studentId})`;
 
                         const userMsgs = allChats[key] || {};
                         const totalMsgs = Object.keys(userMsgs).length;
@@ -1360,17 +1392,17 @@
                             }
                         });
 
-                        if (!searchUserTerm || username.toLowerCase().includes(searchUserTerm) || email.toLowerCase().includes(searchUserTerm)) {
+                        if (!searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm)) {
                             userListContainer.innerHTML += `
                                 <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
                                     <div class="flex justify-between items-start">
-                                        <button onclick="renderAdminUserDetail('${email}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
+                                        <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
                                             👤 ${displayName}
                                         </button>
                                     </div>
                                     <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
                                         <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
-                                        <button onclick="deleteUserPermanently('${email}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
+                                        <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
                                             🗑️ ลบ
                                         </button>
                                     </div>
@@ -1378,7 +1410,7 @@
                             `;
                         }
 
-                        let isSelected = selectedAdminChatEmail === email;
+                        let isSelected = selectedAdminChatId === key;
                         let activeStyle = isSelected ? 'bg-blue-100 border-blue-400 font-bold' : 'hover:bg-blue-50 border-stone-100';
                         
                         let badgeHtml = unreadMsgs > 0 
@@ -1386,8 +1418,8 @@
                             : `<span class="text-stone-400 text-[10px] ml-1">(${totalMsgs} ข้อความ)</span>`;
 
                         chatUserList.innerHTML += `
-                            <button onclick="selectAdminChatUser('${email}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer text-stone-700 flex justify-between items-center">
-                                <span class="truncate">📧 ${username}</span>
+                            <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer text-stone-700 flex justify-between items-center">
+                                <span class="truncate">👤 ${name}</span>
                                 ${badgeHtml}
                             </button>
                         `;
@@ -1422,7 +1454,7 @@
 
                 claimSnapshot.forEach(child => {
                     const claim = child.val();
-                    const searchTarget = `${claim.username || ''} ${claim.userEmail}`.toLowerCase();
+                    const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || claim.userEmail || ''}`.toLowerCase();
 
                     if(claim.status === 'รอแอดมินอนุมัติ') {
                         pendingRewardsCount++;
@@ -1444,16 +1476,17 @@
                     pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่มีคำขอแลกของรางวัลที่ค้างตรวจสอบ 🎉</td></tr>`;
                 } else {
                     pendingClaims.reverse().forEach(claim => {
+                        const uid = claim.userIdentifier || claim.userEmail;
                         pendingRewardsTbody.innerHTML += `
                             <tr class="border-b border-stone-200 hover:bg-purple-50/40">
-                                <td class="p-3 font-semibold text-stone-800">${claim.username || claim.userEmail} <span class="block text-[10px] text-gray-400">${claim.userEmail}</span></td>
+                                <td class="p-3 font-semibold text-stone-800">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                 <td class="p-3 font-bold text-purple-900">${claim.rewardName}</td>
                                 <td class="p-3 font-bold text-amber-700">-${claim.cost} คะแนน</td>
                                 <td class="p-3 text-xs text-gray-500">${claim.timestamp}</td>
                                 <td class="p-3 text-center">
                                     <div class="flex justify-center gap-1.5">
-                                        <button onclick="reviewRewardClaim('${claim.id}', '${claim.userEmail}', ${claim.cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                        <button onclick="reviewRewardClaim('${claim.id}', '${claim.userEmail}', ${claim.cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                        <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                        <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
                                     </div>
                                 </td>
                             </tr>
@@ -1467,10 +1500,11 @@
                     historyClaims.reverse().forEach(claim => {
                         let badgeStyle = claim.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100';
                         let reasonText = claim.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${claim.reason}</span>` : '';
+                        const uid = claim.userIdentifier || claim.userEmail;
 
                         historyRewardsTbody.innerHTML += `
                             <tr class="border-b border-stone-100 hover:bg-stone-50 text-xs md:text-sm">
-                                <td class="p-3 font-medium text-stone-700">${claim.username || claim.userEmail} <span class="block text-[10px] text-gray-400">${claim.userEmail}</span></td>
+                                <td class="p-3 font-medium text-stone-700">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                 <td class="p-3 font-semibold text-stone-800">${claim.rewardName}</td>
                                 <td class="p-3 font-bold text-stone-600">-${claim.cost} คะแนน</td>
                                 <td class="p-3 text-xs text-gray-400">${claim.timestamp}</td>
@@ -1494,7 +1528,7 @@
                     const m = child.val();
                     allMissionsCache.push(m);
 
-                    const searchTarget = `${m.username || ''} ${m.userEmail}`.toLowerCase();
+                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || m.userEmail || ''}`.toLowerCase();
 
                     if(m.status === 'รออนุมัติ') {
                         pendingMissionsCount++;
@@ -1512,15 +1546,16 @@
                     pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
                 } else {
                     pendingList.reverse().forEach(m => {
+                        const uid = m.userIdentifier || m.userEmail;
                         pendingTbody.innerHTML += `
                             <tr class="border-b border-stone-200 hover:bg-stone-50">
-                                <td class="p-3 font-semibold text-stone-700">${m.username || m.userEmail} <span class="block text-[10px] text-gray-400">${m.userEmail}</span></td>
+                                <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                 <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-gray-400">${m.timestamp}</span></td>
                                 <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
                                 <td class="p-3 text-center">
                                     <div class="flex justify-center gap-1.5">
-                                        <button onclick="reviewMission('${m.id}', '${m.userEmail}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                        <button onclick="reviewMission('${m.id}', '${m.userEmail}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                        <button onclick="reviewMission('${m.id}', '${uid}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                        <button onclick="reviewMission('${m.id}', '${uid}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
                                     </div>
                                 </td>
                             </tr>`;
@@ -1529,39 +1564,40 @@
             });
         }
 
-        function deleteUserPermanently(email) {
-            const safeKey = email.replace(/\./g, ',');
-            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${email}" ออกจากระบบถาวร?\n\n(ผู้ใช้รายนี้จะไม่สามารถเข้าสู่ระบบได้ และหากต้องการเข้าใช้งานจะต้องทำการลงทะเบียนใหม่ทั้งหมด)`)) {
+        function deleteUserPermanently(userKey) {
+            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?\n\n(ผู้ใช้รายนี้จะไม่สามารถเข้าสู่ระบบได้ และหากต้องการเข้าใช้งานจะต้องทำการลงทะเบียนใหม่ทั้งหมด)`)) {
                 return;
             }
 
             const updates = {};
-            updates[`users/${safeKey}`] = null;
-            updates[`chats/${safeKey}`] = null;
+            updates[`users/${userKey}`] = null;
+            updates[`chats/${userKey}`] = null;
 
             database.ref('missions').once('value', (mSnapshot) => {
                 mSnapshot.forEach(child => {
-                    if (child.val().userEmail === email) {
+                    const m = child.val();
+                    if (m.userIdentifier === userKey || m.userEmail === userKey) {
                         updates[`missions/${child.key}`] = null;
                     }
                 });
 
                 database.ref('reward_claims').once('value', (rSnapshot) => {
                     rSnapshot.forEach(child => {
-                        if (child.val().userEmail === email) {
+                        const r = child.val();
+                        if (r.userIdentifier === userKey || r.userEmail === userKey) {
                             updates[`reward_claims/${child.key}`] = null;
                         }
                     });
 
                     database.ref().update(updates).then(() => {
-                        alert(`✅ ลบบัญชีผู้ใช้ "${email}" สำเร็จแล้ว!`);
-                        document.getElementById('admin-selected-user-title').innerText = 'โปรดเลือกอีเมลฝั่งซ้ายมือเพื่อดูประวัติ';
+                        alert(`✅ ลบบัญชีผู้ใช้ "${userKey}" สำเร็จแล้ว!`);
+                        document.getElementById('admin-selected-user-title').innerText = 'โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ';
                         document.getElementById('selected-user-actions').classList.add('hidden');
                         document.getElementById('admin-user-detail-table').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>`;
                         document.getElementById('admin-user-detail-footer').classList.add('hidden');
-                        selectedAdminViewUserEmail = null;
+                        selectedAdminViewUserId = null;
 
-                        if (selectedAdminChatEmail === email) {
+                        if (selectedAdminChatId === userKey) {
                             closeAdminChat();
                         }
                     }).catch(err => {
@@ -1571,29 +1607,27 @@
             });
         }
 
-        function selectAdminChatUser(email) {
-            selectedAdminChatEmail = email;
+        function selectAdminChatUser(userKey) {
+            selectedAdminChatId = userKey;
             document.getElementById('admin-chat-input').disabled = false;
-            document.getElementById('admin-chat-input').placeholder = `พิมพ์ตอบกลับ ${email}...`;
+            document.getElementById('admin-chat-input').placeholder = `พิมพ์ตอบกลับ ${userKey}...`;
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
             document.getElementById('btn-close-admin-chat').classList.remove('hidden');
 
-            const safeKey = email.replace(/\./g, ',');
-            
-            database.ref('chats/' + safeKey).once('value', (snapshot) => {
+            database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
                 const updates = {};
                 Object.entries(messages).forEach(([msgId, msg]) => {
                     if (msg.sender !== 'แอดมิน' && !msg.read) {
-                        updates[`chats/${safeKey}/${msgId}/read`] = true;
+                        updates[`chats/${userKey}/${msgId}/read`] = true;
                     }
                 });
                 if (Object.keys(updates).length > 0) database.ref().update(updates);
             });
 
-            database.ref('chats/' + safeKey).on('value', (snapshot) => {
+            database.ref('chats/' + userKey).on('value', (snapshot) => {
                 const chatBox = document.getElementById('admin-chat-box');
                 const isAtBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 50;
 
@@ -1601,7 +1635,7 @@
                 const messages = snapshot.val() || {};
 
                 if (Object.keys(messages).length === 0) {
-                    chatBox.innerHTML = `<p class="text-center text-gray-400 text-xs my-auto">ยังไม่มีข้อความสนทนากับ ${email}</p>`;
+                    chatBox.innerHTML = `<p class="text-center text-gray-400 text-xs my-auto">ยังไม่มีข้อความสนทนากับ ${userKey}</p>`;
                     return;
                 }
 
@@ -1630,8 +1664,8 @@
         }
 
         function sendAdminChatMessage(isImage = false) {
-            if (!selectedAdminChatEmail) return;
-            const safeKey = selectedAdminChatEmail.replace(/\./g, ',');
+            if (!selectedAdminChatId) return;
+            const userKey = selectedAdminChatId;
 
             if (isImage) {
                 const fileInput = document.getElementById('admin-chat-file');
@@ -1651,7 +1685,7 @@
                         const base64 = canvas.toDataURL('image/jpeg', 0.4);
 
                         const msgId = Date.now().toString();
-                        database.ref(`chats/${safeKey}/${msgId}`).set({
+                        database.ref(`chats/${userKey}/${msgId}`).set({
                             sender: 'แอดมิน',
                             image: base64,
                             read: false,
@@ -1667,7 +1701,7 @@
                 if (!text) return;
 
                 const msgId = Date.now().toString();
-                database.ref(`chats/${safeKey}/${msgId}`).set({
+                database.ref(`chats/${userKey}/${msgId}`).set({
                     sender: 'แอดมิน',
                     text: text,
                     read: false,
@@ -1676,8 +1710,8 @@
             }
         }
 
-        function reviewRewardClaim(claimId, userEmail, cost, action) {
-            const safeKey = userEmail.replace(/\./g, ',');
+        function reviewRewardClaim(claimId, userIdentifier, cost, action) {
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             let reason = "";
 
             if (action === 'reject') {
@@ -1706,21 +1740,26 @@
             });
         }
 
-        // แสดงประวัติภารกิจรายบุคคลฝั่งแอดมิน (เพิ่ม CO2 และยอดรวม CO2 รายคน)
-        function renderAdminUserDetail(email) {
-            selectedAdminViewUserEmail = email;
-            document.getElementById('admin-selected-user-title').innerText = `📜 ข้อมูลสมาชิก: ${email}`;
+        function renderAdminUserDetail(userKey) {
+            selectedAdminViewUserId = userKey;
+            
+            database.ref('users/' + userKey).once('value', (snapshot) => {
+                const u = snapshot.val() || {};
+                const name = u.name || u.username || userKey;
+                const studentId = u.studentId || userKey;
+                document.getElementById('admin-selected-user-title').innerText = `📜 ข้อมูลสมาชิก: ${name} (รหัส: ${studentId})`;
+            });
             
             const actionsDiv = document.getElementById('selected-user-actions');
             actionsDiv.classList.remove('hidden');
             const btnDelete = document.getElementById('btn-delete-viewing-user');
-            btnDelete.setAttribute('onclick', `deleteUserPermanently('${email}')`);
+            btnDelete.setAttribute('onclick', `deleteUserPermanently('${userKey}')`);
 
             const tbody = document.getElementById('admin-user-detail-table');
             const footer = document.getElementById('admin-user-detail-footer');
             tbody.innerHTML = '';
 
-            const userMissions = allMissionsCache.filter(m => m.userEmail === email);
+            const userMissions = allMissionsCache.filter(m => (m.userIdentifier === userKey || m.userEmail === userKey));
 
             if (userMissions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ไม่พบประวัติภารกิจของสมาชิกท่านนี้</td></tr>`;
@@ -1763,8 +1802,8 @@
             footer.classList.remove('hidden');
         }
 
-        function reviewMission(missionId, userEmail, action) {
-            const safeKey = userEmail.replace(/\./g, ',');
+        function reviewMission(missionId, userIdentifier, action) {
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             let reason = "";
 
             if (action === 'reject') {
