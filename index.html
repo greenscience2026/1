@@ -18,18 +18,20 @@
 </head>
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
 
-    <nav class="bg-emerald-600 text-white p-3 md:p-4 shadow-md flex justify-between items-center sticky top-0 z-30">
-        <h1 class="text-lg md:text-xl font-bold font-serif flex items-center gap-2">
-            🌱 Green Passport
-        </h1>
-        <div id="nav-auth" class="flex gap-2 items-center text-xs md:text-sm"></div>
+    <!-- Navbar แถบสีเขียวด้านบน (ปรับ Responsive ให้รองรับมือถือสวยงาม) -->
+    <nav class="bg-emerald-600 text-white px-3 py-2.5 sm:px-4 sm:py-3 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 shrink-0">
+            <span class="text-xl sm:text-2xl">🌱</span>
+            <span class="text-base sm:text-lg font-bold tracking-tight font-serif whitespace-nowrap">Green Passport</span>
+        </div>
+        
+        <div id="nav-auth" class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm shrink-0"></div>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-3 md:p-4 mt-2 md:mt-4">
+    <main class="max-w-5xl mx-auto p-3 sm:p-4 mt-2 sm:mt-4">
         
         <!-- 1. ล็อกอิน / ลงทะเบียน (แบบ 2 แท็บ) -->
-        <section id="auth-section" class="bg-white rounded-3xl shadow-sm max-w-md mx-auto my-8 md:my-12 border border-stone-200 overflow-hidden">
-            <!-- แถบสลับแท็บ เข้าสู่ระบบ / ลงทะเบียน -->
+        <section id="auth-section" class="bg-white rounded-3xl shadow-sm max-w-md mx-auto my-6 sm:my-10 border border-stone-200 overflow-hidden">
             <div class="flex border-b border-stone-200 bg-stone-50">
                 <button type="button" id="tab-auth-login" onclick="switchAuthTab('login')" class="flex-1 py-3.5 text-center font-bold text-sm text-emerald-600 border-b-2 border-emerald-600 bg-white transition cursor-pointer">
                     เข้าสู่ระบบ
@@ -39,20 +41,20 @@
                 </button>
             </div>
 
-            <div class="p-6">
+            <div class="p-5 sm:p-6">
                 <!-- ฟอร์มเข้าสู่ระบบ -->
                 <div id="form-login" class="space-y-4">
                     <div>
-                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
+                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
                     </div>
 
                     <div>
-                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสผ่าน</label>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสผ่าน</label>
                         <input type="password" id="login-password" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="••••••••">
                     </div>
 
-                    <button type="button" onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm md:text-base mt-2">
+                    <button type="button" onclick="handleLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm sm:text-base mt-2">
                         เข้าสู่ระบบ
                     </button>
                 </div>
@@ -60,21 +62,21 @@
                 <!-- ฟอร์มลงทะเบียน -->
                 <div id="form-register" class="space-y-4 hidden">
                     <div>
-                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
                         <input type="text" id="reg-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
                     </div>
 
                     <div>
-                        <label class="block text-xs md:text-sm font-medium text-stone-700">ชื่อ - นามสกุล</label>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">ชื่อ - นามสกุล</label>
                         <input type="text" id="reg-fullname" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="เช่น สมชาย สายเขียว">
                     </div>
 
                     <div>
-                        <label class="block text-xs md:text-sm font-medium text-stone-700">รหัสผ่าน (อย่างน้อย 6 ตัว)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</label>
                         <input type="password" id="reg-password" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กำหนดรหัสผ่าน 6 ตัวขึ้นไป">
                     </div>
 
-                    <button type="button" onclick="handleRegister()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm md:text-base mt-2">
+                    <button type="button" onclick="handleRegister()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl transition cursor-pointer shadow-sm text-sm sm:text-base mt-2">
                         สร้างบัญชีสมาชิก
                     </button>
                 </div>
@@ -82,17 +84,27 @@
         </section>
 
         <!-- 2. Dashboard ผู้ใช้งาน -->
-        <section id="user-dashboard" class="hidden space-y-4 md:space-y-6">
-            <div class="flex flex-wrap items-center justify-between border-b border-stone-200 bg-white rounded-t-2xl px-2 md:px-4 pt-2 gap-2 text-xs md:text-sm">
-                <div class="flex gap-2">
-                    <button onclick="switchUserTab('missions')" id="tab-btn-missions" class="py-2.5 px-3 md:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer">🚀 ทำภารกิจ & อันดับคะแนน</button>
-                    <button onclick="switchUserTab('rewards')" id="tab-btn-rewards" class="py-2.5 px-3 md:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer">🎁 แลกรางวัล</button>
+        <section id="user-dashboard" class="hidden space-y-4 sm:space-y-6">
+            
+            <!-- แถบเมนู 3 แท็บของผู้ใช้: ภารกิจรักษ์โลก | ประวัติภารกิจ | แลกรางวัล -->
+            <div class="flex flex-wrap items-center justify-between border-b border-stone-200 bg-white rounded-t-2xl px-2 sm:px-4 pt-2 gap-2 text-xs sm:text-sm">
+                <div class="flex flex-wrap gap-1 sm:gap-2">
+                    <button onclick="switchUserTab('missions')" id="tab-btn-missions" class="py-2.5 px-2.5 sm:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer">
+                        🌱 ภารกิจรักษ์โลก
+                    </button>
+                    <button onclick="switchUserTab('history')" id="tab-btn-history" class="py-2.5 px-2.5 sm:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer">
+                        📜 ประวัติภารกิจ
+                    </button>
+                    <button onclick="switchUserTab('rewards')" id="tab-btn-rewards" class="py-2.5 px-2.5 sm:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer">
+                        🎁 แลกรางวัล
+                    </button>
                 </div>
-                <button onclick="toggleUserChatModal(true)" class="mb-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 md:px-4 rounded-xl shadow-xs text-xs md:text-sm flex items-center gap-1.5 transition cursor-pointer">
-                    💬 สอบถามแอดมิน <span id="user-unread-badge" class="hidden bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">มีข้อความใหม่</span>
+                <button onclick="toggleUserChatModal(true)" class="mb-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-2.5 sm:px-3.5 rounded-xl shadow-xs text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0">
+                    💬 สอบถามแอดมิน <span id="user-unread-badge" class="hidden bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">ใหม่</span>
                 </button>
             </div>
 
+            <!-- กล่องสรุปคะแนนและ CO2 -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                 <div class="bg-emerald-50 text-emerald-900 p-4 md:p-6 rounded-2xl shadow-xs border border-emerald-200 text-center">
                     <p class="text-xs md:text-sm text-emerald-700 font-medium uppercase tracking-wider">คะแนนสะสมของคุณ</p>
@@ -108,7 +120,7 @@
                 </div>
             </div>
 
-            <!-- แท็บทำภารกิจ -->
+            <!-- แท็บที่ 1: ภารกิจรักษ์โลก (มีอันดับคะแนน + การ์ดส่งภารกิจ 8 รายการ) -->
             <div id="user-tab-missions" class="space-y-4 md:space-y-6">
                 <!-- ตารางอันดับคะแนน (Leaderboard) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
@@ -131,10 +143,10 @@
 
                 <!-- การ์ดภารกิจ 8 รายการ -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
-                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข : แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานกิจกรรมรักษ์โลก</h3>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ กฎการบันทึก: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs" id="box-mission-1">
                             <div>
                                 <div class="text-3xl text-center my-1">🛍️</div>
@@ -280,10 +292,18 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- ตารางประวัติภารกิจ -->
+            <!-- แท็บที่ 2: ประวัติภารกิจของคุณ (ย้ายมาไว้แท็บตรงกลาง) -->
+            <div id="user-tab-history" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
-                    <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3">📜 ประวัติภารกิจของคุณ</h3>
+                    <div class="mb-3 pb-2 border-b">
+                        <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
+                            📜 ประวัติการส่งภารกิจรักษ์โลกของคุณ
+                        </h3>
+                        <p class="text-xs text-stone-500">ตรวจสอบสถานะการอนุมัติ คะแนน และปริมาณคาร์บอนที่ลดได้จากแต่ละกิจกรรม</p>
+                    </div>
+
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[600px]">
                             <thead>
@@ -308,7 +328,7 @@
                 </div>
             </div>
 
-            <!-- แท็บแลกรางวัล -->
+            <!-- แท็บที่ 3: แลกรางวัล -->
             <div id="user-tab-rewards" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
@@ -716,7 +736,7 @@
             }
         }
 
-        // ฟังก์ชันเข้าสู่ระบบ: รหัสนักศึกษา + รหัสผ่าน
+        // เข้าสู่ระบบ
         function handleLogin() {
             const studentId = document.getElementById('login-studentid').value.trim();
             const password = document.getElementById('login-password').value.trim();
@@ -726,7 +746,6 @@
                 return;
             }
 
-            // ตรวจสอบสิทธิ์แอดมิน
             if ((studentId === "admin" || studentId === "admin@greenpassport.com") && password === "Green2026!Master") {
                 currentUser = { studentId: "admin", name: "ผู้ดูแลระบบ (Admin)", role: 'admin' };
                 localStorage.setItem('green_passport_session', JSON.stringify(currentUser));
@@ -734,7 +753,6 @@
                 return;
             }
 
-            // ค้นหาใน Firebase Users
             database.ref('users').once('value', (snapshot) => {
                 const users = snapshot.val() || {};
                 let foundUser = null;
@@ -756,7 +774,7 @@
             });
         }
 
-        // ฟังก์ชันลงทะเบียน: รหัสนักศึกษา + ชื่อ-นามสกุล + รหัสผ่าน >= 6 ตัว
+        // ลงทะเบียน
         function handleRegister() {
             const studentId = document.getElementById('reg-studentid').value.trim();
             const fullName = document.getElementById('reg-fullname').value.trim();
@@ -856,22 +874,34 @@
             }
         };
 
+        // สลับแท็บของผู้ใช้ (3 แท็บ)
         function switchUserTab(tabName) {
             const missionsTab = document.getElementById('user-tab-missions');
+            const historyTab = document.getElementById('user-tab-history');
             const rewardsTab = document.getElementById('user-tab-rewards');
+            
             const btnMissions = document.getElementById('tab-btn-missions');
+            const btnHistory = document.getElementById('tab-btn-history');
             const btnRewards = document.getElementById('tab-btn-rewards');
+
+            // ซ่อนทุกแท็บก่อน
+            missionsTab.classList.add('hidden');
+            historyTab.classList.add('hidden');
+            rewardsTab.classList.add('hidden');
+
+            btnMissions.className = "py-2.5 px-2.5 sm:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer";
+            btnHistory.className = "py-2.5 px-2.5 sm:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer";
+            btnRewards.className = "py-2.5 px-2.5 sm:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer";
 
             if (tabName === 'missions') {
                 missionsTab.classList.remove('hidden');
-                rewardsTab.classList.add('hidden');
-                btnMissions.className = "py-2.5 px-3 md:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer";
-                btnRewards.className = "py-2.5 px-3 md:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer";
-            } else {
-                missionsTab.classList.add('hidden');
+                btnMissions.className = "py-2.5 px-2.5 sm:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer";
+            } else if (tabName === 'history') {
+                historyTab.classList.remove('hidden');
+                btnHistory.className = "py-2.5 px-2.5 sm:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer";
+            } else if (tabName === 'rewards') {
                 rewardsTab.classList.remove('hidden');
-                btnMissions.className = "py-2.5 px-3 md:px-4 font-semibold text-gray-500 hover:text-emerald-600 cursor-pointer";
-                btnRewards.className = "py-2.5 px-3 md:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer";
+                btnRewards.className = "py-2.5 px-2.5 sm:px-4 font-semibold text-emerald-600 border-b-2 border-emerald-600 cursor-pointer";
             }
         }
 
@@ -884,12 +914,19 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
+        // ปรับแต่งแถบ Navbar สีเขียวให้สวยกระชับบนมือถือ
         function showDashboard() {
             document.getElementById('auth-section').classList.add('hidden');
             const displayName = currentUser.name || currentUser.studentId || currentUser.username || 'ผู้ใช้';
+            
             document.getElementById('nav-auth').innerHTML = `
-                <span class="self-center bg-emerald-700 px-2.5 py-1 rounded-full border border-emerald-500 text-xs md:text-sm">👤 ${displayName}</span>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2.5 rounded-lg transition cursor-pointer text-xs md:text-sm">ออกจากระบบ</button>
+                <div class="flex items-center gap-1.5 max-w-[170px] sm:max-w-xs bg-emerald-700/80 px-2 py-1 rounded-full border border-emerald-400/50">
+                    <span class="text-xs">👤</span>
+                    <span class="truncate text-xs font-medium" title="${displayName}">${displayName}</span>
+                </div>
+                <button onclick="logout()" class="bg-red-500/90 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-lg transition cursor-pointer text-xs shrink-0 shadow-2xs">
+                    ออก
+                </button>
             `;
 
             if (currentUser.role === 'admin') {
@@ -1440,7 +1477,7 @@
                 });
             });
 
-            // ตารางคำขอแลกรางวัล + ประวัติแลกรางวัล
+            // คำขอแลกรางวัล + ประวัติ
             database.ref('reward_claims').on('value', (claimSnapshot) => {
                 const pendingRewardsTbody = document.getElementById('admin-pending-rewards-table');
                 const historyRewardsTbody = document.getElementById('admin-reward-history-table');
