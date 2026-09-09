@@ -392,7 +392,7 @@
             </div>
         </section>
 
-        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) Card Hub -->
+        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) -->
         <section id="admin-dashboard" class="hidden space-y-4 md:space-y-6">
             
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
@@ -659,7 +659,7 @@
                     <div>
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                         <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลภาพรวมองค์รวม</h3>
-                        <p class="text-xs text-stone-500">เลือกช่วงเวลารายงานเพื่อสร้างเอกสารสรุปสถิติทั่วทั้งระบบ</p>
+                        <p class="text-xs text-stone-500">เลือกช่วงเวลารายงานเพื่อสร้างเอกสรุปสถิติทั่วทั้งระบบตามรูปแบบที่คุณต้องการ</p>
                     </div>
                 </div>
 
@@ -675,9 +675,9 @@
                     </div>
 
                     <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
-                        <p class="font-bold">ℹ️ รูปแบบรายงานองค์รวม:</p>
-                        <p>• สรุปยอดผู้เข้าร่วมกิจกรรม, จำนวนภารกิจที่อนุมัติ, คะแนนรวม และ CO₂ รวม</p>
-                        <p>• ตารางแจกแจงแยกตามประเภทภารกิจ (ชื่อภารกิจ, จำนวนครั้ง, คะแนน, CO₂)</p>
+                        <p class="font-bold">ℹ️ รูปแบบรายงานองค์รวมที่จะพิมพ์:</p>
+                        <p>• สรุปยอดผู้เข้าร่วม, ภารกิจที่อนุมัติ, คะแนนรวม และ CO₂ รวม</p>
+                        <p>• ตารางแจกแจงแยกตามประเภทภารกิจ (ชื่อภารกิจ, จำนวนครั้ง, คะแนนรวม, CO₂ รวม)</p>
                     </div>
 
                     <button onclick="generateSystemSummaryPDF()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition cursor-pointer shadow-sm flex items-center justify-center gap-2">
@@ -770,6 +770,7 @@
             }
         }
 
+        // แก้ไขฟังก์ชันล็อกอินให้ค้นหา key รหัสนักศึกษาใน Firebase ได้อย่างถูกต้อง 100%
         function handleLogin() {
             const studentId = document.getElementById('login-studentid').value.trim();
             const password = document.getElementById('login-password').value.trim();
@@ -791,7 +792,7 @@
                 let foundUser = null;
 
                 Object.entries(users).forEach(([key, u]) => {
-                    const uStudentId = u.studentId || u.username || key;
+                    const uStudentId = u.studentId || key;
                     if (uStudentId === studentId && u.password === password) {
                         foundUser = { ...u, studentId: uStudentId };
                     }
@@ -890,7 +891,7 @@
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 if (currentUser.role === 'user') {
-                    const safeKey = (currentUser.studentId || currentUser.email || '').replace(/[.#$[\]]/g, '_');
+                    const safeKey = (currentUser.studentId || '').replace(/[.#$[\]]/g, '_');
                     database.ref('users/' + safeKey).on('value', (snapshot) => {
                         if(snapshot.exists()) {
                             currentUser = { ...currentUser, ...snapshot.val() };
@@ -979,7 +980,7 @@
             localStorage.removeItem('green_passport_session');
             document.getElementById('user-dashboard').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.add('hidden');
-            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('auth-section').classList.remove('hidden');
             document.getElementById('nav-auth').innerHTML = '';
             switchAuthTab('login');
         }
@@ -1061,13 +1062,13 @@
             if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
 
             const todayStr = getTodayDateString();
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             
             database.ref('missions').once('value', (snapshot) => {
                 let alreadyDoneToday = false;
                 snapshot.forEach(child => {
                     const m = child.val();
-                    if ((m.userIdentifier === userIdentifier || m.userEmail === userIdentifier) && m.missionName === missionName && m.dateStr === todayStr) {
+                    if (m.userIdentifier === userIdentifier && m.missionName === missionName && m.dateStr === todayStr) {
                         alreadyDoneToday = true;
                     }
                 });
@@ -1123,7 +1124,7 @@
         }
 
         function fetchUserMissions() {
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             database.ref('missions').on('value', (snapshot) => {
                 const tbody = document.getElementById('user-history-table');
                 tbody.innerHTML = '';
@@ -1137,7 +1138,7 @@
 
                 snapshot.forEach(child => {
                     const m = child.val();
-                    if(m.userIdentifier === userIdentifier || m.userEmail === userIdentifier) {
+                    if(m.userIdentifier === userIdentifier) {
                         list.push(m);
                         hasData = true;
 
@@ -1213,7 +1214,7 @@
         }
 
         function fetchUserRewardHistory() {
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             database.ref('reward_claims').on('value', (snapshot) => {
                 const tbody = document.getElementById('user-reward-history-table');
                 tbody.innerHTML = '';
@@ -1222,7 +1223,7 @@
 
                 snapshot.forEach(child => {
                     const item = child.val();
-                    if(item.userIdentifier === userIdentifier || item.userEmail === userIdentifier) {
+                    if(item.userIdentifier === userIdentifier) {
                         list.push(item);
                         hasData = true;
                     }
@@ -1253,7 +1254,7 @@
         }
 
         function claimReward(cost, rewardName) {
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             if ((currentUser.points || 0) < cost) { 
                 alert(`คะแนนสะสมของคุณยังไม่พอ (ต้องใช้ ${cost} คะแนน)`); 
@@ -1302,7 +1303,7 @@
 
         function markAdminMessagesAsRead() {
             if(!currentUser || currentUser.role !== 'user') return;
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             database.ref('chats/' + safeKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -1317,7 +1318,7 @@
         }
 
         function listenToUserChat() {
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             database.ref('chats/' + safeKey).on('value', (snapshot) => {
                 const chatBox = document.getElementById('user-chat-box');
@@ -1370,7 +1371,7 @@
         }
 
         function sendUserChatMessage(isImage = false) {
-            const userIdentifier = currentUser.studentId || currentUser.email;
+            const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
 
             if (isImage) {
@@ -1418,7 +1419,6 @@
 
         // --- ระบบแอดมิน ---
         let allMissionsCache = [];
-        let allUsersCache = {};
         function listenToAdminData() {
             const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase();
             const searchPendingRewardTerm = (document.getElementById('search-pending-rewards')?.value || '').toLowerCase();
@@ -1523,7 +1523,7 @@
 
                 claimSnapshot.forEach(child => {
                     const claim = child.val();
-                    const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || claim.userEmail || ''}`.toLowerCase();
+                    const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || ''}`.toLowerCase();
 
                     if(claim.status === 'รอแอดมินอนุมัติ') {
                         pendingRewardsCount++;
@@ -1545,7 +1545,7 @@
                     pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่มีคำขอแลกของรางวัลที่ค้างตรวจสอบ 🎉</td></tr>`;
                 } else {
                     pendingClaims.reverse().forEach(claim => {
-                        const uid = claim.userIdentifier || claim.userEmail;
+                        const uid = claim.userIdentifier;
                         pendingRewardsTbody.innerHTML += `
                             <tr class="border-b border-stone-200 hover:bg-purple-50/40">
                                 <td class="p-3 font-semibold text-stone-800">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
@@ -1569,7 +1569,7 @@
                     historyClaims.reverse().forEach(claim => {
                         let badgeStyle = claim.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100';
                         let reasonText = claim.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${claim.reason}</span>` : '';
-                        const uid = claim.userIdentifier || claim.userEmail;
+                        const uid = claim.userIdentifier;
 
                         historyRewardsTbody.innerHTML += `
                             <tr class="border-b border-stone-100 hover:bg-stone-50 text-xs md:text-sm">
@@ -1596,7 +1596,7 @@
                     const m = child.val();
                     allMissionsCache.push(m);
 
-                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || m.userEmail || ''}`.toLowerCase();
+                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''}`.toLowerCase();
 
                     if(m.status === 'รออนุมัติ') {
                         pendingMissionsCount++;
@@ -1614,7 +1614,7 @@
                     pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
                 } else {
                     pendingList.reverse().forEach(m => {
-                        const uid = m.userIdentifier || m.userEmail;
+                        const uid = m.userIdentifier;
                         pendingTbody.innerHTML += `
                             <tr class="border-b border-stone-200 hover:bg-stone-50">
                                 <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
@@ -1644,7 +1644,7 @@
             database.ref('missions').once('value', (mSnapshot) => {
                 mSnapshot.forEach(child => {
                     const m = child.val();
-                    if (m.userIdentifier === userKey || m.userEmail === userKey) {
+                    if (m.userIdentifier === userKey) {
                         updates[`missions/${child.key}`] = null;
                     }
                 });
@@ -1652,7 +1652,7 @@
                 database.ref('reward_claims').once('value', (rSnapshot) => {
                     rSnapshot.forEach(child => {
                         const r = child.val();
-                        if (r.userIdentifier === userKey || r.userEmail === userKey) {
+                        if (r.userIdentifier === userKey) {
                             updates[`reward_claims/${child.key}`] = null;
                         }
                     });
@@ -1682,7 +1682,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -1760,7 +1760,7 @@
                             timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                         }).then(() => { fileInput.value = ''; });
                     };
-                    img.src = event.target.result;
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -1828,7 +1828,7 @@
             const footer = document.getElementById('admin-user-detail-footer');
             tbody.innerHTML = '';
 
-            const userMissions = allMissionsCache.filter(m => (m.userIdentifier === userKey || m.userEmail === userKey));
+            const userMissions = allMissionsCache.filter(m => m.userIdentifier === userKey);
 
             if (userMissions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ไม่พบประวัติภารกิจของสมาชิกท่านนี้</td></tr>`;
@@ -1908,13 +1908,13 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวมทั้งระบบ (ตามรูปแบบตัวอย่างภาพที่ส่งมา) =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวมทั้งระบบ (ตรงตามรูปแบบตัวอย่างภาพ) =================
         function generateSystemSummaryPDF() {
             const period = document.getElementById('admin-system-pdf-period').value;
             const now = new Date();
             const todayStr = getTodayDateString();
 
-            // 1. กรองภารกิจที่ผ่านการอนุมัติทั้งหมดในระบบตามช่วงเวลา
+            // กรองเฉพาะภารกิจที่อนุมัติแล้วตามช่วงเวลา
             const approvedMissions = allMissionsCache.filter(m => {
                 if (m.status !== 'อนุมัติแล้ว') return false;
                 const mDate = new Date(m.dateStr || m.timestamp);
@@ -1936,9 +1936,9 @@
             if (period === 'weekly') periodTitle = "รายสัปดาห์ (7 วันล่าสุด)";
             if (period === 'monthly') periodTitle = `รายเดือน (ประจำเดือน ${now.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })})`;
 
-            // 2. คำนวณผู้เข้าร่วมที่ไม่ซ้ำกัน
+            // คำนวณผู้เข้าร่วมที่ไม่ซ้ำกัน
             const activeUsers = new Set();
-            approvedMissions.forEach(m => activeUsers.add(m.userIdentifier || m.userEmail));
+            approvedMissions.forEach(m => activeUsers.add(m.userIdentifier));
 
             let totalPoints = 0;
             let totalCo2 = 0;
@@ -1976,7 +1976,7 @@
                 });
             }
 
-            // เปิดหน้าต่างพิมพ์เอกสารสำหรับบันทึก PDF
+            // สร้างหน้าต่างพิมพ์เอกสารสำหรับบันทึก PDF
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <html>
