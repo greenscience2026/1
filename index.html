@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <!-- ไลบรารีแปลงเอกสารเป็น PDF สำหรับแอดมิน -->
+    <!-- html2pdf Library สำหรับสร้าง PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -87,7 +87,7 @@
             </div>
         </section>
 
-        <!-- 2. Dashboard ผู้ใช้งาน (ไม่มีปุ่ม PDF สำหรับผู้ใช้) -->
+        <!-- 2. Dashboard ผู้ใช้งาน -->
         <section id="user-dashboard" class="hidden space-y-4 sm:space-y-6">
             
             <div class="flex flex-wrap items-center justify-between border-b border-stone-200 bg-white rounded-t-2xl px-2 sm:px-4 pt-2 gap-2 text-xs sm:text-sm">
@@ -401,7 +401,7 @@
             </div>
         </section>
 
-        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) พร้อมระบบออก PDF สรุปผล -->
+        <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) Card Hub (เพิ่มการ์ดออกรายงาน PDF เป็นแท็บที่ 5) -->
         <section id="admin-dashboard" class="hidden space-y-4 md:space-y-6">
             
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
@@ -445,8 +445,8 @@
                 </div>
             </div>
 
-            <!-- เมนูการจัดการ 4 กรอบหลัก -->
-            <div id="admin-menu-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- เมนูการจัดการ 5 กรอบหลัก (เพิ่มการ์ดออกรายงาน PDF เป็นกรอบที่ต่อจากระบบแชท) -->
+            <div id="admin-menu-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 
                 <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
                     <div>
@@ -476,7 +476,7 @@
                     <div>
                         <span class="text-3xl">👥</span>
                         <h4 class="font-bold text-base text-stone-800 mt-3">จัดการสมาชิก & ประวัติรายคน</h4>
-                        <p class="text-xs text-stone-500 mt-1">ดูรายละเอียด ออกรายงาน PDF สรุปผล หรือลบบัญชีผู้ใช้ถาวร</p>
+                        <p class="text-xs text-stone-500 mt-1">ดูรายละเอียดประวัติภารกิจของสมาชิกรายคน หรือลบบัญชีผู้ใช้ถาวร</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-stone-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -491,6 +491,16 @@
                         <p class="text-xs text-stone-500 mt-1">สนทนากับสมาชิกแบบเรียลไทม์ ส่งรูปภาพ พร้อมดูจำนวนข้อความที่สมาชิกทักเข้ามา</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-blue-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
+                </div>
+
+                <!-- การ์ดที่ 5: ระบบออกรายงาน PDF สรุปผลรายบุคคล (วางต่อจากระบบแชทตามที่คุณสั่ง) -->
+                <div onclick="openAdminSection('section-pdf-report')" class="bg-white p-5 rounded-2xl border-2 border-emerald-200 hover:border-emerald-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between sm:col-span-2 md:col-span-1">
+                    <div>
+                        <span class="text-3xl">📄</span>
+                        <h4 class="font-bold text-base text-stone-800 mt-3">ออกรายงาน PDF สรุปผล</h4>
+                        <p class="text-xs text-stone-500 mt-1">เลือกสมาชิกและกำหนดช่วงเวลา (รายวัน/สัปดาห์/เดือน) เพื่อดาวน์โหลดเอกสาร PDF สรุปผลงาน</p>
+                    </div>
+                    <div class="mt-4 text-xs font-semibold text-emerald-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
             </div>
@@ -572,12 +582,12 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 3: จัดการสมาชิก & ประวัติรายบุคคล + ระบบออก PDF (สำหรับแอดมินเท่านั้น) -->
+            <!-- ส่วนที่ 3: จัดการสมาชิก & ประวัติรายบุคคล -->
             <div id="section-user-management" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-stone-500">
                 <div class="mb-3 pb-3 border-b">
                     <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                     <h3 class="text-lg md:text-xl font-bold text-stone-800">👥 จัดการสมาชิกและประวัติภารกิจรายบุคคล</h3>
-                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ ดาวน์โหลดรายงานสรุป PDF หรือลบบัญชีผู้ใช้ถาวร</p>
+                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ หรือกดปุ่มลบเพื่อลบบัญชีออกจากระบบถาวร</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -590,29 +600,12 @@
                         <div>
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 mb-3 gap-2">
                                 <h4 id="admin-selected-user-title" class="font-bold text-emerald-800 text-xs md:text-sm">โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ</h4>
-                                <div id="selected-user-actions" class="hidden flex flex-wrap gap-2">
+                                <div id="selected-user-actions" class="hidden flex gap-2">
                                     <button id="btn-delete-viewing-user" onclick="" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-300 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer">
                                         🗑️ ลบบัญชีคนนี้
                                     </button>
                                 </div>
                             </div>
-
-                            <!-- แถบออกรายงานสรุป PDF สำหรับแอดมิน (รายวัน / รายสัปดาห์ / รายเดือน / ทั้งหมด) -->
-                            <div id="admin-pdf-control-box" class="hidden bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-200 mb-3 flex flex-wrap items-center justify-between gap-2">
-                                <div class="flex items-center gap-1.5 text-xs font-medium text-emerald-900">
-                                    <span>ช่วงเวลารายงาน:</span>
-                                    <select id="admin-pdf-period" class="p-1.5 bg-white border border-emerald-300 rounded-lg text-xs font-semibold text-stone-700">
-                                        <option value="all">📋 ทั้งหมด (All Time)</option>
-                                        <option value="daily">📅 รายวัน (วันนี้)</option>
-                                        <option value="weekly">📆 รายสัปดาห์ (7 วันล่าสุด)</option>
-                                        <option value="monthly">🗓️ รายเดือน (เดือนนี้)</option>
-                                    </select>
-                                </div>
-                                <button onclick="generateAdminUserPDF()" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer shadow-xs flex items-center gap-1">
-                                    📄 ดาวน์โหลด PDF สรุปของคนนี้
-                                </button>
-                            </div>
-
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
                                     <thead>
@@ -669,6 +662,57 @@
                 </div>
             </div>
 
+            <!-- ส่วนที่ 5: ออกรายงาน PDF สรุปผล (แท็บใหม่ที่เพิ่มเข้ามาต่อจากระบบแชทตามที่คุณสั่ง) -->
+            <div id="section-pdf-report" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b">
+                    <div>
+                        <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
+                        <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลรายบุคคล</h3>
+                        <p class="text-xs text-stone-500">เลือกสมาชิกและเลือกช่วงเวลาเพื่อดาวน์โหลดรายงานเอกสาร PDF ทันที</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <div class="border border-stone-200 rounded-xl p-3 bg-stone-50 max-h-96 overflow-y-auto">
+                        <label class="block text-xs font-bold text-stone-700 mb-1">1. เลือกสมาชิกที่ต้องการออกรายงาน:</label>
+                        <input type="text" id="search-pdf-user-list" oninput="renderPdfUserList()" placeholder="🔍 ค้นหารหัสนักศึกษา / ชื่อ..." class="p-2 mb-2 border border-stone-300 rounded-xl text-xs w-full bg-white">
+                        <div id="admin-pdf-user-list" class="space-y-1.5"></div>
+                    </div>
+
+                    <div class="md:col-span-2 border border-stone-200 rounded-xl p-4 bg-stone-50 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div>
+                                <span class="text-xs font-semibold text-stone-500 uppercase">สมาชิกที่เลือก:</span>
+                                <h4 id="pdf-selected-user-label" class="text-base font-bold text-emerald-800 mt-0.5">⚠️ ยังไม่ได้เลือกสมาชิก</h4>
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl border border-stone-200 space-y-3">
+                                <label class="block text-xs font-bold text-stone-700">2. เลือกระยะเวลารายงาน:</label>
+                                <select id="admin-pdf-period" class="w-full p-2.5 bg-stone-50 border border-stone-300 rounded-xl text-xs sm:text-sm font-semibold text-stone-700">
+                                    <option value="all">📋 ทั้งหมด (All Time)</option>
+                                    <option value="daily">📅 รายวัน (เฉพาะวันนี้)</option>
+                                    <option value="weekly">📆 รายสัปดาห์ (7 วันล่าสุด)</option>
+                                    <option value="monthly">🗓️ รายเดือน (เดือนนี้)</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
+                                <p class="font-bold">ℹ️ ข้อมูลที่จะอยู่ในไฟล์ PDF:</p>
+                                <p>• ข้อมูลส่วนตัว (ชื่อ และรหัสนักศึกษา)</p>
+                                <p>• ตารางภารกิจที่ผ่านการอนุมัติในช่วงเวลาที่เลือก</p>
+                                <p>• สรุปผลรวมคะแนนและปริมาณ CO₂ ที่ลดได้</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <button onclick="generateAdminUserPDF()" id="btn-download-pdf" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition cursor-pointer shadow-sm flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
+                                📥 ดาวน์โหลดรายงานสรุป PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </main>
 
@@ -719,7 +763,10 @@
         let selectedAdminChatId = null;
         let selectedAdminViewUserId = null;
         let selectedAdminViewUserData = null;
+        let selectedPdfUserKey = null;
+        let selectedPdfUserData = null;
         let isUserChatOpen = false;
+        let allUsersCache = {};
 
         function getMissionMeta(name) {
             if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.07, id: 'box-mission-1' };
@@ -832,7 +879,12 @@
             document.getElementById('admin-menu-cards').classList.add('hidden');
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById(sectionId);
-            if (target) target.classList.remove('hidden');
+            if (target) {
+                target.classList.remove('hidden');
+                if (sectionId === 'section-pdf-report') {
+                    renderPdfUserList();
+                }
+            }
         }
 
         function closeAdminSection() {
@@ -973,6 +1025,7 @@
         function listenToLeaderboard() {
             database.ref('users').on('value', (snapshot) => {
                 const usersData = snapshot.val() || {};
+                allUsersCache = usersData;
                 const list = [];
                 Object.entries(usersData).forEach(([key, u]) => {
                     list.push({
@@ -1153,7 +1206,7 @@
                 }
 
                 if(!hasData) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่มีการทำภารกิจในระบบ</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้ส่งภารกิจใดๆ ในระบบ</td></tr>`;
                     document.getElementById('user-total-approved-points').innerText = `0 คะแนน`;
                     document.getElementById('user-total-approved-co2').innerText = `0.00 kgCO₂e`;
                     return;
@@ -1377,7 +1430,7 @@
                             timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                         }).then(() => { fileInput.value = ''; });
                     };
-                    img.src = e.target.result;
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
@@ -1641,11 +1694,9 @@
                         alert(`✅ ลบบัญชีผู้ใช้ "${userKey}" สำเร็จแล้ว!`);
                         document.getElementById('admin-selected-user-title').innerText = 'โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ';
                         document.getElementById('selected-user-actions').classList.add('hidden');
-                        document.getElementById('admin-pdf-control-box').classList.add('hidden');
                         document.getElementById('admin-user-detail-table').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>`;
                         document.getElementById('admin-user-detail-footer').classList.add('hidden');
                         selectedAdminViewUserId = null;
-                        selectedAdminViewUserData = null;
 
                         if (selectedAdminChatId === userKey) {
                             closeAdminChat();
@@ -1806,8 +1857,6 @@
             const btnDelete = document.getElementById('btn-delete-viewing-user');
             btnDelete.setAttribute('onclick', `deleteUserPermanently('${userKey}')`);
 
-            document.getElementById('admin-pdf-control-box').classList.remove('hidden');
-
             const tbody = document.getElementById('admin-user-detail-table');
             const footer = document.getElementById('admin-user-detail-footer');
             tbody.innerHTML = '';
@@ -1892,23 +1941,68 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้างไฟล์ PDF สำหรับแอดมินเท่านั้น =================
+        // ================= ระบบเลือกสมาชิกสำหรับออกรายงาน PDF =================
+        function renderPdfUserList() {
+            const searchTerm = (document.getElementById('search-pdf-user-list')?.value || '').toLowerCase();
+            const container = document.getElementById('admin-pdf-user-list');
+            if (!container) return;
+
+            container.innerHTML = '';
+            let count = 0;
+
+            Object.entries(allUsersCache).forEach(([key, u]) => {
+                const studentId = u.studentId || key;
+                const name = u.name || u.username || studentId;
+                const displayName = `${name} (${studentId})`;
+
+                if (searchTerm && !name.toLowerCase().includes(searchTerm) && !studentId.toLowerCase().includes(searchTerm)) {
+                    return;
+                }
+
+                count++;
+                let isSelected = selectedPdfUserKey === key;
+                let activeStyle = isSelected ? 'bg-emerald-100 border-emerald-500 font-bold' : 'bg-white border-stone-200 hover:bg-stone-50';
+
+                container.innerHTML += `
+                    <button onclick="selectPdfUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer text-stone-700 flex justify-between items-center">
+                        <span class="truncate">👤 ${displayName}</span>
+                        <span class="text-[10px] text-emerald-700 font-bold">${u.points || 0} แต้ม</span>
+                    </button>
+                `;
+            });
+
+            if (count === 0) {
+                container.innerHTML = `<p class="text-center text-xs text-gray-400 py-4">ไม่พบรายชื่อสมาชิก</p>`;
+            }
+        }
+
+        function selectPdfUser(userKey) {
+            selectedPdfUserKey = userKey;
+            selectedPdfUserData = allUsersCache[userKey] || {};
+            const name = selectedPdfUserData.name || selectedPdfUserData.username || userKey;
+            const studentId = selectedPdfUserData.studentId || userKey;
+
+            document.getElementById('pdf-selected-user-label').innerText = `👤 ${name} (รหัส: ${studentId})`;
+            document.getElementById('btn-download-pdf').disabled = false;
+            renderPdfUserList();
+        }
+
+        // ================= ฟังก์ชันสร้างไฟล์ PDF (ทำงานจริงและดาวน์โหลดได้เสถียร) =================
         function generateAdminUserPDF() {
-            if (!selectedAdminViewUserId) {
-                alert("โปรดเลือกสมาชิกก่อนดาวน์โหลดรายงาน");
+            if (!selectedPdfUserKey) {
+                alert("โปรดเลือกสมาชิกจากเมนูด้านซ้ายก่อนดาวน์โหลดรายงาน");
                 return;
             }
 
             const period = document.getElementById('admin-pdf-period').value;
-            const userKey = selectedAdminViewUserId;
-            const u = selectedAdminViewUserData || {};
+            const userKey = selectedPdfUserKey;
+            const u = selectedPdfUserData || {};
             const studentName = u.name || u.username || userKey;
             const studentId = u.studentId || userKey;
 
             const now = new Date();
             const todayStr = getTodayDateString();
 
-            // กรองภารกิจเฉพาะที่อนุมัติแล้ว และตรงกับช่วงเวลาที่เลือก
             const userMissions = allMissionsCache.filter(m => {
                 const isThisUser = (m.userIdentifier === userKey || m.userEmail === userKey);
                 if (!isThisUser || m.status !== 'อนุมัติแล้ว') return false;
@@ -1924,7 +2018,7 @@
                 } else if (period === 'monthly') {
                     return mDate.getMonth() === now.getMonth() && mDate.getFullYear() === now.getFullYear();
                 }
-                return true; // all
+                return true;
             });
 
             let periodLabel = "ทั้งหมด (All Time)";
@@ -1937,7 +2031,7 @@
             let rowsHtml = '';
 
             if (userMissions.length === 0) {
-                rowsHtml = `<tr><td colspan="4" style="padding: 12px; text-align: center; color: #999;">ไม่พบรายการภารกิจที่ผ่านการอนุมัติในช่วงเวลานี้</td></tr>`;
+                rowsHtml = `<tr><td colspan="4" style="padding: 16px; text-align: center; color: #6b7280; font-size: 13px;">ไม่พบรายการภารกิจที่ผ่านการอนุมัติในช่วงเวลานี้</td></tr>`;
             } else {
                 userMissions.forEach((m, idx) => {
                     const meta = getMissionMeta(m.missionName);
@@ -1946,102 +2040,100 @@
 
                     rowsHtml += `
                         <tr style="border-bottom: 1px solid #e5e7eb; font-size: 12px;">
-                            <td style="padding: 8px 10px; text-align: center;">${idx + 1}</td>
-                            <td style="padding: 8px 10px;">${m.missionName} <div style="font-size: 10px; color: #6b7280;">${m.timestamp}</div></td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: 600;">+${meta.co2.toFixed(2)} kgCO₂e</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: 600;">+${meta.points} คะแนน</td>
+                            <td style="padding: 10px; text-align: center;">${idx + 1}</td>
+                            <td style="padding: 10px;">${m.missionName} <div style="font-size: 10px; color: #6b7280;">บันทึกเมื่อ: ${m.timestamp}</div></td>
+                            <td style="padding: 10px; text-align: right; color: #047857; font-weight: bold;">+${meta.co2.toFixed(2)} kgCO₂e</td>
+                            <td style="padding: 10px; text-align: right; color: #059669; font-weight: bold;">+${meta.points} คะแนน</td>
                         </tr>
                     `;
                 });
             }
 
-            // สร้าง Layout เอกสาร A4
             const container = document.createElement('div');
-            container.style.padding = '24px';
+            container.style.padding = '30px';
             container.style.fontFamily = "'Kanit', sans-serif";
             container.style.color = '#1f2937';
             container.style.backgroundColor = '#ffffff';
+            container.style.width = '700px';
 
             container.innerHTML = `
                 <div style="border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
                     <div>
-                        <h1 style="font-size: 22px; color: #065f46; margin: 0; font-weight: bold;">🌱 Green Passport - ใบรายงานผลกิจกรรมรักษ์โลก</h1>
-                        <p style="font-size: 12px; color: #4b5563; margin-top: 4px;">สรุปปริมาณการลดก๊าซเรือนกระจกและการสะสมแต้มพฤติกรรมสีเขียว</p>
+                        <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">🌱 Green Passport - ใบรายงานผลกิจกรรมรักษ์โลก</h1>
+                        <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการลดการปล่อยก๊าซเรือนกระจกและการสะสมแต้ม</p>
                     </div>
-                    <div style="text-align: right; font-size: 11px; color: #6b7280;">
+                    <div style="text-align: right; font-size: 10px; color: #6b7280;">
                         <div>วันที่ออกเอกสาร: ${now.toLocaleDateString('th-TH')}</div>
-                        <div>เวลา: ${now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</div>
                     </div>
                 </div>
 
-                <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; font-size: 13px;">
+                <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; justify-content: space-between; font-size: 12px;">
                     <div>
                         <div><strong>ชื่อ-นามสกุล:</strong> ${studentName}</div>
                         <div style="margin-top: 4px;"><strong>รหัสนักศึกษา:</strong> ${studentId}</div>
                     </div>
                     <div style="text-align: right;">
-                        <div><strong>ประเภทรายงาน:</strong> <span style="color: #059669; font-weight: bold;">${periodLabel}</span></div>
-                        <div style="margin-top: 4px; color: #6b7280;">ออกโดย: ผู้ดูแลระบบ Green Passport</div>
+                        <div><strong>ช่วงเวลารายงาน:</strong> <span style="color: #059669; font-weight: bold;">${periodLabel}</span></div>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 12px; margin-bottom: 24px;">
-                    <div style="flex: 1; padding: 12px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; text-align: center;">
-                        <span style="font-size: 11px; color: #047857; font-weight: 600;">คะแนนที่ได้รับในรอบนี้</span>
-                        <div style="font-size: 22px; font-weight: bold; color: #065f46; margin-top: 4px;">${totalPoints} <span style="font-size: 12px; font-weight: normal;">คะแนน</span></div>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <div style="flex: 1; padding: 10px; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 10px; color: #047857; font-weight: bold;">คะแนนรวมในรอบนี้</span>
+                        <div style="font-size: 18px; font-weight: bold; color: #065f46; margin-top: 2px;">${totalPoints} คะแนน</div>
                     </div>
-                    <div style="flex: 1; padding: 12px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; text-align: center;">
-                        <span style="font-size: 11px; color: #0f766e; font-weight: 600;">ลด CO₂ ในรอบนี้</span>
-                        <div style="font-size: 22px; font-weight: bold; color: #115e59; margin-top: 4px;">${totalCo2.toFixed(2)} <span style="font-size: 12px; font-weight: normal;">kgCO₂e</span></div>
+                    <div style="flex: 1; padding: 10px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 10px; color: #0f766e; font-weight: bold;">ลด CO₂ ในรอบนี้</span>
+                        <div style="font-size: 18px; font-weight: bold; color: #115e59; margin-top: 2px;">${totalCo2.toFixed(2)} kgCO₂e</div>
                     </div>
-                    <div style="flex: 1; padding: 12px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; text-align: center;">
-                        <span style="font-size: 11px; color: #1d4ed8; font-weight: 600;">ภารกิจที่สำเร็จ</span>
-                        <div style="font-size: 22px; font-weight: bold; color: #1e40af; margin-top: 4px;">${userMissions.length} <span style="font-size: 12px; font-weight: normal;">รายการ</span></div>
+                    <div style="flex: 1; padding: 10px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 10px; color: #1d4ed8; font-weight: bold;">ภารกิจที่สำเร็จ</span>
+                        <div style="font-size: 18px; font-weight: bold; color: #1e40af; margin-top: 2px;">${userMissions.length} รายการ</div>
                     </div>
                 </div>
 
-                <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 8px; color: #374151;">📋 รายละเอียดภารกิจที่ผ่านการอนุมัติ</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                <h3 style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #374151;">📋 รายการภารกิจที่ผ่านการอนุมัติ</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                     <thead>
-                        <tr style="background: #f3f4f6; color: #374151; font-size: 12px; border-bottom: 2px solid #e5e7eb;">
-                            <th style="padding: 8px 10px; width: 40px; text-align: center;">ลำดับ</th>
-                            <th style="padding: 8px 10px; text-align: left;">รายการภารกิจ</th>
-                            <th style="padding: 8px 10px; text-align: right; width: 120px;">ลด CO₂</th>
-                            <th style="padding: 8px 10px; text-align: right; width: 100px;">คะแนน</th>
+                        <tr style="background: #f3f4f6; color: #374151; font-size: 11px; border-bottom: 2px solid #e5e7eb;">
+                            <th style="padding: 8px; width: 35px; text-align: center;">ลำดับ</th>
+                            <th style="padding: 8px; text-align: left;">รายการภารกิจ</th>
+                            <th style="padding: 8px; text-align: right; width: 110px;">ลด CO₂</th>
+                            <th style="padding: 8px; text-align: right; width: 90px;">คะแนน</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${rowsHtml}
                     </tbody>
                     <tfoot>
-                        <tr style="background: #ecfdf5; font-weight: bold; font-size: 12px;">
-                            <td colspan="2" style="padding: 8px 10px; text-align: right; color: #374151;">รวมยอดสุทธิ (${periodLabel}):</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kgCO₂e</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
+                        <tr style="background: #ecfdf5; font-weight: bold; font-size: 11px;">
+                            <td colspan="2" style="padding: 8px; text-align: right; color: #374151;">รวมยอดสุทธิ (${periodLabel}):</td>
+                            <td style="padding: 8px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kgCO₂e</td>
+                            <td style="padding: 8px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
                         </tr>
                     </tfoot>
                 </table>
 
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding-top: 15px; border-top: 1px dashed #d1d5db; font-size: 11px; color: #6b7280;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 10px; color: #6b7280;">
                     <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project</div>
                     <div style="text-align: center;">
-                        <div style="border-bottom: 1px solid #9ca3af; width: 150px; margin-bottom: 4px;"></div>
+                        <div style="border-bottom: 1px solid #9ca3af; width: 130px; margin-bottom: 3px;"></div>
                         <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
                     </div>
                 </div>
             `;
 
-            // กำหนดการสร้าง PDF
             const opt = {
-                margin: 8,
-                filename: `GreenPassport_Report_${studentId}_${period}.pdf`,
+                margin: 5,
+                filename: `GreenPassport_${studentId}_${period}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
+                html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            // สร้างและดาวน์โหลด
-            html2pdf().set(opt).from(container).save();
+            html2pdf().set(opt).from(container).save().then(() => {
+                alert("📥 ดาวน์โหลดรายงานสรุป PDF สำเร็จเรียบร้อยแล้ว!");
+            });
         }
     </script>
 </body>
