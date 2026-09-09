@@ -18,14 +18,14 @@
 </head>
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
 
-    <!-- Navbar แถบสีเขียวด้านบน (ปรับ Responsive ให้รองรับมือถือสวยงาม) -->
-    <nav class="bg-emerald-600 text-white px-3 py-2.5 sm:px-4 sm:py-3 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
+    <!-- Navbar แถบสีเขียวด้านบน (ชื่อผู้ใช้ + ปุ่มออกจากระบบอยู่ด้านล่างชื่อ) -->
+    <nav class="bg-emerald-600 text-white px-3 py-2 sm:px-4 sm:py-2.5 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 shrink-0">
             <span class="text-xl sm:text-2xl">🌱</span>
             <span class="text-base sm:text-lg font-bold tracking-tight font-serif whitespace-nowrap">Green Passport</span>
         </div>
         
-        <div id="nav-auth" class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm shrink-0"></div>
+        <div id="nav-auth" class="flex flex-col items-end gap-1 text-xs shrink-0"></div>
     </nav>
 
     <main class="max-w-5xl mx-auto p-3 sm:p-4 mt-2 sm:mt-4">
@@ -46,7 +46,7 @@
                 <div id="form-login" class="space-y-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
                     </div>
 
                     <div>
@@ -141,10 +141,10 @@
                     </div>
                 </div>
 
-                <!-- การ์ดภารกิจ 8 รายการ -->
+                <!-- การ์ดภารกิจ 8 รายการ (ปรับเป็น ส่งหลักฐานภารกิจรักษ์โลก และ เงื่อนไข) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
-                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานกิจกรรมรักษ์โลก</h3>
-                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ กฎการบันทึก: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs" id="box-mission-1">
@@ -294,7 +294,7 @@
                 </div>
             </div>
 
-            <!-- แท็บที่ 2: ประวัติภารกิจของคุณ (ย้ายมาไว้แท็บตรงกลาง) -->
+            <!-- แท็บที่ 2: ประวัติภารกิจของคุณ -->
             <div id="user-tab-history" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-3 pb-2 border-b">
@@ -884,7 +884,6 @@
             const btnHistory = document.getElementById('tab-btn-history');
             const btnRewards = document.getElementById('tab-btn-rewards');
 
-            // ซ่อนทุกแท็บก่อน
             missionsTab.classList.add('hidden');
             historyTab.classList.add('hidden');
             rewardsTab.classList.add('hidden');
@@ -914,18 +913,18 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
-        // ปรับแต่งแถบ Navbar สีเขียวให้สวยกระชับบนมือถือ
+        // ปรับแต่งแถบ Navbar สีเขียว: ชื่อผู้ใช้ และปุ่ม "ออกจากระบบ" อยู่ใต้ชื่อ
         function showDashboard() {
             document.getElementById('auth-section').classList.add('hidden');
             const displayName = currentUser.name || currentUser.studentId || currentUser.username || 'ผู้ใช้';
             
             document.getElementById('nav-auth').innerHTML = `
-                <div class="flex items-center gap-1.5 max-w-[170px] sm:max-w-xs bg-emerald-700/80 px-2 py-1 rounded-full border border-emerald-400/50">
-                    <span class="text-xs">👤</span>
+                <div class="flex items-center gap-1.5 max-w-[170px] sm:max-w-xs bg-emerald-700/80 px-2.5 py-0.5 rounded-full border border-emerald-400/50">
+                    <span class="text-[11px]">👤</span>
                     <span class="truncate text-xs font-medium" title="${displayName}">${displayName}</span>
                 </div>
-                <button onclick="logout()" class="bg-red-500/90 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded-lg transition cursor-pointer text-xs shrink-0 shadow-2xs">
-                    ออก
+                <button onclick="logout()" class="text-[11px] sm:text-xs text-red-200 hover:text-white bg-red-600/80 hover:bg-red-600 px-2 py-0.5 rounded-md font-medium transition cursor-pointer shadow-2xs">
+                    ออกจากระบบ
                 </button>
             `;
 
@@ -1302,7 +1301,7 @@
 
                 if (unreadCount > 0 && !isUserChatOpen) {
                     unreadBadge.classList.remove('hidden');
-                    unreadBadge.innerText = `${unreadCount} ข้อความใหม่`;
+                    unreadBadge.innerText = `${unreadCount} ใหม่`;
                 } else {
                     unreadBadge.classList.add('hidden');
                     if (isUserChatOpen) markAdminMessagesAsRead();
