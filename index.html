@@ -489,7 +489,7 @@
                     <div>
                         <span class="text-3xl">📄</span>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ออกรายงาน PDF สรุปผล</h4>
-                        <p class="text-xs text-stone-500 mt-1">สรุปข้อมูลองค์รวมทั้งระบบ (รายวัน/รายสัปดาห์/รายเดือน) พร้อมตารางรายชื่อบุคคล</p>
+                        <p class="text-xs text-stone-500 mt-1">สรุปข้อมูลองค์รวมทั้งระบบ (เลือกวัน/สัปดาห์/เดือน) พร้อมตารางรายชื่อบุคคล</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-emerald-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -653,29 +653,35 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 5: ออกรายงาน PDF ภาพรวมองค์รวมทั้งระบบ (พร้อมตารางรายชื่อบุคคลด้านล่าง) -->
+            <!-- ส่วนที่ 5: ออกรายงาน PDF ภาพรวมองค์รวม พร้อมตัวเลือกปฏิทินจริงรายวัน/สัปดาห์/เดือน -->
             <div id="section-pdf-report" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500 max-w-xl mx-auto">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b">
                     <div>
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                         <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลภาพรวมองค์รวม</h3>
-                        <p class="text-xs text-stone-500">เลือกช่วงเวลารายงานเพื่อสร้างเอกสารสรุปสถิติทั่วทั้งระบบและรายชื่อบุคคล</p>
+                        <p class="text-xs text-stone-500">เลือกประเภทรายงานและกำหนดช่วงเวลาเพื่อสร้างเอกสารสรุปสถิติทั่วทั้งระบบ</p>
                     </div>
                 </div>
 
                 <div class="space-y-4">
                     <div class="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-3">
-                        <label class="block text-xs font-bold text-stone-700">เลือกระยะเวลารายงานสรุป:</label>
-                        <select id="admin-system-pdf-period" class="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs sm:text-sm font-semibold text-stone-700">
-                            <option value="daily">📅 รายวัน (วันนี้)</option>
-                            <option value="weekly">📆 รายสัปดาห์ (7 วันล่าสุด)</option>
-                            <option value="monthly">🗓️ รายเดือน (เดือนนี้)</option>
+                        <label class="block text-xs font-bold text-stone-700">1. เลือกระยะเวลารายงานสรุป:</label>
+                        <select id="admin-report-type" onchange="toggleReportInput()" class="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs sm:text-sm font-semibold text-stone-700">
+                            <option value="daily">📅 รายวัน (เลือกวันที่จริง)</option>
+                            <option value="weekly">📆 รายสัปดาห์ (เลือกสัปดาห์)</option>
+                            <option value="monthly">🗓️ รายเดือน (เลือกเดือน)</option>
                             <option value="all">📋 ทั้งหมด (All Time)</option>
                         </select>
                     </div>
 
+                    <!-- ช่องเลือกปฏิทินจริงตามประเภทที่เลือก -->
+                    <div id="container-input-date" class="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-2">
+                        <label id="label-date-input" class="block text-xs font-bold text-stone-700">เลือกวันที่:</label>
+                        <input type="date" id="admin-input-date" class="w-full p-3 bg-white border border-stone-300 rounded-xl text-xs sm:text-sm font-semibold text-stone-700">
+                    </div>
+
                     <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
-                        <p class="font-bold">ℹ️ รูปแบบรายงานองค์รวม:</p>
+                        <p class="font-bold">ℹ️ รายงานนี้ประกอบด้วย:</p>
                         <p>• สรุปยอดผู้เข้าร่วม, ภารกิจที่อนุมัติ, คะแนนรวม และ CO₂ รวม</p>
                         <p>• ตารางแจกแจงแยกตามประเภทภารกิจ และตารางรายชื่อบุคคลด้านล่าง</p>
                     </div>
@@ -852,12 +858,48 @@
             const target = document.getElementById(sectionId);
             if (target) {
                 target.classList.remove('hidden');
+                if (sectionId === 'section-pdf-report') {
+                    // กำหนดค่าเริ่มต้นช่องวันที่ให้เป็นวันนี้
+                    const dateInput = document.getElementById('admin-input-date');
+                    if (dateInput) dateInput.value = getTodayDateString();
+                    toggleReportInput();
+                }
             }
         }
 
         function closeAdminSection() {
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             document.getElementById('admin-menu-cards').classList.remove('hidden');
+        }
+
+        // จัดการเปลี่ยนชนิด Input ตามประเภทรายงาน (รายวันใช้ date, สัปดาห์/เดือนใช้ week/month, ทั้งหมดซ่อน)
+        function toggleReportInput() {
+            const type = document.getElementById('admin-report-type').value;
+            const container = document.getElementById('container-input-date');
+            const label = document.getElementById('label-date-input');
+            const input = document.getElementById('admin-input-date');
+
+            if (type === 'all') {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            if (type === 'daily') {
+                label.innerText = "เลือกวันที่:";
+                input.type = "date";
+                input.value = getTodayDateString();
+            } else if (type === 'weekly') {
+                label.innerText = "เลือกสัปดาห์ (ระบบนับย้อนหลัง 7 วันจากวันที่เลือก):";
+                input.type = "date";
+                input.value = getTodayDateString();
+            } else if (type === 'monthly') {
+                label.innerText = "เลือกเดือนและปี:";
+                input.type = "month";
+                const now = new Date();
+                const m = String(now.getMonth() + 1).padStart(2, '0');
+                input.value = `${now.getFullYear()}-${m}`;
+            }
         }
 
         function handleGlobalClick(event) {
@@ -979,7 +1021,7 @@
             localStorage.removeItem('green_passport_session');
             document.getElementById('user-dashboard').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.add('hidden');
-            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('nav-auth').innerHTML = '';
             switchAuthTab('login');
         }
@@ -1681,7 +1723,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.add('hidden');
+            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -1909,33 +1951,49 @@
 
         // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม พร้อมตารางรายชื่อบุคคลด้านล่าง =================
         function generateSystemSummaryPDF() {
-            const period = document.getElementById('admin-system-pdf-period').value;
+            const type = document.getElementById('admin-report-type').value;
+            const inputDateVal = document.getElementById('admin-input-date').value;
             const now = new Date();
-            const todayStr = getTodayDateString();
 
-            // กรองภารกิจที่ผ่านการอนุมัติแล้วตามช่วงเวลา
+            // กรองภารกิจตามประเภทและช่วงเวลาที่เลือก
             const approvedMissions = allMissionsCache.filter(m => {
                 if (m.status !== 'อนุมัติแล้ว') return false;
+                if (!m.userIdentifier) return false; // ข้ามข้อมูลขยะเก่าที่เป็น undefined
+
+                if (type === 'all') return true;
+
                 const mDate = new Date(m.dateStr || m.timestamp);
 
-                if (period === 'daily') {
-                    return m.dateStr === todayStr;
-                } else if (period === 'weekly') {
-                    const sevenDaysAgo = new Date();
-                    sevenDaysAgo.setDate(now.getDate() - 7);
-                    return mDate >= sevenDaysAgo && mDate <= now;
-                } else if (period === 'monthly') {
-                    return mDate.getMonth() === now.getMonth() && mDate.getFullYear() === now.getFullYear();
+                if (type === 'daily') {
+                    // inputDateVal จะอยู่ในรูปแบบ YYYY-MM-DD
+                    return m.dateStr === inputDateVal;
+                } else if (type === 'weekly') {
+                    // นับย้อนหลัง 7 วันจากวันที่เลือกในปฏิทิน
+                    const selectedDate = new Date(inputDateVal);
+                    const sevenDaysBefore = new Date(selectedDate);
+                    sevenDaysBefore.setDate(selectedDate.getDate() - 7);
+                    return mDate >= sevenDaysBefore && mDate <= selectedDate;
+                } else if (type === 'monthly') {
+                    // inputDateVal รูปแบบ YYYY-MM
+                    const [selYear, selMonth] = inputDateVal.split('-').map(Number);
+                    return mDate.getMonth() + 1 === selMonth && mDate.getFullYear() === selYear;
                 }
-                return true; // all
+                return true;
             });
 
+            // สร้างหัวข้อรายงานตามวันที่เลือก
             let periodTitle = "ภาพรวมทั้งหมด (All Time)";
-            if (period === 'daily') periodTitle = `รายวัน (ประจำวันที่ ${now.toLocaleDateString('th-TH')})`;
-            if (period === 'weekly') periodTitle = "รายสัปดาห์ (7 วันล่าสุด)";
-            if (period === 'monthly') periodTitle = `รายเดือน (ประจำเดือน ${now.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' })})`;
+            if (type === 'daily') {
+                periodTitle = `รายวัน (ประจำวันที่ ${new Date(inputDateVal).toLocaleDateString('th-TH', {year: 'numeric', month: 'long', day: 'numeric'})})`;
+            } else if (type === 'weekly') {
+                periodTitle = `รายสัปดาห์ (ช่วง 7 วันสิ้นสุดวันที่ ${new Date(inputDateVal).toLocaleDateString('th-TH')})`;
+            } else if (type === 'monthly') {
+                const [selYear, selMonth] = inputDateVal.split('-');
+                const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                periodTitle = `รายเดือน (ประจำเดือน ${monthNames[parseInt(selMonth)-1]} พ.ศ. ${parseInt(selYear)+543})`;
+            }
 
-            // คำนวณสถิติภาพรวม
+            // คำนวณสถิติ
             const activeUsersMap = {};
             let totalPoints = 0;
             let totalCo2 = 0;
@@ -1946,7 +2004,6 @@
                 totalPoints += meta.points;
                 totalCo2 += meta.co2;
 
-                // แยกตามประเภทภารกิจ
                 if (!breakdown[m.missionName]) {
                     breakdown[m.missionName] = { count: 0, points: 0, co2: 0 };
                 }
@@ -1954,7 +2011,6 @@
                 breakdown[m.missionName].points += meta.points;
                 breakdown[m.missionName].co2 += meta.co2;
 
-                // สถิติรายบุคคล
                 const uid = m.userIdentifier;
                 if (!activeUsersMap[uid]) {
                     activeUsersMap[uid] = { name: m.userName || uid, studentId: uid, count: 0, points: 0, co2: 0 };
@@ -1964,7 +2020,6 @@
                 activeUsersMap[uid].co2 += meta.co2;
             });
 
-            // สร้าง HTML ตารางแยกตามภารกิจ
             let breakdownRows = '';
             const missionKeys = Object.keys(breakdown);
             if (missionKeys.length === 0) {
@@ -1983,7 +2038,6 @@
                 });
             }
 
-            // สร้าง HTML ตารางรายชื่อบุคคลด้านล่าง
             let userSummaryRows = '';
             const userKeys = Object.keys(activeUsersMap);
             if (userKeys.length === 0) {
@@ -2003,12 +2057,11 @@
                 });
             }
 
-            // เปิดหน้าต่างพิมพ์เอกสารสำหรับบันทึก PDF
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <html>
                 <head>
-                    <title>GreenPassport_System_Report_${period}</title>
+                    <title>GreenPassport_System_Report_${type}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
                     <style>
                         body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 25px; margin: 0; background: #fff; }
