@@ -19,7 +19,7 @@
 </head>
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
 
-    <!-- Navbar แถบสีเขียวด้านบน -->
+    <!-- Navbar แถบสีเขียวด้านบน (เปลี่ยนไอคอนเป็น 📗 ตามต้องการ) -->
     <nav class="bg-emerald-600 text-white px-3 py-2 sm:px-4 sm:py-2.5 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 shrink-0">
             <span class="text-xl sm:text-2xl">📗</span>
@@ -46,7 +46,7 @@
                 <div id="form-login" class="space-y-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
                     </div>
 
                     <div>
@@ -71,7 +71,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสผ่าน (อย่างน้อย 6 ตัว)</label>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)</label>
                         <input type="password" id="reg-password" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กำหนดรหัสผ่าน 6 ตัวขึ้นไป">
                     </div>
 
@@ -871,35 +871,6 @@
             document.getElementById('admin-menu-cards').classList.remove('hidden');
         }
 
-        function toggleReportInput() {
-            const type = document.getElementById('admin-report-type').value;
-            const container = document.getElementById('container-input-date');
-            const label = document.getElementById('label-date-input');
-            const input = document.getElementById('admin-input-date');
-
-            if (type === 'all') {
-                container.classList.add('hidden');
-                return;
-            }
-
-            container.classList.remove('hidden');
-            if (type === 'daily') {
-                label.innerText = "เลือกวันที่:";
-                input.type = "date";
-                input.value = getTodayDateString();
-            } else if (type === 'weekly') {
-                label.innerText = "เลือกสัปดาห์ (ระบบนับย้อนหลัง 7 วันจากวันที่เลือก):";
-                input.type = "date";
-                input.value = getTodayDateString();
-            } else if (type === 'monthly') {
-                label.innerText = "เลือกเดือนและปี:";
-                input.type = "month";
-                const now = new Date();
-                const m = String(now.getMonth() + 1).padStart(2, '0');
-                input.value = `${now.getFullYear()}-${m}`;
-            }
-        }
-
         function handleGlobalClick(event) {
             if (currentUser && currentUser.role === 'admin' && selectedAdminChatId) {
                 const chatSection = document.getElementById('section-chat');
@@ -1014,13 +985,22 @@
             }
         }
 
+        // ปรับปรุงฟังก์ชันออกจากระบบให้เคลียร์เซสชันและเด้งกลับหน้าล็อกอินทันทีอย่างไร้รอยต่อ
         function logout() {
             currentUser = null;
             localStorage.removeItem('green_passport_session');
+            
             document.getElementById('user-dashboard').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.add('hidden');
-            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('auth-section').classList.remove('hidden');
             document.getElementById('nav-auth').innerHTML = '';
+            
+            // รีเซ็ตฟอร์มล็อกอิน
+            const loginId = document.getElementById('login-studentid');
+            const loginPass = document.getElementById('login-password');
+            if(loginId) loginId.value = '';
+            if(loginPass) loginPass.value = '';
+
             switchAuthTab('login');
         }
 
@@ -1665,7 +1645,7 @@
                         pendingTbody.innerHTML += `
                             <tr class="border-b border-stone-200 hover:bg-stone-50">
                                 <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
-                                <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-gray-400">${m.timestamp}</span></td>
+                                <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
                                 <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
                                 <td class="p-3 text-center">
                                     <div class="flex justify-center gap-1.5">
@@ -1728,8 +1708,8 @@
             document.getElementById('admin-chat-input').placeholder = `พิมพ์ตอบกลับ ${userKey}...`;
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
-            document.getElementById('label-admin-chat-file').classList.add('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.add('hidden');
+            document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
+            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -2077,7 +2057,7 @@
                     <!-- Header -->
                     <div style="border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
-                            <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">🌱 GREEN PASSPORT — OFFICIAL REPORT</h1>
+                            <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL REPORT</h1>
                             <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
                         </div>
                         <div style="text-align: right; font-size: 10px; color: #6b7280;">
