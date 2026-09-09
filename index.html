@@ -18,7 +18,7 @@
 </head>
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
 
-    <!-- Navbar แถบสีเขียวด้านบน (ชื่อผู้ใช้ + ปุ่มออกจากระบบอยู่ด้านล่างชื่อ) -->
+    <!-- Navbar แถบสีเขียวด้านบน (ปุ่มออกจากระบบกรอบสีแดง ตัวหนังสือสีขาว วางใต้ชื่อโปรไฟล์) -->
     <nav class="bg-emerald-600 text-white px-3 py-2 sm:px-4 sm:py-2.5 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 shrink-0">
             <span class="text-xl sm:text-2xl">🌱</span>
@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <!-- แท็บที่ 1: ภารกิจรักษ์โลก (มีอันดับคะแนน + การ์ดส่งภารกิจ 8 รายการ) -->
+            <!-- แท็บที่ 1: ภารกิจรักษ์โลก -->
             <div id="user-tab-missions" class="space-y-4 md:space-y-6">
                 <!-- ตารางอันดับคะแนน (Leaderboard) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
 
-                <!-- การ์ดภารกิจ 8 รายการ (ปรับเป็น ส่งหลักฐานภารกิจรักษ์โลก และ เงื่อนไข) -->
+                <!-- การ์ดภารกิจ 8 รายการ -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
                     <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
@@ -913,7 +913,7 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
-        // ปรับแต่งแถบ Navbar สีเขียว: ชื่อผู้ใช้ และปุ่ม "ออกจากระบบ" อยู่ใต้ชื่อ
+        // ปรับแต่งแถบ Navbar สีเขียว: ปุ่ม "ออกจากระบบ" ใช้กรอบสีแดง ตัวหนังสือสีขาว วางใต้ชื่อโปรไฟล์
         function showDashboard() {
             document.getElementById('auth-section').classList.add('hidden');
             const displayName = currentUser.name || currentUser.studentId || currentUser.username || 'ผู้ใช้';
@@ -921,9 +921,9 @@
             document.getElementById('nav-auth').innerHTML = `
                 <div class="flex items-center gap-1.5 max-w-[170px] sm:max-w-xs bg-emerald-700/80 px-2.5 py-0.5 rounded-full border border-emerald-400/50">
                     <span class="text-[11px]">👤</span>
-                    <span class="truncate text-xs font-medium" title="${displayName}">${displayName}</span>
+                    <span class="truncate text-xs font-medium text-white" title="${displayName}">${displayName}</span>
                 </div>
-                <button onclick="logout()" class="text-[11px] sm:text-xs text-red-200 hover:text-white bg-red-600/80 hover:bg-red-600 px-2 py-0.5 rounded-md font-medium transition cursor-pointer shadow-2xs">
+                <button onclick="logout()" class="text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded-lg border border-red-500 transition cursor-pointer shadow-xs">
                     ออกจากระบบ
                 </button>
             `;
