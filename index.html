@@ -102,11 +102,8 @@
                 </button>
             </div>
 
+            <!-- สลับลำดับให้ลดคาร์บอนมาก่อนคะแนนสะสม -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                <div class="bg-emerald-50 text-emerald-900 p-4 md:p-6 rounded-2xl shadow-xs border border-emerald-200 text-center">
-                    <p class="text-xs md:text-sm text-emerald-700 font-medium uppercase tracking-wider">คะแนนสะสมของคุณ</p>
-                    <p class="text-3xl md:text-4xl font-bold mt-1 md:mt-2"><span id="user-points">0</span> คะแนน</p>
-                </div>
                 <div class="bg-teal-50 text-teal-900 p-4 md:p-6 rounded-2xl shadow-xs border border-teal-200 text-center">
                     <p class="text-xs md:text-sm text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ ในวันนี้</p>
                     <p class="text-3xl md:text-4xl font-bold mt-1 md:mt-2 text-teal-800"><span id="user-today-co2">0.00</span> <span class="text-lg font-normal">kgCO₂e</span></p>
@@ -115,10 +112,13 @@
                     <p class="text-xs md:text-sm text-stone-400 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
                     <p class="text-3xl md:text-4xl font-bold mt-1 md:mt-2 text-emerald-400"><span id="user-co2">0.00</span> <span class="text-lg font-normal">kgCO₂e</span></p>
                 </div>
+                <div class="bg-emerald-50 text-emerald-900 p-4 md:p-6 rounded-2xl shadow-xs border border-emerald-200 text-center">
+                    <p class="text-xs md:text-sm text-emerald-700 font-medium uppercase tracking-wider">คะแนนสะสมของคุณ</p>
+                    <p class="text-3xl md:text-4xl font-bold mt-1 md:mt-2"><span id="user-points">0</span> คะแนน</p>
+                </div>
             </div>
 
             <div id="user-tab-missions" class="space-y-4 md:space-y-6">
-                <!-- ตารางอันดับคะแนน (จำกัดความสูงโชว์ 3 อันดับแรก เลื่อนดูต่อได้) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
                         🏆 อันดับคะแนนสะสมสูงสุด (Leaderboard)
@@ -128,7 +128,7 @@
                             <thead class="sticky top-0 bg-stone-100 z-10">
                                 <tr class="text-stone-600 border-b">
                                     <th class="p-2.5 w-16 text-center">อันดับ</th>
-                                    <th class="p-2.5">ผู้ใช้งาน (ชื่อ / รหัสนักศึกษา)</th>
+                                    <th class="p-2.5">ผู้ใช้งาน</th>
                                     <th class="p-2.5 text-right">คะแนนสะสม</th>
                                 </tr>
                             </thead>
@@ -429,7 +429,7 @@
                         <thead class="sticky top-0 bg-stone-100 z-10">
                             <tr class="text-stone-600 border-b">
                                 <th class="p-2.5 w-16 text-center">อันดับ</th>
-                                <th class="p-2.5">ผู้ใช้งาน (ชื่อ / รหัสนักศึกษา)</th>
+                                <th class="p-2.5">ผู้ใช้งาน</th>
                                 <th class="p-2.5 text-right">คะแนนสะสม</th>
                             </tr>
                         </thead>
@@ -500,9 +500,9 @@
 
             <!-- ================= หน้ารายละเอียด ================= -->
 
-            <!-- ส่วนที่ 1: ภารกิจรอตรวจสอบ -->
-            <div id="section-pending-missions" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-amber-500">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 pb-3 border-b">
+            <!-- ส่วนที่ 1: ภารกิจรอตรวจสอบ (ไม่มีแถบคะแนนสะสมด้านบนตามที่ขอ) -->
+            <div id="section-pending-missions" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-amber-500 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b">
                     <div>
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                         <h3 class="text-lg md:text-xl font-bold text-amber-800">📥 รายการภารกิจที่รอตรวจสอบอนุมัติ</h3>
@@ -617,6 +617,7 @@
                             </div>
                         </div>
 
+                        <!-- สลับสถิติให้ ลดคาร์บอน มาก่อน คะแนนรวม -->
                         <div id="admin-user-detail-footer" class="hidden bg-emerald-50/70 p-3 rounded-xl font-bold border border-emerald-200 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs md:text-sm mt-3 gap-1">
                             <span class="text-stone-700">รวมทั้งหมดที่อนุมัติของสมาชิกคนนี้:</span>
                             <div class="flex gap-4">
@@ -683,7 +684,7 @@
 
                     <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
                         <p class="font-bold">ℹ️ รายงานนี้ประกอบด้วย:</p>
-                        <p>• กล่อง Box สรุปภาพรวม (ผู้เข้าร่วม, ภารกิจ, คะแนน, CO₂)</p>
+                        <p>• กล่อง Box สรุปภาพรวม (ผู้เข้าร่วม, ภารกิจ, CO₂, คะแนน)</p>
                         <p>• ตารางแจกแจงตามประเภทภารกิจ และตารางรายชื่อบุคคลด้านล่าง</p>
                     </div>
 
@@ -1047,7 +1048,8 @@
                     list.push({
                         studentId: u.studentId || key,
                         name: u.name || u.username || key,
-                        points: u.points || 0
+                        points: u.points || 0,
+                        co2: u.co2 || 0
                     });
                 });
 
@@ -1068,7 +1070,10 @@
                         userTbody.innerHTML += `
                             <tr class="border-b border-stone-100 ${rowHighlight}">
                                 <td class="p-2.5 text-center font-bold text-stone-600">${rankBadge}</td>
-                                <td class="p-2.5 text-stone-800">${user.name} <span class="text-xs text-stone-400">(${user.studentId})</span> ${isCurrent ? '<span class="text-[10px] text-emerald-600 font-bold">(คุณ)</span>' : ''}</td>
+                                <td class="p-2.5 text-stone-800">
+                                    <div class="font-medium">${user.name}</div>
+                                    <div class="text-[11px] text-stone-400">รหัส: ${user.studentId} ${isCurrent ? '<span class="text-emerald-600 font-bold">(คุณ)</span>' : ''}</div>
+                                </td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -1087,7 +1092,10 @@
                         adminTbody.innerHTML += `
                             <tr class="border-b border-stone-100 hover:bg-stone-50">
                                 <td class="p-2.5 text-center font-bold text-stone-600">${rankBadge}</td>
-                                <td class="p-2.5 font-medium text-stone-800">${user.name} <span class="text-xs text-stone-400">(รหัส: ${user.studentId})</span></td>
+                                <td class="p-2.5 text-stone-800">
+                                    <div class="font-medium">${user.name}</div>
+                                    <div class="text-[11px] text-stone-400">รหัส: ${user.studentId}</div>
+                                </td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -1736,8 +1744,8 @@
             document.getElementById('admin-chat-input').placeholder = `พิมพ์ตอบกลับ ${userKey}...`;
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
-            document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('label-admin-chat-file').classList.add('opacity-50');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -2041,8 +2049,8 @@
                         <tr style="border-bottom: 1px solid #e5e7eb; font-size: 12px;">
                             <td style="padding: 10px 12px; color: #374151; font-weight: 500;">${name}</td>
                             <td style="padding: 10px 12px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
-                            <td style="padding: 10px 12px; text-align: center; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
                             <td style="padding: 10px 12px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
+                            <td style="padding: 10px 12px; text-align: right; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
                         </tr>
                     `;
                 });
@@ -2098,7 +2106,7 @@
                         <strong>รอบรายงาน:</strong> ${periodTitle}
                     </div>
 
-                    <!-- KPI Boxes (Boxes แบบสวยงามเป็นทางการ) -->
+                    <!-- KPI Boxes (สลับให้ลดคาร์บอนมาก่อนคะแนนสะสม) -->
                     <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 10px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px;">
                         <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 10px; padding: 12px; text-align: center;">
@@ -2109,25 +2117,25 @@
                             <div style="font-size: 11px; color: #b45309; font-weight: bold; margin-bottom: 4px;">ภารกิจที่อนุมัติ</div>
                             <div style="font-size: 20px; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 11px; font-weight: normal;">รายการ</span></div>
                         </div>
-                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 11px; color: #047857; font-weight: bold; margin-bottom: 4px;">คะแนนรวมสะสม</div>
-                            <div style="font-size: 20px; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 11px; font-weight: normal;">แต้ม</span></div>
-                        </div>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 12px; text-align: center;">
                             <div style="font-size: 11px; color: #0f766e; font-weight: bold; margin-bottom: 4px;">CO₂ ที่ลดได้สุทธิ</div>
                             <div style="font-size: 20px; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 11px; font-weight: normal;">kg</span></div>
                         </div>
+                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #047857; font-weight: bold; margin-bottom: 4px;">คะแนนรวมสะสม</div>
+                            <div style="font-size: 20px; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 11px; font-weight: normal;">แต้ม</span></div>
+                        </div>
                     </div>
 
-                    <!-- Breakdown Table -->
+                    <!-- Breakdown Table (สลับคอลัมน์ CO₂ มาก่อน คะแนน) -->
                     <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
                         <thead>
                             <tr style="background: #f3f4f6; color: #374151; font-size: 12px; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 10px 12px; text-align: left;">ประเภทภารกิจ</th>
                                 <th style="padding: 10px 12px; text-align: center; width: 100px;">จำนวนครั้ง</th>
-                                <th style="padding: 10px 12px; text-align: center; width: 100px;">คะแนนรวม</th>
                                 <th style="padding: 10px 12px; text-align: right; width: 120px;">CO₂ (kgCO₂e)</th>
+                                <th style="padding: 10px 12px; text-align: right; width: 100px;">คะแนนรวม</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2137,20 +2145,20 @@
                             <tr style="background: #ecfdf5; font-weight: bold; font-size: 12px;">
                                 <td style="padding: 10px 12px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
                                 <td style="padding: 10px 12px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
-                                <td style="padding: 10px 12px; text-align: center; color: #059669;">${totalPoints}</td>
                                 <td style="padding: 10px 12px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
+                                <td style="padding: 10px 12px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
                             </tr>
                         </tfoot>
                     </table>
 
-                    <!-- User Summary Table -->
+                    <!-- User Summary Table (สลับคอลัมน์ CO₂ มาก่อน คะแนน) -->
                     <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 35px;">
                         <thead>
                             <tr style="background: #f3f4f6; color: #374151; font-size: 11px; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 8px 10px; width: 40px; text-align: center;">ลำดับ</th>
                                 <th style="padding: 8px 10px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
-                                <th style="padding: 8px 10px; text-align: center; width: 100px;">ภารกิจที่ทำ</th>
+                                <th style="padding: 8px 10px; text-align: center; width: 90px;">ภารกิจที่ทำ</th>
                                 <th style="padding: 8px 10px; text-align: right; width: 100px;">ลด CO₂</th>
                                 <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนน</th>
                             </tr>
