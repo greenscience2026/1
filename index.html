@@ -697,7 +697,7 @@
 
         </section>
 
-        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Database Storage Meter) ไว้ล่างสุดของหน้าแอดมิน -->
+        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Database Storage Meter) ไว้ล่างสุดของหน้าแอดมิน (แก้ไขสูตรคำนวณฐานสิบ 1 MB = 1,000 KB, 1 GB = 1,000,000 KB) -->
         <div id="admin-storage-footer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 mt-6 space-y-2">
             <div class="flex justify-between items-center text-xs md:text-sm font-bold text-stone-700">
                 <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ</span>
@@ -706,7 +706,7 @@
             <div class="w-full bg-stone-200 rounded-full h-2.5 overflow-hidden">
                 <div id="storage-progress-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
-            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database ทั้งหมดในระบบปัจจุบัน (โควต้าแพ็กเกจ Spark ฟรี 1 GB)</p>
+            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database ทั้งหมดในระบบปัจจุบัน (โควต้าแพ็กเกจ Spark ฟรี 1 GB / 1,000,000 KB)</p>
         </div>
 
     </main>
@@ -1764,24 +1764,28 @@
                 }
             });
 
-            // คำนวณขนาดพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Database Storage Meter) แบบเรียลไทม์
+            // คำนวณขนาดพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Database Storage Meter) ด้วยสูตรฐานสิบที่ถูกต้อง (1 KB = 1000 Bytes, 1 MB = 1000 KB, 1 GB = 1,000,000 KB)
             database.ref().once('value', (snapshot) => {
                 const dataString = JSON.stringify(snapshot.val() || {});
                 const bytes = new Blob([dataString]).size;
+                const kb = bytes / 1000;
                 let sizeText = `${bytes} ไบต์`;
-                let percentage = (bytes / (1024 * 1024 * 1024)) * 100; // เทียบกับ 1 GB (1024 MB)
+                
+                // โควต้า 1 GB = 1,000,000 KB (เทียบกับเกณฑ์แพ็กเกจฟรี Spark)
+                const maxKb = 1000000; 
+                let percentage = (kb / maxKb) * 100;
 
-                if (bytes >= 1024 * 1024) {
-                    sizeText = `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-                } else if (bytes >= 1024) {
-                    sizeText = `${(bytes / 1024).toFixed(2)} KB`;
+                if (kb >= 1000) {
+                    sizeText = `${(kb / 1000).toFixed(2)} MB`;
+                } else if (kb >= 1) {
+                    sizeText = `${kb.toFixed(2)} KB`;
                 }
 
-                if (percentage < 0.1 && bytes > 0) percentage = 0.1; // ให้แถบขยับขั้นต่ำให้เห็นชัดเจน
+                if (percentage < 0.1 && bytes > 0) percentage = 0.1;
 
                 const sizeEl = document.getElementById('storage-size-text');
                 const barEl = document.getElementById('storage-progress-bar');
-                if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
+                if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(4)}%)`;
                 if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
             });
         }
@@ -2075,7 +2079,7 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม (ฟอนต์ขนาดกะทัดรัด) =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
@@ -2296,3 +2300,4 @@
     </script>
 </body>
 </html>
+
