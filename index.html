@@ -1024,7 +1024,6 @@
 
             if (currentUser.role === 'admin') {
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                document.getElementById('admin-storage-footer').classList.remove('hidden');
                 closeAdminSection();
                 listenToAdminData();
             } else {
@@ -1545,7 +1544,6 @@
 
             listenToLeaderboard();
 
-            // ป้องกันการผูก Event ซ้ำซ้อน (ใช้ .on ครั้งเดียวต่อ session ของแอดมิน)
             if (!adminDataListenerInitialized) {
                 adminDataListenerInitialized = true;
 
@@ -1783,7 +1781,7 @@
             }
         }
 
-        // ฟังก์ชันคำนวณและอัปเดตพื้นที่จัดเก็บ Real-time แบบแสดงทศนิยม 2 ตำแหน่ง
+        // ฟังก์ชันคำนวณขนาดพื้นที่จัดเก็บแบบ Real-time ของจริง
         function updateStorageMeterRealtime() {
             database.ref().on('value', (snapshot) => {
                 const dataString = JSON.stringify(snapshot.val() || {});
@@ -1858,7 +1856,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
