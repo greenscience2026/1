@@ -697,16 +697,16 @@
 
         </section>
 
-        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Database Storage Meter) ไว้ล่างสุดของหน้าแอดมิน (แก้ไขสูตรคำนวณฐานสิบ 1 MB = 1,000 KB, 1 GB = 1,000,000 KB) -->
+        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (ดึงข้อมูลจาก Firebase จริง / 1 GB = 1,000,000 KB) -->
         <div id="admin-storage-footer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 mt-6 space-y-2">
             <div class="flex justify-between items-center text-xs md:text-sm font-bold text-stone-700">
-                <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ</span>
-                <span id="storage-size-text" class="text-emerald-600">กำลังคำนวณ...</span>
+                <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ (Realtime Database)</span>
+                <span id="storage-size-text" class="text-emerald-600">กำลังเชื่อมต่อฐานข้อมูล...</span>
             </div>
             <div class="w-full bg-stone-200 rounded-full h-2.5 overflow-hidden">
                 <div id="storage-progress-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
-            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database ทั้งหมดในระบบปัจจุบัน (โควต้าแพ็กเกจ Spark ฟรี 1 GB / 1,000,000 KB)</p>
+            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database จริง (โควต้าแพ็กเกจ Spark ฟรี 1 GB / 1,000,000 KB)</p>
         </div>
 
     </main>
@@ -1764,30 +1764,51 @@
                 }
             });
 
-            // คำนวณขนาดพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Database Storage Meter) ด้วยสูตรฐานสิบที่ถูกต้อง (1 KB = 1000 Bytes, 1 MB = 1000 KB, 1 GB = 1,000,000 KB)
-            database.ref().once('value', (snapshot) => {
-                const dataString = JSON.stringify(snapshot.val() || {});
-                const bytes = new Blob([dataString]).size;
-                const kb = bytes / 1000;
-                let sizeText = `${bytes} ไบต์`;
-                
-                // โควต้า 1 GB = 1,000,000 KB (เทียบกับเกณฑ์แพ็กเกจฟรี Spark)
-                const maxKb = 1000000; 
-                let percentage = (kb / maxKb) * 100;
+            // ดึงข้อมูลขนาดพื้นที่จริงจาก Firebase REST API (ฐานสิบ: 1 MB = 1,000 KB, 1 GB = 1,000,000 KB)
+            const dbUrl = firebaseConfig.databaseURL + '/.json?print=silent';
+            fetch(dbUrl)
+                .then(response => {
+                    const lengthHeader = response.headers.get('Content-Length');
+                    if (lengthHeader) {
+                        return parseInt(lengthHeader, 10);
+                    }
+                    return response.text().then(text => new Blob([text]).size);
+                })
+                .then(bytes => {
+                    const kb = bytes / 1000;
+                    let sizeText = `${bytes} ไบต์`;
+                    const maxKb = 1000000; // โควต้าแพ็กเกจ Spark ฟรี 1 GB = 1,000,000 KB
+                    let percentage = (kb / maxKb) * 100;
 
-                if (kb >= 1000) {
-                    sizeText = `${(kb / 1000).toFixed(2)} MB`;
-                } else if (kb >= 1) {
-                    sizeText = `${kb.toFixed(2)} KB`;
-                }
+                    if (kb >= 1000) {
+                        sizeText = `${(kb / 1000).toFixed(2)} MB`;
+                    } else if (kb >= 1) {
+                        sizeText = `${kb.toFixed(2)} KB`;
+                    }
 
-                if (percentage < 0.1 && bytes > 0) percentage = 0.1;
+                    if (percentage < 0.01 && bytes > 0) percentage = 0.01;
 
-                const sizeEl = document.getElementById('storage-size-text');
-                const barEl = document.getElementById('storage-progress-bar');
-                if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(4)}%)`;
-                if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
-            });
+                    const sizeEl = document.getElementById('storage-size-text');
+                    const barEl = document.getElementById('storage-progress-bar');
+                    if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
+                    if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
+                })
+                .catch(() => {
+                    // Fallback กรณี Network ขัดข้อง คำนวณจาก Cache ในเครื่อง
+                    database.ref().once('value', (snapshot) => {
+                        const dataString = JSON.stringify(snapshot.val() || {});
+                        const bytes = new Blob([dataString]).size;
+                        const kb = bytes / 1000;
+                        let sizeText = kb >= 1000 ? `${(kb / 1000).toFixed(2)} MB` : `${kb.toFixed(2)} KB`;
+                        let percentage = (kb / 1000000) * 100;
+                        if (percentage < 0.01 && bytes > 0) percentage = 0.01;
+
+                        const sizeEl = document.getElementById('storage-size-text');
+                        const barEl = document.getElementById('storage-progress-bar');
+                        if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
+                        if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
+                    });
+                });
         }
 
         function deleteUserPermanently(userKey) {
@@ -1840,7 +1861,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -2300,4 +2321,3 @@
     </script>
 </body>
 </html>
-
