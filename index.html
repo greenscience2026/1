@@ -441,14 +441,14 @@
                 </div>
             </div>
 
-            <!-- เมนูการจัดการ 5 กรอบหลัก -->
+            <!-- เมนูการจัดการ 5 กรอบหลัก พร้อมระบบกะพริบแจ้งเตือนค้างตรวจและแชท -->
             <div id="admin-menu-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 
-                <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
+                <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between relative overflow-hidden">
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">📥</span>
-                            <span class="bg-amber-100 text-amber-800 font-bold text-xs px-2.5 py-1 rounded-full"><span id="card-badge-missions">0</span> ค้างตรวจ</span>
+                            <span id="card-badge-missions-pill" class="hidden bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm">มีค้างตรวจ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ภารกิจรอตรวจสอบ</h4>
                         <p class="text-xs text-stone-500 mt-1">ตรวจสอบรูปถ่ายหลักฐานกิจกรรม อนุมัติหรือปฏิเสธพร้อมระบุเหตุผล</p>
@@ -456,11 +456,11 @@
                     <div class="mt-4 text-xs font-semibold text-amber-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
-                <div onclick="openAdminSection('section-rewards-hub')" class="bg-white p-5 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
+                <div onclick="openAdminSection('section-rewards-hub')" class="bg-white p-5 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between relative overflow-hidden">
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">🎁</span>
-                            <span class="bg-purple-100 text-purple-800 font-bold text-xs px-2.5 py-1 rounded-full"><span id="card-badge-rewards">0</span> ค้างตรวจ</span>
+                            <span id="card-badge-rewards-pill" class="hidden bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm">มีค้างตรวจ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">คำขอแลกรางวัล & ประวัติการแลก</h4>
                         <p class="text-xs text-stone-500 mt-1">อนุมัติคำขอแลกของรางวัล และดูประวัติการแลกทั้งหมดของระบบที่ด้านล่าง</p>
@@ -1578,10 +1578,10 @@
                         let isSelected = selectedAdminChatId === key;
                         let activeStyle = isSelected ? 'bg-blue-100 border-blue-400 font-bold' : 'hover:bg-blue-50 border-stone-100';
                         
-                        // แสดงข้อความ "0 ข้อความ" หากไม่มีข้อความทักเข้ามา
+                        // ปรับแก้ระบบแชทแอดมิน: ถ้าไม่มีข้อความใหม่ให้ขึ้น 0 ข้อความ และไม่แสดงข้อความทั้งหมด
                         let badgeHtml = unreadMsgs > 0 
-                            ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full ml-1">🔴 ${unreadMsgs} ใหม่</span>` 
-                            : `<span class="text-stone-400 text-[10px] ml-1">(${totalMsgs} ข้อความ)</span>`;
+                            ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
+                            : `<span class="text-stone-400 text-[11px]">0 ข้อความ</span>`;
 
                         chatUserList.innerHTML += `
                             <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer text-stone-700 flex justify-between items-center">
@@ -1600,7 +1600,7 @@
                             chatCardBadge.innerText = `🔴 ${systemTotalUnread} ข้อความใหม่`;
                         } else {
                             chatCardBadge.className = "bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full";
-                            chatCardBadge.innerText = `${systemTotalMessages} ข้อความ`;
+                            chatCardBadge.innerText = `0 ข้อความ`;
                         }
                     }
                 });
@@ -1636,6 +1636,17 @@
                 document.getElementById('admin-stat-pending-rewards').innerText = pendingRewardsCount;
                 const cardBadgeRewards = document.getElementById('card-badge-rewards');
                 if (cardBadgeRewards) cardBadgeRewards.innerText = pendingRewardsCount;
+
+                // อัปเดตป้ายแจ้งเตือนกะพริบที่การ์ดแลกรางวัล
+                const pillRewards = document.getElementById('card-badge-rewards-pill');
+                if (pillRewards) {
+                    if (pendingRewardsCount > 0) {
+                        pillRewards.classList.remove('hidden');
+                        pillRewards.innerText = `มีค้างตรวจ (${pendingRewardsCount})`;
+                    } else {
+                        pillRewards.classList.add('hidden');
+                    }
+                }
 
                 if (pendingClaims.length === 0) {
                     pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่มีคำขอแลกของรางวัลที่ค้างตรวจสอบ 🎉</td></tr>`;
@@ -1705,6 +1716,17 @@
                 document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
                 const cardBadgeMissions = document.getElementById('card-badge-missions');
                 if (cardBadgeMissions) cardBadgeMissions.innerText = pendingMissionsCount;
+
+                // อัปเดตป้ายแจ้งเตือนกะพริบที่การ์ดภารกิจค้างตรวจ
+                const pillMissions = document.getElementById('card-badge-missions-pill');
+                if (pillMissions) {
+                    if (pendingMissionsCount > 0) {
+                        pillMissions.classList.remove('hidden');
+                        pillMissions.innerText = `มีค้างตรวจ (${pendingMissionsCount})`;
+                    } else {
+                        pillMissions.classList.add('hidden');
+                    }
+                }
 
                 if(pendingList.length === 0) {
                     pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
@@ -2015,7 +2037,7 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม (ฟอนต์เหมาะสม) =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม (ฟอนต์ขนาดพอดี) =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
@@ -2086,12 +2108,12 @@
             let breakdownRows = '';
             const missionKeys = Object.keys(breakdown);
             if (missionKeys.length === 0) {
-                breakdownRows = `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 11pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
+                breakdownRows = `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 missionKeys.forEach(name => {
                     const item = breakdown[name];
                     breakdownRows += `
-                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 10pt;">
+                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 9.5pt;">
                             <td style="padding: 8px 10px; color: #374151;">${name}</td>
                             <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
                             <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
@@ -2104,14 +2126,14 @@
             let userSummaryRows = '';
             const userKeys = Object.keys(activeUsersMap);
             if (userKeys.length === 0) {
-                userSummaryRows = `<tr><td colspan="5" style="padding: 10px; text-align: center; color: #6b7280; font-size: 11pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
+                userSummaryRows = `<tr><td colspan="5" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 userKeys.forEach((uid, idx) => {
                     const usr = activeUsersMap[uid];
                     userSummaryRows += `
-                        <tr style="border-bottom: 1px solid #f3f4f6; font-size: 10pt;">
+                        <tr style="border-bottom: 1px solid #f3f4f6; font-size: 9.5pt;">
                             <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
-                            <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 9pt;">(รหัส: ${usr.studentId})</span></td>
+                            <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 8.5pt;">(รหัส: ${usr.studentId})</span></td>
                             <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
                             <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
                             <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
@@ -2127,9 +2149,9 @@
                     <title>GreenPassport_System_Report_${type}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 25px; margin: 0; background: #fff; font-size: 11pt; line-height: 1.5; }
-                        h1 { font-size: 16pt; }
-                        h3 { font-size: 12pt; }
+                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 25px; margin: 0; background: #fff; font-size: 10pt; line-height: 1.4; }
+                        h1 { font-size: 14pt; }
+                        h3 { font-size: 11pt; }
                         @media print {
                             body { padding: 0; }
                             button { display: none; }
@@ -2141,15 +2163,15 @@
                     <div style="border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <h1 style="color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL REPORT</h1>
-                            <p style="font-size: 10pt; color: #4b5563; margin: 2px 0 0 0;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
+                            <p style="font-size: 9.5pt; color: #4b5563; margin: 2px 0 0 0;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
                         </div>
-                        <div style="text-align: right; font-size: 9pt; color: #6b7280;">
+                        <div style="text-align: right; font-size: 8.5pt; color: #6b7280;">
                             <div>วันที่ออกรายงาน: ${now.toLocaleDateString('th-TH')}</div>
                         </div>
                     </div>
 
                     <!-- Period Badge -->
-                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 11pt; color: #166534;">
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 10.5pt; color: #166534;">
                         <strong>รอบรายงาน:</strong> ${periodTitle}
                     </div>
 
@@ -2157,20 +2179,20 @@
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 8px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
                         <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px; text-align: center;">
-                            <div style="font-size: 9pt; color: #be185d; font-weight: bold; margin-bottom: 2px;">ผู้เข้าร่วมกิจกรรม</div>
-                            <div style="font-size: 14pt; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 9pt; font-weight: normal;">คน</span></div>
+                            <div style="font-size: 8.5pt; color: #be185d; font-weight: bold; margin-bottom: 2px;">ผู้เข้าร่วมกิจกรรม</div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 8.5pt; font-weight: normal;">คน</span></div>
                         </div>
                         <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 10px; text-align: center;">
-                            <div style="font-size: 9pt; color: #b45309; font-weight: bold; margin-bottom: 2px;">ภารกิจที่อนุมัติ</div>
-                            <div style="font-size: 14pt; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 9pt; font-weight: normal;">รายการ</span></div>
+                            <div style="font-size: 8.5pt; color: #b45309; font-weight: bold; margin-bottom: 2px;">ภารกิจที่อนุมัติ</div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 8.5pt; font-weight: normal;">รายการ</span></div>
                         </div>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 10px; text-align: center;">
-                            <div style="font-size: 9pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
-                            <div style="font-size: 14pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 9pt; font-weight: normal;">kg</span></div>
+                            <div style="font-size: 8.5pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 8.5pt; font-weight: normal;">kg</span></div>
                         </div>
                         <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; text-align: center;">
-                            <div style="font-size: 9pt; color: #047857; font-weight: bold; margin-bottom: 2px;">คะแนนรวมสะสม</div>
-                            <div style="font-size: 14pt; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 9pt; font-weight: normal;">แต้ม</span></div>
+                            <div style="font-size: 8.5pt; color: #047857; font-weight: bold; margin-bottom: 2px;">คะแนนรวมสะสม</div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 8.5pt; font-weight: normal;">แต้ม</span></div>
                         </div>
                     </div>
 
@@ -2178,7 +2200,7 @@
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <thead>
-                            <tr style="background: #f3f4f6; color: #374151; font-size: 10pt; border-bottom: 2px solid #e5e7eb;">
+                            <tr style="background: #f3f4f6; color: #374151; font-size: 9.5pt; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 8px 10px; text-align: left;">ประเภทภารกิจ</th>
                                 <th style="padding: 8px 10px; text-align: center; width: 90px;">จำนวนครั้ง</th>
                                 <th style="padding: 8px 10px; text-align: right; width: 110px;">CO₂ (kgCO₂e)</th>
@@ -2189,7 +2211,7 @@
                             ${breakdownRows}
                         </tbody>
                         <tfoot>
-                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 10pt;">
+                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 9.5pt;">
                                 <td style="padding: 8px 10px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
                                 <td style="padding: 8px 10px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
                                 <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
@@ -2202,7 +2224,7 @@
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                         <thead>
-                            <tr style="background: #f3f4f6; color: #374151; font-size: 10pt; border-bottom: 2px solid #e5e7eb;">
+                            <tr style="background: #f3f4f6; color: #374151; font-size: 9.5pt; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 6px 8px; width: 35px; text-align: center;">ลำดับ</th>
                                 <th style="padding: 6px 8px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
                                 <th style="padding: 6px 8px; text-align: center; width: 80px;">ภารกิจที่ทำ</th>
@@ -2216,7 +2238,7 @@
                     </table>
 
                     <!-- Signature & Footer -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 9pt; color: #6b7280;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 8.5pt; color: #6b7280;">
                         <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project (Official Document)</div>
                         <div style="text-align: center;">
                             <div style="border-bottom: 1px solid #9ca3af; width: 140px; margin-bottom: 3px;"></div>
@@ -2226,7 +2248,7 @@
 
                     <!-- Print Button -->
                     <div style="text-align: center; margin-top: 30px;">
-                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 11pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 10pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
                     </div>
                 </body>
                 </html>
@@ -2236,4 +2258,3 @@
     </script>
 </body>
 </html>
-
