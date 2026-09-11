@@ -139,7 +139,7 @@
 
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
-                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้ง และต้องเว้นระยะเวลาครบ 24 ชั่วโมงจึงจะส่งใหม่ได้</p>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละภารกิจสามารถส่งได้ 1 ครั้ง และต้องเว้นระยะเวลาครบ 24 ชั่วโมงจึงจะส่งใหม่ได้</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs" id="box-mission-1">
@@ -583,7 +583,7 @@
                 <div class="pb-3 border-b">
                     <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                     <h3 class="text-lg md:text-xl font-bold text-stone-800">👥 จัดการสมาชิกและประวัติภารกิจรายบุคคล</h3>
-                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ หรือกดปุ่มลบเพื่อลบบัญชีออกจากระบบถาวร</p>
+                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ หรือกดปุ่มลบเพื่อลบบัญชีผู้ใช้ถาวร</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -1126,7 +1126,7 @@
             const userIdentifier = currentUser.studentId;
             const originalText = btnElement.innerText;
             btnElement.disabled = true;
-            btnElement.innerText = 'กำลังประมวลผล...';
+            btnElement.innerText = 'กำลังส่ง...';
 
             const file = fileInput.files[0];
             const reader = new FileReader();
@@ -1154,7 +1154,8 @@
                         userIdentifier: userIdentifier,
                         userName: currentUser.name || currentUser.username || userIdentifier,
                         missionName: missionName,
-                        submitTime: now.getTime(), // บันทึก timestamp เป็นมิลลิวินาทีสำหรับเช็ค 24 ชั่วโมง
+                        submitTime: now.getTime(),
+                        dateStr: getTodayDateString(),
                         image: compressedBase64,
                         status: 'รออนุมัติ',
                         timestamp: `${dateFormatted} เวลา ${timeStr} น.`
@@ -1188,7 +1189,6 @@
                 const todayStr = getTodayDateString();
                 const list = [];
                 
-                // เก็บเวลาล่าสุดที่ส่งของแต่ละภารกิจ (เช็คแบบ 24 ชั่วโมงจริง)
                 const latestMissionTime = {};
                 const nowTime = new Date().getTime();
                 const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
@@ -1199,7 +1199,6 @@
                         list.push(m);
                         hasData = true;
 
-                        // คำนวณ CO2 วันนี้
                         const mDate = new Date(m.submitTime || 0);
                         const mDateStr = `${mDate.getFullYear()}-${String(mDate.getMonth() + 1).padStart(2, '0')}-${String(mDate.getDate()).padStart(2, '0')}`;
                         if (mDateStr === todayStr && m.status === 'อนุมัติแล้ว') {
@@ -1207,7 +1206,6 @@
                             todayCo2Total += meta.co2;
                         }
 
-                        // เช็คเวลาล่าสุดของแต่ละชื่อภารกิจ
                         if (!latestMissionTime[m.missionName] || m.submitTime > latestMissionTime[m.missionName]) {
                             latestMissionTime[m.missionName] = m.submitTime || 0;
                         }
@@ -1216,7 +1214,6 @@
 
                 document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(2);
 
-                // ตรวจสอบและล็อกปุ่มภารกิจแต่ละตัวตามกฎ 24 ชั่วโมง พร้อมแสดงเวลาถอยหลัง
                 for (let i = 1; i <= 8; i++) {
                     const box = document.getElementById(`box-mission-${i}`);
                     if (!box) continue;
@@ -1232,11 +1229,10 @@
                         btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
                         btn.classList.add('bg-stone-300', 'text-stone-600', 'cursor-not-allowed');
                         
-                        // คำนวณ ชั่วโมง:นาที:วินาที
                         const hours = Math.floor(timeLeft / (1000 * 60 * 60));
                         const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                         const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                        btn.innerText = `⏳ รอ ${hours}ชม. ${minutes}น.`;
+                        btn.innerText = `⏳ รอ ${hours}ชม. ${minutes}น. ${seconds}ว.`;
                     } else {
                         btn.disabled = false;
                         btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
@@ -1443,17 +1439,16 @@
             });
         }
 
-        // ปรับปรุงความเสถียรช่องแชท ป้องกันการกดส่งเบิ้ลซ้ำซ้อน
-        let isSendingChat = false;
+        let isSendingUserChat = false;
         function sendUserChatMessage(isImage = false) {
-            if (isSendingChat) return;
+            if (isSendingUserChat) return;
             const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
 
             if (isImage) {
                 const fileInput = document.getElementById('user-chat-file');
                 if (fileInput.files.length === 0) return;
-                isSendingChat = true;
+                isSendingUserChat = true;
                 const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1477,8 +1472,8 @@
                             timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                         }).then(() => { 
                             fileInput.value = ''; 
-                            isSendingChat = false;
-                        }).catch(() => { isSendingChat = false; });
+                            isSendingUserChat = false;
+                        }).catch(() => { isSendingUserChat = false; });
                     };
                     img.src = e.target.result;
                 };
@@ -1488,7 +1483,7 @@
                 const text = input.value.trim();
                 if (!text) return;
 
-                isSendingChat = true;
+                isSendingUserChat = true;
                 const now = new Date();
                 const msgId = Date.now().toString();
                 database.ref(`chats/${safeKey}/${msgId}`).set({
@@ -1498,8 +1493,8 @@
                     timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                 }).then(() => { 
                     input.value = ''; 
-                    isSendingChat = false;
-                }).catch(() => { isSendingChat = false; });
+                    isSendingUserChat = false;
+                }).catch(() => { isSendingUserChat = false; });
             }
         }
 
@@ -1569,9 +1564,10 @@
                         let isSelected = selectedAdminChatId === key;
                         let activeStyle = isSelected ? 'bg-blue-100 border-blue-400 font-bold' : 'hover:bg-blue-50 border-stone-100';
                         
+                        // แสดงจำนวนข้อความเฉพาะที่มี หรือขึ้น 0 ข้อความตามต้องการ
                         let badgeHtml = unreadMsgs > 0 
                             ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full ml-1">🔴 ${unreadMsgs} ใหม่</span>` 
-                            : `<span class="text-stone-400 text-[10px] ml-1">(${totalMsgs} ข้อความ)</span>`;
+                            : `<span class="text-stone-400 text-[10px] ml-1">(${totalMsgs > 0 ? totalMsgs + ' ข้อความ' : '0 ข้อความ'})</span>`;
 
                         chatUserList.innerHTML += `
                             <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer text-stone-700 flex justify-between items-center">
@@ -1768,7 +1764,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -2017,10 +2013,13 @@
 
                 if (type === 'all') return true;
 
-                const mDate = new Date(m.dateStr || m.timestamp);
+                const mDate = new Date(m.submitTime || 0);
 
                 if (type === 'daily') {
-                    return m.dateStr === inputDateVal;
+                    const selDate = new Date(inputDateVal);
+                    return mDate.getFullYear() === selDate.getFullYear() &&
+                           mDate.getMonth() === selDate.getMonth() &&
+                           mDate.getDate() === selDate.getDate();
                 } else if (type === 'weekly') {
                     const selectedDate = new Date(inputDateVal);
                     const sevenDaysBefore = new Date(selectedDate);
