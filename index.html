@@ -697,7 +697,7 @@
 
         </section>
 
-        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (ดึงข้อมูลจาก Firebase จริง / 1 GB = 1,000,000 KB) -->
+        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (แสดงเฉพาะหน้าแรกเมนูหลักแอดมิน) -->
         <div id="admin-storage-footer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 mt-6 space-y-2">
             <div class="flex justify-between items-center text-xs md:text-sm font-bold text-stone-700">
                 <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ (Realtime Database)</span>
@@ -706,7 +706,7 @@
             <div class="w-full bg-stone-200 rounded-full h-2.5 overflow-hidden">
                 <div id="storage-progress-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
-            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database จริง (โควต้าแพ็กเกจ Spark ฟรี 1 GB / 1,000,000 KB)</p>
+            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database จริงแบบเรียลไทม์ (โควต้าแพ็กเกจ Spark ฟรี 1 GB / 1,000,000 KB)</p>
         </div>
 
     </main>
@@ -872,6 +872,7 @@
         function openAdminSection(sectionId) {
             document.getElementById('admin-main-overview').classList.add('hidden');
             document.getElementById('admin-menu-cards').classList.add('hidden');
+            document.getElementById('admin-storage-footer').classList.add('hidden'); // ซ่อนแถบพื้นที่เมื่อเข้าหน้าฟังก์ชันย่อย
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             
             const target = document.getElementById(sectionId);
@@ -889,6 +890,7 @@
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             document.getElementById('admin-main-overview').classList.remove('hidden');
             document.getElementById('admin-menu-cards').classList.remove('hidden');
+            document.getElementById('admin-storage-footer').classList.remove('hidden'); // แสดงแถบพื้นที่กลับมาที่หน้าหลักแอดมิน
         }
 
         function toggleReportInput() {
@@ -1022,7 +1024,6 @@
 
             if (currentUser.role === 'admin') {
                 document.getElementById('admin-dashboard').classList.remove('hidden');
-                document.getElementById('admin-storage-footer').classList.remove('hidden');
                 closeAdminSection();
                 listenToAdminData();
             } else {
@@ -1764,7 +1765,7 @@
                 }
             });
 
-            // ดึงข้อมูลขนาดพื้นที่จริงจาก Firebase REST API (ฐานสิบ: 1 MB = 1,000 KB, 1 GB = 1,000,000 KB)
+            // ดึงขนาดข้อมูลแบบ Real-time ผ่าน Firebase REST API (ฐานสิบ: 1 MB = 1,000 KB, 1 GB = 1,000,000 KB)
             const dbUrl = firebaseConfig.databaseURL + '/.json?print=silent';
             fetch(dbUrl)
                 .then(response => {
@@ -1794,7 +1795,6 @@
                     if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
                 })
                 .catch(() => {
-                    // Fallback กรณี Network ขัดข้อง คำนวณจาก Cache ในเครื่อง
                     database.ref().once('value', (snapshot) => {
                         const dataString = JSON.stringify(snapshot.val() || {});
                         const bytes = new Blob([dataString]).size;
@@ -1861,7 +1861,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.add('hidden');
+            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
