@@ -441,14 +441,14 @@
                 </div>
             </div>
 
-            <!-- เมนูการจัดการ 5 กรอบหลัก (สลับตำแหน่งตามสั่ง: ย้ายแชทขึ้นมา, สลับการจัดการสมาชิกไปล่างสุด) -->
+            <!-- เมนูการจัดการ 5 กรอบหลัก (จัดลำดับใหม่ตามที่คุณต้องการ) -->
             <div id="admin-menu-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 
                 <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between relative overflow-hidden">
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">📥</span>
-                            <span id="card-badge-missions-pill" class="hidden bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm">มีค้างตรวจ</span>
+                            <span id="card-badge-missions-pill" class="bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm">0 ค้างตรวจ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ภารกิจรอตรวจสอบ</h4>
                         <p class="text-xs text-stone-500 mt-1">ตรวจสอบรูปถ่ายหลักฐานกิจกรรม อนุมัติหรือปฏิเสธพร้อมระบุเหตุผล</p>
@@ -460,7 +460,7 @@
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">🎁</span>
-                            <span id="card-badge-rewards-pill" class="hidden bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm">มีค้างตรวจ</span>
+                            <span id="card-badge-rewards-pill" class="bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm">0 ค้างตรวจ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">คำขอแลกรางวัล & ประวัติการแลก</h4>
                         <p class="text-xs text-stone-500 mt-1">อนุมัติคำขอแลกของรางวัล และดูประวัติการแลกทั้งหมดของระบบที่ด้านล่าง</p>
@@ -468,7 +468,7 @@
                     <div class="mt-4 text-xs font-semibold text-purple-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
-                <!-- เลื่อนระบบแชทขึ้นมาอยู่ต่อจากคำขอแลกรางวัล -->
+                <!-- ระบบแชทขยับขึ้นมาอยู่ต่อจากคำขอแลกรางวัล -->
                 <div onclick="openAdminSection('section-chat')" class="bg-white p-5 rounded-2xl border-2 border-blue-200 hover:border-blue-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-start">
@@ -481,7 +481,7 @@
                     <div class="mt-4 text-xs font-semibold text-blue-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
-                <!-- เลื่อนจัดการสมาชิกมาไว้ต่อจากระบบแชท -->
+                <!-- จัดการสมาชิกย้ายไปไว้ล่างสุด -->
                 <div onclick="openAdminSection('section-user-management')" class="bg-white p-5 rounded-2xl border-2 border-stone-200 hover:border-stone-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
                     <div>
                         <span class="text-3xl">👥</span>
@@ -633,7 +633,7 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 4: ระบบแชทแอดมิน (ไฮไลต์แถบสีคนที่กำลังคุยอยู่) -->
+            <!-- ส่วนที่ 4: ระบบแชทแอดมิน -->
             <div id="section-chat" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 space-y-4">
                 <div class="flex justify-between items-center pb-3 border-b">
                     <div>
@@ -1548,6 +1548,8 @@
                         const displayName = `${name} (${studentId})`;
 
                         const userMsgs = allChats[key] || {};
+                        const totalMsgs = Object.keys(userMsgs).length;
+                        systemTotalMessages += totalMsgs;
                         
                         let unreadMsgs = 0;
                         Object.values(userMsgs).forEach(m => {
@@ -1576,10 +1578,9 @@
                         }
 
                         let isSelected = selectedAdminChatId === key;
-                        // เพิ่มแถบสีไฮไลต์ (Active Highlight) ให้ชัดเจนเมื่อเลือกชื่อสมาชิกคนนั้นๆ อยู่
+                        // เพิ่มแถบสีไฮไลต์ (Active Highlight) สีน้ำเงินเข้มตัวหนังสือขาวเมื่อเลือกแชทคนนั้น
                         let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
                         
-                        // ระบบแชทแอดมิน: ขึ้น 0 ข้อความ และแจ้งเตือนเฉพาะเมื่อมีข้อความเข้าใหม่
                         let badgeHtml = unreadMsgs > 0 
                             ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
                             : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
@@ -1638,11 +1639,11 @@
                 const cardBadgeRewards = document.getElementById('card-badge-rewards');
                 if (cardBadgeRewards) cardBadgeRewards.innerText = pendingRewardsCount;
 
-                // อัปเดตป้ายแจ้งเตือนกะพริบที่การ์ดแลกรางวัล (ถ้ามีค้างตรวจให้กะพริบ ถ้าไม่มีให้ขึ้น 0 ค้างตรวจ)
                 const pillRewards = document.getElementById('card-badge-rewards-pill');
                 if (pillRewards) {
                     if (pendingRewardsCount > 0) {
                         pillRewards.classList.remove('hidden');
+                        pillRewards.className = "bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
                         pillRewards.innerText = `มีค้างตรวจ (${pendingRewardsCount})`;
                     } else {
                         pillRewards.classList.remove('hidden');
@@ -1720,7 +1721,6 @@
                 const cardBadgeMissions = document.getElementById('card-badge-missions');
                 if (cardBadgeMissions) cardBadgeMissions.innerText = pendingMissionsCount;
 
-                // อัปเดตป้ายแจ้งเตือนกะพริบที่การ์ดภารกิจค้างตรวจ (ถ้ามีค้างตรวจให้กะพริบ ถ้าไม่มีให้ขึ้น 0 ค้างตรวจ)
                 const pillMissions = document.getElementById('card-badge-missions-pill');
                 if (pillMissions) {
                     if (pendingMissionsCount > 0) {
@@ -1819,6 +1819,9 @@
                 if (Object.keys(updates).length > 0) database.ref().update(updates);
             });
 
+            // อัปเดตรายการแชทใหม่ทันทีเพื่อให้แถบสีไฮไลต์อัปเดตตามชื่อที่เลือก
+            listenToAdminData();
+
             database.ref('chats/' + userKey).on('value', (snapshot) => {
                 const chatBox = document.getElementById('admin-chat-box');
                 const isAtBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 50;
@@ -1853,64 +1856,6 @@
                     chatBox.scrollTop = chatBox.scrollHeight;
                 }
             });
-        }
-
-        let isSendingAdminChat = false;
-        function sendAdminChatMessage(isImage = false) {
-            if (!selectedAdminChatId || isSendingAdminChat) return;
-            const userKey = selectedAdminChatId;
-
-            if (isImage) {
-                const fileInput = document.getElementById('admin-chat-file');
-                if (fileInput.files.length === 0) return;
-                isSendingAdminChat = true;
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400;
-                        let w = img.width, h = img.height;
-                        if (w > MAX_WIDTH) { h *= MAX_WIDTH / w; w = MAX_WIDTH; }
-                        canvas.width = w; canvas.height = h;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, w, h);
-                        const base64 = canvas.toDataURL('image/jpeg', 0.4);
-
-                        const now = new Date();
-                        const msgId = Date.now().toString();
-                        database.ref(`chats/${userKey}/${msgId}`).set({
-                            sender: 'แอดมิน',
-                            image: base64,
-                            read: false,
-                            timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                        }).then(() => { 
-                            fileInput.value = ''; 
-                            isSendingAdminChat = false;
-                        }).catch(() => { isSendingAdminChat = false; });
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                const input = document.getElementById('admin-chat-input');
-                const text = input.value.trim();
-                if (!text) return;
-
-                isSendingAdminChat = true;
-                const now = new Date();
-                const msgId = Date.now().toString();
-                database.ref(`chats/${userKey}/${msgId}`).set({
-                    sender: 'แอดมิน',
-                    text: text,
-                    read: false,
-                    timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                }).then(() => { 
-                    input.value = ''; 
-                    isSendingAdminChat = false;
-                }).catch(() => { isSendingAdminChat = false; });
-            }
         }
 
         function reviewRewardClaim(claimId, userIdentifier, cost, action) {
@@ -2043,7 +1988,7 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม (ฟอนต์ขนาดกะทัดรัด) =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
