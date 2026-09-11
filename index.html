@@ -403,9 +403,10 @@
                         <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
                         <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0</span> คน</p>
                     </div>
-                    <div class="bg-emerald-50 text-emerald-900 p-4 rounded-2xl border border-emerald-200 text-center">
-                        <p class="text-[11px] md:text-xs text-emerald-700 font-medium uppercase tracking-wider">คะแนนรวมในระบบ</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-points">0</span> คะแนน</p>
+                    <!-- เปลี่ยนช่อง "คะแนนรวมในระบบ" เป็น "ปริมาณ CO₂ ที่ลดได้สะสมทั้งหมด" ตามที่คุณต้องการ -->
+                    <div class="bg-teal-50 text-teal-900 p-4 rounded-2xl border border-teal-200 text-center">
+                        <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-total-co2">0.00</span> <span class="text-xs font-normal">kg</span></p>
                     </div>
                     <div class="bg-amber-50 text-amber-900 p-4 rounded-2xl border border-amber-200 text-center">
                         <p class="text-[11px] md:text-xs text-amber-700 font-medium uppercase tracking-wider">ภารกิจค้างตรวจ</p>
@@ -630,7 +631,7 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 4: ระบบแชทแอดมิน -->
+            <!-- ส่วนที่ 4: ระบบแชทแอดมิน (ไฮไลต์ชื่อสมาชิกที่เลือกชัดเจน) -->
             <div id="section-chat" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 space-y-4">
                 <div class="flex justify-between items-center pb-3 border-b">
                     <div>
@@ -1603,7 +1604,7 @@
                             }
 
                             let isSelected = selectedAdminChatId === key;
-                            let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
+                            let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-md ring-2 ring-blue-300' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
                             
                             let badgeHtml = unreadMsgs > 0 
                                 ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
@@ -1726,12 +1727,18 @@
                     
                     pendingTbody.innerHTML = '';
                     let pendingMissionsCount = 0;
+                    let totalSystemCo2 = 0; // คำนวณปริมาณ CO2 ลดได้สะสมทั้งหมดของระบบ
                     const pendingList = [];
                     allMissionsCache = [];
 
                     missionSnapshot.forEach(child => {
                         const m = child.val();
                         allMissionsCache.push(m);
+
+                        if (m.status === 'อนุมัติแล้ว') {
+                            const meta = getMissionMeta(m.missionName);
+                            totalSystemCo2 += meta.co2;
+                        }
 
                         const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''}`.toLowerCase();
 
@@ -1742,6 +1749,10 @@
                             }
                         }
                     });
+
+                    // อัปเดตช่อง CO2 สะสมทั้งหมดของระบบในแดชบอร์ดแอดมิน
+                    const adminCo2El = document.getElementById('admin-stat-total-co2');
+                    if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(2);
 
                     document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
                     const cardBadgeMissions = document.getElementById('card-badge-missions');
@@ -2316,3 +2327,4 @@
     </script>
 </body>
 </html>
+
