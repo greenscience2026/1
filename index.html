@@ -697,7 +697,7 @@
 
         </section>
 
-        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (แสดงเฉพาะหน้าแรกเมนูหลักแอดมิน) -->
+        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Real-time Storage Meter ของแท้ แสดงทศนิยม 2 ตำแหน่ง) -->
         <div id="admin-storage-footer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 mt-6 space-y-2">
             <div class="flex justify-between items-center text-xs md:text-sm font-bold text-stone-700">
                 <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ (Realtime Database)</span>
@@ -872,7 +872,7 @@
         function openAdminSection(sectionId) {
             document.getElementById('admin-main-overview').classList.add('hidden');
             document.getElementById('admin-menu-cards').classList.add('hidden');
-            document.getElementById('admin-storage-footer').classList.add('hidden'); // ซ่อนแถบพื้นที่เมื่อเข้าหน้าฟังก์ชันย่อย
+            document.getElementById('admin-storage-footer').classList.add('hidden');
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             
             const target = document.getElementById(sectionId);
@@ -890,7 +890,7 @@
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             document.getElementById('admin-main-overview').classList.remove('hidden');
             document.getElementById('admin-menu-cards').classList.remove('hidden');
-            document.getElementById('admin-storage-footer').classList.remove('hidden'); // แสดงแถบพื้นที่กลับมาที่หน้าหลักแอดมิน
+            document.getElementById('admin-storage-footer').classList.remove('hidden');
         }
 
         function toggleReportInput() {
@@ -1024,6 +1024,7 @@
 
             if (currentUser.role === 'admin') {
                 document.getElementById('admin-dashboard').classList.remove('hidden');
+                document.getElementById('admin-storage-footer').classList.remove('hidden');
                 closeAdminSection();
                 listenToAdminData();
             } else {
@@ -1530,7 +1531,13 @@
 
         // --- ระบบแอดมิน ---
         let allMissionsCache = [];
+        let adminDataListenerInitialized = false;
+
         function listenToAdminData() {
+            if (currentUser && currentUser.role === 'admin') {
+                updateStorageMeterRealtime();
+            }
+
             const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase();
             const searchPendingRewardTerm = (document.getElementById('search-pending-rewards')?.value || '').toLowerCase();
             const searchHistoryRewardTerm = (document.getElementById('search-history-rewards')?.value || '').toLowerCase();
@@ -1538,277 +1545,267 @@
 
             listenToLeaderboard();
 
-            database.ref('chats').on('value', (chatSnapshot) => {
-                const allChats = chatSnapshot.val() || {};
-                
-                database.ref('users').once('value', (userSnapshot) => {
-                    const usersData = userSnapshot.val() || {};
-                    const userListContainer = document.getElementById('admin-user-list');
-                    const chatUserList = document.getElementById('admin-chat-user-list');
+            // ป้องกันการผูก Event ซ้ำซ้อน (ใช้ .on ครั้งเดียวต่อ session ของแอดมิน)
+            if (!adminDataListenerInitialized) {
+                adminDataListenerInitialized = true;
+
+                database.ref('chats').on('value', (chatSnapshot) => {
+                    if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                    const allChats = chatSnapshot.val() || {};
                     
-                    userListContainer.innerHTML = '';
-                    chatUserList.innerHTML = '';
+                    database.ref('users').once('value', (userSnapshot) => {
+                        const usersData = userSnapshot.val() || {};
+                        const userListContainer = document.getElementById('admin-user-list');
+                        const chatUserList = document.getElementById('admin-chat-user-list');
+                        
+                        if(!userListContainer || !chatUserList) return;
+                        userListContainer.innerHTML = '';
+                        chatUserList.innerHTML = '';
 
-                    document.getElementById('admin-stat-users').innerText = Object.keys(usersData).length;
+                        document.getElementById('admin-stat-users').innerText = Object.keys(usersData).length;
 
-                    let totalPoints = 0;
-                    let systemTotalMessages = 0;
-                    let systemTotalUnread = 0;
+                        let totalPoints = 0;
+                        let systemTotalMessages = 0;
+                        let systemTotalUnread = 0;
 
-                    Object.entries(usersData).forEach(([key, u]) => {
-                        totalPoints += (u.points || 0);
-                        const studentId = u.studentId || key;
-                        const name = u.name || u.username || studentId;
-                        const displayName = `${name} (${studentId})`;
+                        Object.entries(usersData).forEach(([key, u]) => {
+                            totalPoints += (u.points || 0);
+                            const studentId = u.studentId || key;
+                            const name = u.name || u.username || studentId;
+                            const displayName = `${name} (${studentId})`;
 
-                        const userMsgs = allChats[key] || {};
-                        let unreadMsgs = 0;
-                        Object.values(userMsgs).forEach(m => {
-                            if (m.sender !== 'แอดมิน' && !m.read) {
-                                unreadMsgs++;
-                                systemTotalUnread++;
+                            const userMsgs = allChats[key] || {};
+                            const totalMsgs = Object.keys(userMsgs).length;
+                            systemTotalMessages += totalMsgs;
+                            
+                            let unreadMsgs = 0;
+                            Object.values(userMsgs).forEach(m => {
+                                if (m.sender !== 'แอดมิน' && !m.read) {
+                                    unreadMsgs++;
+                                    systemTotalUnread++;
+                                }
+                            });
+
+                            if (!searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm)) {
+                                userListContainer.innerHTML += `
+                                    <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
+                                        <div class="flex justify-between items-start">
+                                            <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
+                                                👤 ${displayName}
+                                            </button>
+                                        </div>
+                                        <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
+                                            <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
+                                            <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
+                                                🗑️ ลบ
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
                             }
+
+                            let isSelected = selectedAdminChatId === key;
+                            let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
+                            
+                            let badgeHtml = unreadMsgs > 0 
+                                ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
+                                : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
+
+                            chatUserList.innerHTML += `
+                                <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer flex justify-between items-center">
+                                    <span class="truncate">👤 ${name}</span>
+                                    ${badgeHtml}
+                                </button>
+                            `;
                         });
 
-                        if (!searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm)) {
-                            userListContainer.innerHTML += `
-                                <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
-                                    <div class="flex justify-between items-start">
-                                        <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
-                                            👤 ${displayName}
-                                        </button>
-                                    </div>
-                                    <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
-                                        <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
-                                        <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
-                                            🗑️ ลบ
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
+                        document.getElementById('admin-stat-points').innerText = totalPoints;
+
+                        const chatCardBadge = document.getElementById('card-badge-chat');
+                        if (chatCardBadge) {
+                            if (systemTotalUnread > 0) {
+                                chatCardBadge.className = "bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse";
+                                chatCardBadge.innerText = `🔴 ${systemTotalUnread} ข้อความใหม่`;
+                            } else {
+                                chatCardBadge.className = "bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full";
+                                chatCardBadge.innerText = `0 ข้อความ`;
+                            }
                         }
-
-                        let isSelected = selectedAdminChatId === key;
-                        let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
-                        
-                        let badgeHtml = unreadMsgs > 0 
-                            ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
-                            : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
-
-                        chatUserList.innerHTML += `
-                            <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer flex justify-between items-center">
-                                <span class="truncate">👤 ${name}</span>
-                                ${badgeHtml}
-                            </button>
-                        `;
                     });
+                });
 
-                    document.getElementById('admin-stat-points').innerText = totalPoints;
+                database.ref('reward_claims').on('value', (claimSnapshot) => {
+                    if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                    const pendingRewardsTbody = document.getElementById('admin-pending-rewards-table');
+                    const historyRewardsTbody = document.getElementById('admin-reward-history-table');
+                    if(!pendingRewardsTbody) return;
+                    
+                    pendingRewardsTbody.innerHTML = '';
+                    historyRewardsTbody.innerHTML = '';
+                    
+                    let pendingRewardsCount = 0;
+                    const pendingClaims = [];
+                    const historyClaims = [];
 
-                    const chatCardBadge = document.getElementById('card-badge-chat');
-                    if (chatCardBadge) {
-                        if (systemTotalUnread > 0) {
-                            chatCardBadge.className = "bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse";
-                            chatCardBadge.innerText = `🔴 ${systemTotalUnread} ข้อความใหม่`;
+                    claimSnapshot.forEach(child => {
+                        const claim = child.val();
+                        const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || ''}`.toLowerCase();
+
+                        if(claim.status === 'รอแอดมินอนุมัติ') {
+                            pendingRewardsCount++;
+                            if (!searchPendingRewardTerm || searchTarget.includes(searchPendingRewardTerm)) {
+                                pendingClaims.push(claim);
+                            }
                         } else {
-                            chatCardBadge.className = "bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full";
-                            chatCardBadge.innerText = `0 ข้อความ`;
+                            if (!searchHistoryRewardTerm || searchTarget.includes(searchHistoryRewardTerm)) {
+                                historyClaims.push(claim);
+                            }
+                        }
+                    });
+
+                    document.getElementById('admin-stat-pending-rewards').innerText = pendingRewardsCount;
+                    const cardBadgeRewards = document.getElementById('card-badge-rewards');
+                    if (cardBadgeRewards) cardBadgeRewards.innerText = pendingRewardsCount;
+
+                    const pillRewards = document.getElementById('card-badge-rewards-pill');
+                    if (pillRewards) {
+                        if (pendingRewardsCount > 0) {
+                            pillRewards.className = "bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
+                            pillRewards.innerText = `มีค้างตรวจ (${pendingRewardsCount})`;
+                        } else {
+                            pillRewards.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
+                            pillRewards.innerText = `0 ค้างตรวจ`;
                         }
                     }
-                });
-            });
 
-            database.ref('reward_claims').on('value', (claimSnapshot) => {
-                const pendingRewardsTbody = document.getElementById('admin-pending-rewards-table');
-                const historyRewardsTbody = document.getElementById('admin-reward-history-table');
-                
-                pendingRewardsTbody.innerHTML = '';
-                historyRewardsTbody.innerHTML = '';
-                
-                let pendingRewardsCount = 0;
-                const pendingClaims = [];
-                const historyClaims = [];
-
-                claimSnapshot.forEach(child => {
-                    const claim = child.val();
-                    const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || ''}`.toLowerCase();
-
-                    if(claim.status === 'รอแอดมินอนุมัติ') {
-                        pendingRewardsCount++;
-                        if (!searchPendingRewardTerm || searchTarget.includes(searchPendingRewardTerm)) {
-                            pendingClaims.push(claim);
-                        }
+                    if (pendingClaims.length === 0) {
+                        pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่มีคำขอแลกของรางวัลที่ค้างตรวจสอบ 🎉</td></tr>`;
                     } else {
-                        if (!searchHistoryRewardTerm || searchTarget.includes(searchHistoryRewardTerm)) {
-                            historyClaims.push(claim);
+                        pendingClaims.reverse().forEach(claim => {
+                            const uid = claim.userIdentifier;
+                            pendingRewardsTbody.innerHTML += `
+                                <tr class="border-b border-stone-200 hover:bg-purple-50/40">
+                                    <td class="p-3 font-semibold text-stone-800">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
+                                    <td class="p-3 font-bold text-purple-900">${claim.rewardName}</td>
+                                    <td class="p-3 font-bold text-amber-700">-${claim.cost} คะแนน</td>
+                                    <td class="p-3 text-xs text-gray-500">${claim.timestamp}</td>
+                                    <td class="p-3 text-center">
+                                        <div class="flex justify-center gap-1.5">
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+
+                    if (historyClaims.length === 0) {
+                        historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ยังไม่มีประวัติการคัดกรองคำขอแลกรางวัล</td></tr>`;
+                    } else {
+                        historyClaims.reverse().forEach(claim => {
+                            let badgeStyle = claim.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100';
+                            let reasonText = claim.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${claim.reason}</span>` : '';
+                            const uid = claim.userIdentifier;
+
+                            historyRewardsTbody.innerHTML += `
+                                <tr class="border-b border-stone-100 hover:bg-stone-50 text-xs md:text-sm">
+                                    <td class="p-3 font-medium text-stone-700">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
+                                    <td class="p-3 font-semibold text-stone-800">${claim.rewardName}</td>
+                                    <td class="p-3 font-bold text-stone-600">-${claim.cost} คะแนน</td>
+                                    <td class="p-3 text-xs text-gray-400">${claim.timestamp}</td>
+                                    <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeStyle}">${claim.status}</span>${reasonText}</td>
+                                </tr>
+                            `;
+                        });
+                    }
+                });
+
+                database.ref('missions').on('value', (missionSnapshot) => {
+                    if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                    const pendingTbody = document.getElementById('admin-pending-table');
+                    if(!pendingTbody) return;
+                    
+                    pendingTbody.innerHTML = '';
+                    let pendingMissionsCount = 0;
+                    const pendingList = [];
+                    allMissionsCache = [];
+
+                    missionSnapshot.forEach(child => {
+                        const m = child.val();
+                        allMissionsCache.push(m);
+
+                        const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''}`.toLowerCase();
+
+                        if(m.status === 'รออนุมัติ') {
+                            pendingMissionsCount++;
+                            if (!searchPendingMissionTerm || searchTarget.includes(searchPendingMissionTerm)) {
+                                pendingList.push(m);
+                            }
+                        }
+                    });
+
+                    document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
+                    const cardBadgeMissions = document.getElementById('card-badge-missions');
+                    if (cardBadgeMissions) cardBadgeMissions.innerText = pendingMissionsCount;
+
+                    const pillMissions = document.getElementById('card-badge-missions-pill');
+                    if (pillMissions) {
+                        if (pendingMissionsCount > 0) {
+                            pillMissions.className = "bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
+                            pillMissions.innerText = `มีค้างตรวจ (${pendingMissionsCount})`;
+                        } else {
+                            pillMissions.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
+                            pillMissions.innerText = `0 ค้างตรวจ`;
                         }
                     }
-                });
 
-                document.getElementById('admin-stat-pending-rewards').innerText = pendingRewardsCount;
-                const cardBadgeRewards = document.getElementById('card-badge-rewards');
-                if (cardBadgeRewards) cardBadgeRewards.innerText = pendingRewardsCount;
-
-                const pillRewards = document.getElementById('card-badge-rewards-pill');
-                if (pillRewards) {
-                    if (pendingRewardsCount > 0) {
-                        pillRewards.classList.remove('hidden');
-                        pillRewards.className = "bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
-                        pillRewards.innerText = `มีค้างตรวจ (${pendingRewardsCount})`;
+                    if(pendingList.length === 0) {
+                        pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
                     } else {
-                        pillRewards.classList.remove('hidden');
-                        pillRewards.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
-                        pillRewards.innerText = `0 ค้างตรวจ`;
-                    }
-                }
-
-                if (pendingClaims.length === 0) {
-                    pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่มีคำขอแลกของรางวัลที่ค้างตรวจสอบ 🎉</td></tr>`;
-                } else {
-                    pendingClaims.reverse().forEach(claim => {
-                        const uid = claim.userIdentifier;
-                        pendingRewardsTbody.innerHTML += `
-                            <tr class="border-b border-stone-200 hover:bg-purple-50/40">
-                                <td class="p-3 font-semibold text-stone-800">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
-                                <td class="p-3 font-bold text-purple-900">${claim.rewardName}</td>
-                                <td class="p-3 font-bold text-amber-700">-${claim.cost} คะแนน</td>
-                                <td class="p-3 text-xs text-gray-500">${claim.timestamp}</td>
-                                <td class="p-3 text-center">
-                                    <div class="flex justify-center gap-1.5">
-                                        <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                        <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-
-                if (historyClaims.length === 0) {
-                    historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ยังไม่มีประวัติการคัดกรองคำขอแลกรางวัล</td></tr>`;
-                } else {
-                    historyClaims.reverse().forEach(claim => {
-                        let badgeStyle = claim.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100';
-                        let reasonText = claim.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${claim.reason}</span>` : '';
-                        const uid = claim.userIdentifier;
-
-                        historyRewardsTbody.innerHTML += `
-                            <tr class="border-b border-stone-100 hover:bg-stone-50 text-xs md:text-sm">
-                                <td class="p-3 font-medium text-stone-700">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
-                                <td class="p-3 font-semibold text-stone-800">${claim.rewardName}</td>
-                                <td class="p-3 font-bold text-stone-600">-${claim.cost} คะแนน</td>
-                                <td class="p-3 text-xs text-gray-400">${claim.timestamp}</td>
-                                <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeStyle}">${claim.status}</span>${reasonText}</td>
-                            </tr>
-                        `;
-                    });
-                }
-            });
-
-            database.ref('missions').on('value', (missionSnapshot) => {
-                const pendingTbody = document.getElementById('admin-pending-table');
-                pendingTbody.innerHTML = '';
-                
-                let pendingMissionsCount = 0;
-                const pendingList = [];
-                allMissionsCache = [];
-
-                missionSnapshot.forEach(child => {
-                    const m = child.val();
-                    allMissionsCache.push(m);
-
-                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''}`.toLowerCase();
-
-                    if(m.status === 'รออนุมัติ') {
-                        pendingMissionsCount++;
-                        if (!searchPendingMissionTerm || searchTarget.includes(searchPendingMissionTerm)) {
-                            pendingList.push(m);
-                        }
+                        pendingList.reverse().forEach(m => {
+                            const uid = m.userIdentifier;
+                            pendingTbody.innerHTML += `
+                                <tr class="border-b border-stone-200 hover:bg-stone-50">
+                                    <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-stone-400">รหัส: ${uid}</span></td>
+                                    <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
+                                    <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
+                                    <td class="p-3 text-center">
+                                        <div class="flex justify-center gap-1.5">
+                                            <button onclick="reviewMission('${m.id}', '${uid}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewMission('${m.id}', '${uid}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                        });
                     }
                 });
+            }
+        }
 
-                document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
-                const cardBadgeMissions = document.getElementById('card-badge-missions');
-                if (cardBadgeMissions) cardBadgeMissions.innerText = pendingMissionsCount;
+        // ฟังก์ชันคำนวณและอัปเดตพื้นที่จัดเก็บ Real-time แบบแสดงทศนิยม 2 ตำแหน่ง
+        function updateStorageMeterRealtime() {
+            database.ref().on('value', (snapshot) => {
+                const dataString = JSON.stringify(snapshot.val() || {});
+                const bytes = new Blob([dataString]).size;
+                const kb = bytes / 1000;
+                let sizeText = `${bytes} ไบต์`;
+                const maxKb = 1000000; // 1 GB = 1,000,000 KB
+                let percentage = (kb / maxKb) * 100;
 
-                const pillMissions = document.getElementById('card-badge-missions-pill');
-                if (pillMissions) {
-                    if (pendingMissionsCount > 0) {
-                        pillMissions.classList.remove('hidden');
-                        pillMissions.className = "bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
-                        pillMissions.innerText = `มีค้างตรวจ (${pendingMissionsCount})`;
-                    } else {
-                        pillMissions.classList.remove('hidden');
-                        pillMissions.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
-                        pillMissions.innerText = `0 ค้างตรวจ`;
-                    }
+                if (kb >= 1000) {
+                    sizeText = `${(kb / 1000).toFixed(2)} MB`;
+                } else if (kb >= 1) {
+                    sizeText = `${kb.toFixed(2)} KB`;
                 }
 
-                if(pendingList.length === 0) {
-                    pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
-                } else {
-                    pendingList.reverse().forEach(m => {
-                        const uid = m.userIdentifier;
-                        pendingTbody.innerHTML += `
-                            <tr class="border-b border-stone-200 hover:bg-stone-50">
-                                <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-stone-400">รหัส: ${uid}</span></td>
-                                <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
-                                <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
-                                <td class="p-3 text-center">
-                                    <div class="flex justify-center gap-1.5">
-                                        <button onclick="reviewMission('${m.id}', '${uid}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                        <button onclick="reviewMission('${m.id}', '${uid}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
-                                    </div>
-                                </td>
-                            </tr>`;
-                    });
-                }
+                if (percentage < 0.01 && bytes > 0) percentage = 0.01;
+
+                const sizeEl = document.getElementById('storage-size-text');
+                const barEl = document.getElementById('storage-progress-bar');
+                if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
+                if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
             });
-
-            // ดึงขนาดข้อมูลแบบ Real-time ผ่าน Firebase REST API (ฐานสิบ: 1 MB = 1,000 KB, 1 GB = 1,000,000 KB)
-            const dbUrl = firebaseConfig.databaseURL + '/.json?print=silent';
-            fetch(dbUrl)
-                .then(response => {
-                    const lengthHeader = response.headers.get('Content-Length');
-                    if (lengthHeader) {
-                        return parseInt(lengthHeader, 10);
-                    }
-                    return response.text().then(text => new Blob([text]).size);
-                })
-                .then(bytes => {
-                    const kb = bytes / 1000;
-                    let sizeText = `${bytes} ไบต์`;
-                    const maxKb = 1000000; // โควต้าแพ็กเกจ Spark ฟรี 1 GB = 1,000,000 KB
-                    let percentage = (kb / maxKb) * 100;
-
-                    if (kb >= 1000) {
-                        sizeText = `${(kb / 1000).toFixed(2)} MB`;
-                    } else if (kb >= 1) {
-                        sizeText = `${kb.toFixed(2)} KB`;
-                    }
-
-                    if (percentage < 0.01 && bytes > 0) percentage = 0.01;
-
-                    const sizeEl = document.getElementById('storage-size-text');
-                    const barEl = document.getElementById('storage-progress-bar');
-                    if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
-                    if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
-                })
-                .catch(() => {
-                    database.ref().once('value', (snapshot) => {
-                        const dataString = JSON.stringify(snapshot.val() || {});
-                        const bytes = new Blob([dataString]).size;
-                        const kb = bytes / 1000;
-                        let sizeText = kb >= 1000 ? `${(kb / 1000).toFixed(2)} MB` : `${kb.toFixed(2)} KB`;
-                        let percentage = (kb / 1000000) * 100;
-                        if (percentage < 0.01 && bytes > 0) percentage = 0.01;
-
-                        const sizeEl = document.getElementById('storage-size-text');
-                        const barEl = document.getElementById('storage-progress-bar');
-                        if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
-                        if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
-                    });
-                });
         }
 
         function deleteUserPermanently(userKey) {
