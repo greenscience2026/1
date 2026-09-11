@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDK (Realtime Database) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -139,7 +139,7 @@
 
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
-                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้งต่อวันเท่านั้น</p>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละกิจกรรมสามารถส่งได้ 1 ครั้ง และต้องเว้นระยะเวลาครบ 24 ชั่วโมงจึงจะส่งใหม่ได้</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs" id="box-mission-1">
@@ -348,7 +348,7 @@
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">100 คะแนน</span>
                                 <div class="text-4xl my-2">📓</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">สมุดโน้ต</h4>
-                                <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตา</p>
+                                <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตารีไซเคิล</p>
                             </div>
                             <button onclick="claimReward(100, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
@@ -397,45 +397,47 @@
         <!-- 3. Dashboard ผู้ดูแลระบบ (Admin) -->
         <section id="admin-dashboard" class="hidden space-y-4 md:space-y-6">
             
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
-                <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl border border-blue-200 text-center">
-                    <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
-                    <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0</span> คน</p>
+            <div id="admin-main-overview" class="space-y-4 md:space-y-6">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                    <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl border border-blue-200 text-center">
+                        <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0</span> คน</p>
+                    </div>
+                    <div class="bg-emerald-50 text-emerald-900 p-4 rounded-2xl border border-emerald-200 text-center">
+                        <p class="text-[11px] md:text-xs text-emerald-700 font-medium uppercase tracking-wider">คะแนนรวมในระบบ</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-points">0</span> คะแนน</p>
+                    </div>
+                    <div class="bg-amber-50 text-amber-900 p-4 rounded-2xl border border-amber-200 text-center">
+                        <p class="text-[11px] md:text-xs text-amber-700 font-medium uppercase tracking-wider">ภารกิจค้างตรวจ</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1 text-amber-700"><span id="admin-stat-pending-missions">0</span> รายการ</p>
+                    </div>
+                    <div class="bg-purple-50 text-purple-900 p-4 rounded-2xl border border-purple-200 text-center">
+                        <p class="text-[11px] md:text-xs text-purple-700 font-medium uppercase tracking-wider">แลกรางวัลค้างตรวจ</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1 text-purple-700"><span id="admin-stat-pending-rewards">0</span> รายการ</p>
+                    </div>
                 </div>
-                <div class="bg-emerald-50 text-emerald-900 p-4 rounded-2xl border border-emerald-200 text-center">
-                    <p class="text-[11px] md:text-xs text-emerald-700 font-medium uppercase tracking-wider">คะแนนรวมในระบบ</p>
-                    <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-points">0</span> คะแนน</p>
-                </div>
-                <div class="bg-amber-50 text-amber-900 p-4 rounded-2xl border border-amber-200 text-center">
-                    <p class="text-[11px] md:text-xs text-amber-700 font-medium uppercase tracking-wider">ภารกิจค้างตรวจ</p>
-                    <p class="text-xl md:text-3xl font-bold mt-1 text-amber-700"><span id="admin-stat-pending-missions">0</span> รายการ</p>
-                </div>
-                <div class="bg-purple-50 text-purple-900 p-4 rounded-2xl border border-purple-200 text-center">
-                    <p class="text-[11px] md:text-xs text-purple-700 font-medium uppercase tracking-wider">แลกรางวัลค้างตรวจ</p>
-                    <p class="text-xl md:text-3xl font-bold mt-1 text-purple-700"><span id="admin-stat-pending-rewards">0</span> รายการ</p>
-                </div>
-            </div>
 
-            <!-- ตารางอันดับคะแนน (Leaderboard) -->
-            <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
-                        🏆 อันดับคะแนนสะสมสมาชิกทั้งหมด (Leaderboard)
-                    </h3>
-                    <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">อัปเดตเรียลไทม์</span>
-                </div>
-                <div class="overflow-y-auto max-h-52 border border-stone-100 rounded-xl">
-                    <table class="w-full text-left text-xs md:text-sm border-collapse">
-                        <thead class="sticky top-0 bg-stone-100 z-10">
-                            <tr class="text-stone-600 border-b">
-                                <th class="p-2.5 w-16 text-center">อันดับ</th>
-                                <th class="p-2.5">ผู้ใช้งาน</th>
-                                <th class="p-2.5 text-right">ลด CO₂</th>
-                                <th class="p-2.5 text-right">คะแนนสะสม</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-leaderboard-table"></tbody>
-                    </table>
+                <!-- ตารางอันดับคะแนน (Leaderboard) -->
+                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
+                            🏆 อันดับคะแนนสะสมสมาชิกทั้งหมด (Leaderboard)
+                        </h3>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">อัปเดตเรียลไทม์</span>
+                    </div>
+                    <div class="overflow-y-auto max-h-52 border border-stone-100 rounded-xl">
+                        <table class="w-full text-left text-xs md:text-sm border-collapse">
+                            <thead class="sticky top-0 bg-stone-100 z-10">
+                                <tr class="text-stone-600 border-b">
+                                    <th class="p-2.5 w-16 text-center">อันดับ</th>
+                                    <th class="p-2.5">ผู้ใช้งาน</th>
+                                    <th class="p-2.5 text-right">ลด CO₂</th>
+                                    <th class="p-2.5 text-right">คะแนนสะสม</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-leaderboard-table"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -499,7 +501,7 @@
 
             </div>
 
-            <!-- ================= หน้ารายละเอียด (ไม่มีแถบคะแนนสะสมด้านบนตามที่สั่ง) ================= -->
+            <!-- ================= หน้ารายละเอียด (ซ่อนภาพรวมและ Leaderboard เมื่อกดเข้ามาดูแต่ละแท็บ) ================= -->
 
             <!-- ส่วนที่ 1: ภารกิจรอตรวจสอบ -->
             <div id="section-pending-missions" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-amber-500 space-y-4">
@@ -855,8 +857,10 @@
         }
 
         function openAdminSection(sectionId) {
+            document.getElementById('admin-main-overview').classList.add('hidden');
             document.getElementById('admin-menu-cards').classList.add('hidden');
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
+            
             const target = document.getElementById(sectionId);
             if (target) {
                 target.classList.remove('hidden');
@@ -870,6 +874,7 @@
 
         function closeAdminSection() {
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById('admin-main-overview').classList.remove('hidden');
             document.getElementById('admin-menu-cards').classList.remove('hidden');
         }
 
@@ -1114,79 +1119,61 @@
             return `${y}-${m}-${d}`;
         }
 
-        // ระบบส่งรูปภาพแบบย่อขนาดเป็น Base64 เสถียร 100% ไม่ติด CORS และทำงานได้ทันที
         function submitSpecificMission(missionName, inputId, btnElement, boxId) {
             const fileInput = document.getElementById(inputId);
             if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
 
-            const todayStr = getTodayDateString();
             const userIdentifier = currentUser.studentId;
-            
-            database.ref('missions').once('value', (snapshot) => {
-                let alreadyDoneToday = false;
-                snapshot.forEach(child => {
-                    const m = child.val();
-                    if (m.userIdentifier === userIdentifier && m.missionName === missionName && m.dateStr === todayStr) {
-                        alreadyDoneToday = true;
-                    }
-                });
+            const originalText = btnElement.innerText;
+            btnElement.disabled = true;
+            btnElement.innerText = 'กำลังประมวลผล...';
 
-                if (alreadyDoneToday) {
-                    alert(`⚠️ กิจกรรม "${missionName}" คุณได้ส่งไปแล้วในวันนี้ (จำกัด 1 ครั้ง/วัน) สามารถทำกิจกรรมข้ออื่นได้ครับ`);
-                    return;
-                }
-
-                const originalText = btnElement.innerText;
-                btnElement.disabled = true;
-                btnElement.innerText = 'กำลังประมวลผลรูป...';
-
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 450; 
-                        let width = img.width;
-                        let height = img.height;
-                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                        
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.45);
-                        const missionId = Date.now().toString();
-                        const now = new Date();
-                        const timeStr = now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
-                        const dateFormatted = now.toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric'});
-                        
-                        const newMission = {
-                            id: missionId,
-                            userIdentifier: userIdentifier,
-                            userName: currentUser.name || currentUser.username || userIdentifier,
-                            missionName: missionName,
-                            dateStr: todayStr,
-                            image: compressedBase64,
-                            status: 'รออนุมัติ',
-                            timestamp: `${dateFormatted} เวลา ${timeStr} น.`
-                        };
-
-                        database.ref('missions/' + missionId).set(newMission).then(() => {
-                            alert(`⚡ ส่งภารกิจ "${missionName}" สำเร็จ! ข้อมูลถูกส่งให้แอดมินตรวจสอบแล้ว`);
-                            fileInput.value = '';
-                            btnElement.disabled = false;
-                            btnElement.innerText = originalText;
-                        }).catch(err => {
-                            alert("เกิดข้อผิดพลาด: " + err.message);
-                            btnElement.disabled = false;
-                            btnElement.innerText = originalText;
-                        });
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 450; 
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.45);
+                    const missionId = Date.now().toString();
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
+                    const dateFormatted = now.toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                    
+                    const newMission = {
+                        id: missionId,
+                        userIdentifier: userIdentifier,
+                        userName: currentUser.name || currentUser.username || userIdentifier,
+                        missionName: missionName,
+                        submitTime: now.getTime(), // บันทึก timestamp เป็นมิลลิวินาทีสำหรับเช็ค 24 ชั่วโมง
+                        image: compressedBase64,
+                        status: 'รออนุมัติ',
+                        timestamp: `${dateFormatted} เวลา ${timeStr} น.`
                     };
-                    img.src = event.target.result;
+
+                    database.ref('missions/' + missionId).set(newMission).then(() => {
+                        alert(`⚡ ส่งภารกิจ "${missionName}" สำเร็จ! ข้อมูลถูกส่งให้แอดมินตรวจสอบแล้ว`);
+                        fileInput.value = '';
+                        btnElement.disabled = false;
+                        btnElement.innerText = originalText;
+                    }).catch(err => {
+                        alert("เกิดข้อผิดพลาด: " + err.message);
+                        btnElement.disabled = false;
+                        btnElement.innerText = originalText;
+                    });
                 };
-                reader.readAsDataURL(file);
-            });
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function fetchUserMissions() {
@@ -1200,7 +1187,11 @@
                 let todayCo2Total = 0;
                 const todayStr = getTodayDateString();
                 const list = [];
-                const submittedMissionsToday = new Set();
+                
+                // เก็บเวลาล่าสุดที่ส่งของแต่ละภารกิจ (เช็คแบบ 24 ชั่วโมงจริง)
+                const latestMissionTime = {};
+                const nowTime = new Date().getTime();
+                const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
                 snapshot.forEach(child => {
                     const m = child.val();
@@ -1208,18 +1199,24 @@
                         list.push(m);
                         hasData = true;
 
-                        if (m.dateStr === todayStr) {
-                            submittedMissionsToday.add(m.missionName);
-                            if (m.status === 'อนุมัติแล้ว') {
-                                const meta = getMissionMeta(m.missionName);
-                                todayCo2Total += meta.co2;
-                            }
+                        // คำนวณ CO2 วันนี้
+                        const mDate = new Date(m.submitTime || 0);
+                        const mDateStr = `${mDate.getFullYear()}-${String(mDate.getMonth() + 1).padStart(2, '0')}-${String(mDate.getDate()).padStart(2, '0')}`;
+                        if (mDateStr === todayStr && m.status === 'อนุมัติแล้ว') {
+                            const meta = getMissionMeta(m.missionName);
+                            todayCo2Total += meta.co2;
+                        }
+
+                        // เช็คเวลาล่าสุดของแต่ละชื่อภารกิจ
+                        if (!latestMissionTime[m.missionName] || m.submitTime > latestMissionTime[m.missionName]) {
+                            latestMissionTime[m.missionName] = m.submitTime || 0;
                         }
                     }
                 });
 
                 document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(2);
 
+                // ตรวจสอบและล็อกปุ่มภารกิจแต่ละตัวตามกฎ 24 ชั่วโมง พร้อมแสดงเวลาถอยหลัง
                 for (let i = 1; i <= 8; i++) {
                     const box = document.getElementById(`box-mission-${i}`);
                     if (!box) continue;
@@ -1227,15 +1224,23 @@
                     const btn = box.querySelector('.btn-mission');
                     const missionName = h4.innerText.trim();
 
-                    if (submittedMissionsToday.has(missionName)) {
+                    const lastTime = latestMissionTime[missionName] || 0;
+                    const timeLeft = (lastTime + TWENTY_FOUR_HOURS) - nowTime;
+
+                    if (timeLeft > 0) {
                         btn.disabled = true;
                         btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
-                        btn.classList.add('bg-stone-300', 'text-stone-500', 'cursor-not-allowed');
-                        btn.innerText = '✓ ทำไปแล้ววันนี้';
+                        btn.classList.add('bg-stone-300', 'text-stone-600', 'cursor-not-allowed');
+                        
+                        // คำนวณ ชั่วโมง:นาที:วินาที
+                        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                        btn.innerText = `⏳ รอ ${hours}ชม. ${minutes}น.`;
                     } else {
                         btn.disabled = false;
                         btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
-                        btn.classList.remove('bg-stone-300', 'text-stone-500', 'cursor-not-allowed');
+                        btn.classList.remove('bg-stone-300', 'text-stone-600', 'cursor-not-allowed');
                         btn.innerText = 'ส่งภารกิจนี้';
                     }
                 }
@@ -1438,13 +1443,17 @@
             });
         }
 
+        // ปรับปรุงความเสถียรช่องแชท ป้องกันการกดส่งเบิ้ลซ้ำซ้อน
+        let isSendingChat = false;
         function sendUserChatMessage(isImage = false) {
+            if (isSendingChat) return;
             const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
 
             if (isImage) {
                 const fileInput = document.getElementById('user-chat-file');
                 if (fileInput.files.length === 0) return;
+                isSendingChat = true;
                 const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1466,7 +1475,10 @@
                             image: base64,
                             read: false,
                             timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                        }).then(() => { fileInput.value = ''; });
+                        }).then(() => { 
+                            fileInput.value = ''; 
+                            isSendingChat = false;
+                        }).catch(() => { isSendingChat = false; });
                     };
                     img.src = e.target.result;
                 };
@@ -1476,6 +1488,7 @@
                 const text = input.value.trim();
                 if (!text) return;
 
+                isSendingChat = true;
                 const now = new Date();
                 const msgId = Date.now().toString();
                 database.ref(`chats/${safeKey}/${msgId}`).set({
@@ -1483,7 +1496,10 @@
                     text: text,
                     read: false,
                     timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                }).then(() => { input.value = ''; });
+                }).then(() => { 
+                    input.value = ''; 
+                    isSendingChat = false;
+                }).catch(() => { isSendingChat = false; });
             }
         }
 
@@ -1801,13 +1817,15 @@
             });
         }
 
+        let isSendingAdminChat = false;
         function sendAdminChatMessage(isImage = false) {
-            if (!selectedAdminChatId) return;
+            if (!selectedAdminChatId || isSendingAdminChat) return;
             const userKey = selectedAdminChatId;
 
             if (isImage) {
                 const fileInput = document.getElementById('admin-chat-file');
                 if (fileInput.files.length === 0) return;
+                isSendingAdminChat = true;
                 const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1829,7 +1847,10 @@
                             image: base64,
                             read: false,
                             timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                        }).then(() => { fileInput.value = ''; });
+                        }).then(() => { 
+                            fileInput.value = ''; 
+                            isSendingAdminChat = false;
+                        }).catch(() => { isSendingAdminChat = false; });
                     };
                     img.src = e.target.result;
                 };
@@ -1839,6 +1860,7 @@
                 const text = input.value.trim();
                 if (!text) return;
 
+                isSendingAdminChat = true;
                 const now = new Date();
                 const msgId = Date.now().toString();
                 database.ref(`chats/${userKey}/${msgId}`).set({
@@ -1846,7 +1868,10 @@
                     text: text,
                     read: false,
                     timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                }).then(() => { input.value = ''; });
+                }).then(() => { 
+                    input.value = ''; 
+                    isSendingAdminChat = false;
+                }).catch(() => { isSendingAdminChat = false; });
             }
         }
 
@@ -2196,4 +2221,3 @@
     </script>
 </body>
 </html>
-
