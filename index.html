@@ -20,16 +20,16 @@
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
 
     <!-- Navbar แถบสีเขียวด้านบน -->
-    <nav class="bg-emerald-600 text-white px-3 py-2 sm:px-4 sm:py-2.5 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
+    <nav class="bg-emerald-600 text-white px-3 py-2.5 sm:px-4 sm:py-3 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 shrink-0">
             <span class="text-xl sm:text-2xl">📗</span>
-            <span class="text-base sm:text-lg font-bold tracking-tight font-serif whitespace-nowrap">Green Passport</span>
+            <span class="text-sm sm:text-lg font-bold tracking-tight font-serif whitespace-nowrap">Green Passport</span>
         </div>
         
-        <div id="nav-auth" class="flex flex-col items-end gap-1 text-xs shrink-0"></div>
+        <div id="nav-auth" class="flex items-center gap-2 text-xs shrink-0"></div>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-3 sm:p-4 mt-2 sm:mt-4">
+    <main class="max-w-5xl mx-auto p-2 sm:p-4 mt-2 sm:mt-4">
         
         <!-- 1. ล็อกอิน / ลงทะเบียน -->
         <section id="auth-section" class="bg-white rounded-3xl shadow-sm max-w-md mx-auto my-6 sm:my-10 border border-stone-200 overflow-hidden">
@@ -42,11 +42,11 @@
                 </button>
             </div>
 
-            <div class="p-5 sm:p-6">
+            <div class="p-4 sm:p-6">
                 <div id="form-login" class="space-y-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                        <input type="text" id="login-studentid" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
                     </div>
 
                     <div>
@@ -118,7 +118,7 @@
             </div>
 
             <div id="user-tab-missions" class="space-y-4 md:space-y-6">
-                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
+                <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
                         🏆 อันดับคะแนนสะสมสูงสุด (Leaderboard)
                     </h3>
@@ -137,9 +137,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
+                <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
-                    <p class="text-xs text-amber-700 bg-amber-50 p-2 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละภารกิจสามารถส่งได้ 1 ครั้ง และต้องเว้นระยะเวลาครบ 24 ชั่วโมงจึงจะส่งใหม่ได้</p>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl mb-4 inline-block">⚠️ เงื่อนไข: แต่ละภารกิจสามารถส่งได้ 1 ครั้ง และต้องเว้นระยะเวลาครบ 24 ชั่วโมงจึงจะส่งใหม่ได้</p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ใช้ถุงผ้าแทนถุงพลาสติก" id="box-mission-1">
@@ -348,7 +348,7 @@
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">100 คะแนน</span>
                                 <div class="text-4xl my-2">📓</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">สมุดโน้ต</h4>
-                                <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตา</p>
+                                <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตารีไซเคิล</p>
                             </div>
                             <button onclick="claimReward(100, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
@@ -501,7 +501,7 @@
 
             </div>
 
-            <!-- ================= หน้ารายละเอียด (ซ่อนภาพรวมและ Leaderboard เมื่อกดเข้ามาดูแต่ละแท็บ) ================= -->
+            <!-- ================= หน้ารายละเอียด ================= -->
 
             <!-- ส่วนที่ 1: ภารกิจรอตรวจสอบ -->
             <div id="section-pending-missions" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-amber-500 space-y-4">
@@ -999,7 +999,7 @@
             const displayName = currentUser.name || currentUser.studentId || currentUser.username || 'ผู้ใช้';
             
             document.getElementById('nav-auth').innerHTML = `
-                <div class="flex items-center gap-1.5 max-w-[170px] sm:max-w-xs bg-emerald-700/80 px-2.5 py-0.5 rounded-full border border-emerald-400/50">
+                <div class="flex items-center gap-1.5 max-w-[140px] sm:max-w-xs bg-emerald-700/80 px-2.5 py-1 rounded-full border border-emerald-400/50">
                     <span class="text-[11px]">👤</span>
                     <span class="truncate text-xs font-medium text-white" title="${displayName}">${displayName}</span>
                 </div>
@@ -1121,7 +1121,64 @@
             return `${y}-${m}-${d}`;
         }
 
-        // ระบบแคชเวลาล่าสุดของภารกิจแต่ละตัวเพื่ออัปเดตนาฬิกาเรียลไทม์
+        function submitSpecificMission(missionName, inputId, btnElement, boxId) {
+            const fileInput = document.getElementById(inputId);
+            if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
+
+            const userIdentifier = currentUser.studentId;
+            const originalText = btnElement.innerText;
+            btnElement.disabled = true;
+            btnElement.innerText = 'กำลังส่ง...';
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 450; 
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.45);
+                    const missionId = Date.now().toString();
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
+                    const dateFormatted = now.toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                    
+                    const newMission = {
+                        id: missionId,
+                        userIdentifier: userIdentifier,
+                        userName: currentUser.name || currentUser.username || userIdentifier,
+                        missionName: missionName,
+                        submitTime: now.getTime(),
+                        dateStr: getTodayDateString(),
+                        image: compressedBase64,
+                        status: 'รออนุมัติ',
+                        timestamp: `${dateFormatted} เวลา ${timeStr} น.`
+                    };
+
+                    database.ref('missions/' + missionId).set(newMission).then(() => {
+                        alert(`⚡ ส่งภารกิจ "${missionName}" สำเร็จ! ข้อมูลถูกส่งให้แอดมินตรวจสอบแล้ว`);
+                        fileInput.value = '';
+                        btnElement.disabled = false;
+                        btnElement.innerText = originalText;
+                    }).catch(err => {
+                        alert("เกิดข้อผิดพลาด: " + err.message);
+                        btnElement.disabled = false;
+                        btnElement.innerText = originalText;
+                    });
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
         let globalLatestMissionTime = {};
 
         function fetchUserMissions() {
@@ -1160,7 +1217,6 @@
                 document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(2);
                 updateMissionCountdownUI();
 
-                // เริ่มลูปนับถอยหลังเรียลไทม์ทุก ๆ 1 วินาที
                 if (countdownTimerInterval) clearInterval(countdownTimerInterval);
                 countdownTimerInterval = setInterval(updateMissionCountdownUI, 1000);
 
@@ -1204,7 +1260,6 @@
             });
         }
 
-        // ฟังก์ชันอัปเดตเวลาถอยหลังแบบเรียลไทม์ทีละ 1 วินาที
         function updateMissionCountdownUI() {
             const nowTime = new Date().getTime();
             const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
@@ -1226,12 +1281,11 @@
                     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-                    // เติมเลข 0 ด้านหน้าให้ดูเป็นนาฬิกาดิจิทัล
                     const padH = String(hours).padStart(2, '0');
                     const padM = String(minutes).padStart(2, '0');
                     const padS = String(seconds).padStart(2, '0');
 
-                    btn.innerText = `⏳ รอ ${padH}:${padM}:${padS} ชม.`;
+                    btn.innerText = `⏳ ${padH}:${padM}:${padS} ชม.`;
                 } else {
                     btn.disabled = false;
                     btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
@@ -1524,9 +1578,10 @@
                         let isSelected = selectedAdminChatId === key;
                         let activeStyle = isSelected ? 'bg-blue-100 border-blue-400 font-bold' : 'hover:bg-blue-50 border-stone-100';
                         
+                        // แสดงข้อความ "0 ข้อความ" หากไม่มีข้อความทักเข้ามา
                         let badgeHtml = unreadMsgs > 0 
                             ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full ml-1">🔴 ${unreadMsgs} ใหม่</span>` 
-                            : `<span class="text-stone-400 text-[10px] ml-1">(${totalMsgs > 0 ? totalMsgs + ' ข้อความ' : '0 ข้อความ'})</span>`;
+                            : `<span class="text-stone-400 text-[10px] ml-1">(${totalMsgs} ข้อความ)</span>`;
 
                         chatUserList.innerHTML += `
                             <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer text-stone-700 flex justify-between items-center">
@@ -1723,7 +1778,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.add('hidden');
+            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -1960,7 +2015,7 @@
             });
         }
 
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม (ฟอนต์เหมาะสม) =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
@@ -2031,16 +2086,16 @@
             let breakdownRows = '';
             const missionKeys = Object.keys(breakdown);
             if (missionKeys.length === 0) {
-                breakdownRows = `<tr><td colspan="4" style="padding: 14px; text-align: center; color: #6b7280; font-size: 13px;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
+                breakdownRows = `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 11pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 missionKeys.forEach(name => {
                     const item = breakdown[name];
                     breakdownRows += `
-                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 12px;">
-                            <td style="padding: 10px 12px; color: #374151; font-weight: 500;">${name}</td>
-                            <td style="padding: 10px 12px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
-                            <td style="padding: 10px 12px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
-                            <td style="padding: 10px 12px; text-align: right; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
+                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 10pt;">
+                            <td style="padding: 8px 10px; color: #374151;">${name}</td>
+                            <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
                         </tr>
                     `;
                 });
@@ -2049,17 +2104,17 @@
             let userSummaryRows = '';
             const userKeys = Object.keys(activeUsersMap);
             if (userKeys.length === 0) {
-                userSummaryRows = `<tr><td colspan="5" style="padding: 14px; text-align: center; color: #6b7280; font-size: 13px;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
+                userSummaryRows = `<tr><td colspan="5" style="padding: 10px; text-align: center; color: #6b7280; font-size: 11pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 userKeys.forEach((uid, idx) => {
                     const usr = activeUsersMap[uid];
                     userSummaryRows += `
-                        <tr style="border-bottom: 1px solid #f3f4f6; font-size: 11px;">
-                            <td style="padding: 8px 10px; text-align: center; color: #6b7280;">${idx + 1}</td>
-                            <td style="padding: 8px 10px; color: #1f2937; font-weight: 500;">${usr.name} <span style="color: #6b7280; font-weight: normal;">(รหัส: ${usr.studentId})</span></td>
-                            <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
+                        <tr style="border-bottom: 1px solid #f3f4f6; font-size: 10pt;">
+                            <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
+                            <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 9pt;">(รหัส: ${usr.studentId})</span></td>
+                            <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
                         </tr>
                     `;
                 });
@@ -2072,7 +2127,9 @@
                     <title>GreenPassport_System_Report_${type}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
                     <style>
-                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 30px; margin: 0; background: #fff; }
+                        body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 25px; margin: 0; background: #fff; font-size: 11pt; line-height: 1.5; }
+                        h1 { font-size: 16pt; }
+                        h3 { font-size: 12pt; }
                         @media print {
                             body { padding: 0; }
                             button { display: none; }
@@ -2081,76 +2138,76 @@
                 </head>
                 <body>
                     <!-- Header -->
-                    <div style="border-bottom: 3px solid #059669; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div style="border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
-                            <h1 style="font-size: 20px; color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL REPORT</h1>
-                            <p style="font-size: 11px; color: #4b5563; margin-top: 2px;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
+                            <h1 style="color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL REPORT</h1>
+                            <p style="font-size: 10pt; color: #4b5563; margin: 2px 0 0 0;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
                         </div>
-                        <div style="text-align: right; font-size: 10px; color: #6b7280;">
+                        <div style="text-align: right; font-size: 9pt; color: #6b7280;">
                             <div>วันที่ออกรายงาน: ${now.toLocaleDateString('th-TH')}</div>
                         </div>
                     </div>
 
                     <!-- Period Badge -->
-                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; font-size: 13px; color: #166534;">
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 11pt; color: #166534;">
                         <strong>รอบรายงาน:</strong> ${periodTitle}
                     </div>
 
                     <!-- KPI Boxes -->
-                    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 10px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px;">
-                        <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 11px; color: #be185d; font-weight: bold; margin-bottom: 4px;">ผู้เข้าร่วมกิจกรรม</div>
-                            <div style="font-size: 20px; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 11px; font-weight: normal;">คน</span></div>
+                    <h3 style="font-weight: bold; color: #111827; margin-bottom: 8px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
+                        <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px; text-align: center;">
+                            <div style="font-size: 9pt; color: #be185d; font-weight: bold; margin-bottom: 2px;">ผู้เข้าร่วมกิจกรรม</div>
+                            <div style="font-size: 14pt; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 9pt; font-weight: normal;">คน</span></div>
                         </div>
-                        <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 11px; color: #b45309; font-weight: bold; margin-bottom: 4px;">ภารกิจที่อนุมัติ</div>
-                            <div style="font-size: 20px; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 11px; font-weight: normal;">รายการ</span></div>
+                        <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 10px; text-align: center;">
+                            <div style="font-size: 9pt; color: #b45309; font-weight: bold; margin-bottom: 2px;">ภารกิจที่อนุมัติ</div>
+                            <div style="font-size: 14pt; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 9pt; font-weight: normal;">รายการ</span></div>
                         </div>
-                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 11px; color: #0f766e; font-weight: bold; margin-bottom: 4px;">CO₂ ที่ลดได้สุทธิ</div>
-                            <div style="font-size: 20px; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 11px; font-weight: normal;">kg</span></div>
+                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 10px; text-align: center;">
+                            <div style="font-size: 9pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
+                            <div style="font-size: 14pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 9pt; font-weight: normal;">kg</span></div>
                         </div>
-                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 12px; text-align: center;">
-                            <div style="font-size: 11px; color: #047857; font-weight: bold; margin-bottom: 4px;">คะแนนรวมสะสม</div>
-                            <div style="font-size: 20px; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 11px; font-weight: normal;">แต้ม</span></div>
+                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; text-align: center;">
+                            <div style="font-size: 9pt; color: #047857; font-weight: bold; margin-bottom: 2px;">คะแนนรวมสะสม</div>
+                            <div style="font-size: 14pt; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 9pt; font-weight: normal;">แต้ม</span></div>
                         </div>
                     </div>
 
                     <!-- Breakdown Table -->
-                    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+                    <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <thead>
-                            <tr style="background: #f3f4f6; color: #374151; font-size: 12px; border-bottom: 2px solid #e5e7eb;">
-                                <th style="padding: 10px 12px; text-align: left;">ประเภทภารกิจ</th>
-                                <th style="padding: 10px 12px; text-align: center; width: 100px;">จำนวนครั้ง</th>
-                                <th style="padding: 10px 12px; text-align: right; width: 120px;">CO₂ (kgCO₂e)</th>
-                                <th style="padding: 10px 12px; text-align: right; width: 100px;">คะแนนรวม</th>
+                            <tr style="background: #f3f4f6; color: #374151; font-size: 10pt; border-bottom: 2px solid #e5e7eb;">
+                                <th style="padding: 8px 10px; text-align: left;">ประเภทภารกิจ</th>
+                                <th style="padding: 8px 10px; text-align: center; width: 90px;">จำนวนครั้ง</th>
+                                <th style="padding: 8px 10px; text-align: right; width: 110px;">CO₂ (kgCO₂e)</th>
+                                <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนนรวม</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${breakdownRows}
                         </tbody>
                         <tfoot>
-                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 12px;">
-                                <td style="padding: 10px 12px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
-                                <td style="padding: 10px 12px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
-                                <td style="padding: 10px 12px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
-                                <td style="padding: 10px 12px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
+                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 10pt;">
+                                <td style="padding: 8px 10px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
+                                <td style="padding: 8px 10px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
                             </tr>
                         </tfoot>
                     </table>
 
                     <!-- User Summary Table -->
-                    <h3 style="font-size: 14px; font-weight: bold; color: #111827; margin-bottom: 8px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 35px;">
+                    <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                         <thead>
-                            <tr style="background: #f3f4f6; color: #374151; font-size: 11px; border-bottom: 2px solid #e5e7eb;">
-                                <th style="padding: 8px 10px; width: 40px; text-align: center;">ลำดับ</th>
-                                <th style="padding: 8px 10px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
-                                <th style="padding: 8px 10px; text-align: center; width: 90px;">ภารกิจที่ทำ</th>
-                                <th style="padding: 8px 10px; text-align: right; width: 100px;">ลด CO₂</th>
-                                <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนน</th>
+                            <tr style="background: #f3f4f6; color: #374151; font-size: 10pt; border-bottom: 2px solid #e5e7eb;">
+                                <th style="padding: 6px 8px; width: 35px; text-align: center;">ลำดับ</th>
+                                <th style="padding: 6px 8px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
+                                <th style="padding: 6px 8px; text-align: center; width: 80px;">ภารกิจที่ทำ</th>
+                                <th style="padding: 6px 8px; text-align: right; width: 90px;">ลด CO₂</th>
+                                <th style="padding: 6px 8px; text-align: right; width: 80px;">คะแนน</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2159,17 +2216,17 @@
                     </table>
 
                     <!-- Signature & Footer -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding-top: 15px; border-top: 1px dashed #d1d5db; font-size: 11px; color: #6b7280;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 9pt; color: #6b7280;">
                         <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project (Official Document)</div>
                         <div style="text-align: center;">
-                            <div style="border-bottom: 1px solid #9ca3af; width: 150px; margin-bottom: 4px;"></div>
+                            <div style="border-bottom: 1px solid #9ca3af; width: 140px; margin-bottom: 3px;"></div>
                             <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
                         </div>
                     </div>
 
                     <!-- Print Button -->
-                    <div style="text-align: center; margin-top: 35px;">
-                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 12px 28px; font-size: 14px; font-weight: bold; border-radius: 10px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 11pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
                     </div>
                 </body>
                 </html>
