@@ -105,11 +105,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                 <div class="bg-stone-50 text-stone-800 p-3.5 md:p-4 rounded-2xl shadow-xs border border-stone-200 text-center">
                     <p class="text-[11px] md:text-xs text-stone-600 font-medium uppercase tracking-wider">ลด CO₂ ในวันนี้</p>
-                    <p class="text-2xl md:text-3xl font-bold mt-1 text-stone-700"><span id="user-today-co2">0.00</span> <span class="text-sm font-normal">kgCO₂e</span></p>
+                    <p class="text-2xl md:text-3xl font-bold mt-1 text-stone-700"><span id="user-today-co2">0.0000</span> <span class="text-sm font-normal">kgCO₂e</span></p>
                 </div>
                 <div class="bg-stone-800 text-white p-3.5 md:p-4 rounded-2xl shadow-xs text-center">
                     <p class="text-[11px] md:text-xs text-stone-400 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
-                    <p class="text-2xl md:text-3xl font-bold mt-1 text-emerald-400"><span id="user-co2">0.00</span> <span class="text-sm font-normal">kgCO₂e</span></p>
+                    <p class="text-2xl md:text-3xl font-bold mt-1 text-emerald-400"><span id="user-co2">0.0000</span> <span class="text-sm font-normal">kgCO₂e</span></p>
                 </div>
                 <div class="bg-emerald-50 text-emerald-900 p-3.5 md:p-4 rounded-2xl shadow-xs border border-emerald-200 text-center">
                     <p class="text-[11px] md:text-xs text-emerald-700 font-medium uppercase tracking-wider">คะแนนสะสมของคุณ</p>
@@ -139,20 +139,39 @@
 
                 <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
-                    <p class="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl mb-2 inline-block">⚠️ เงื่อนไข: แต่ละภารกิจส่งได้สูงสุด 5 ครั้ง และต้องเว้นระยะ 24 ชั่วโมง (ห้ามใช้รูปซ้ำ)</p>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl mb-2 inline-block">⚠️ เงื่อนไข: ทุกภารกิจส่งได้สูงสุด 5 ครั้ง และห้ามใช้รูปภาพซ้ำในการส่ง</p>
                     <p class="text-[11px] text-stone-500 bg-stone-50 p-2.5 rounded-xl mb-4 border border-stone-200">
                         📌 <strong>หมายเหตุ:</strong> ค่าการลด CO₂e ของแต่ละกิจกรรมเป็นค่าประมาณการต่อการปฏิบัติกิจกรรม 1 ครั้ง ซึ่งกำหนดขึ้นเพื่อใช้เป็นค่าอ้างอิงในการคำนวณ
                     </p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                         
-                        <!-- 1. ใช้ถุงผ้า -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ใช้ถุงผ้าแทนถุงพลาสติก" id="box-mission-1">
+                        <!-- 1. เดินขึ้นบันได -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="เดินขึ้นบันไดแทนการกดใช้ลิฟต์" id="box-mission-1">
+                            <div>
+                                <div class="text-3xl text-center my-1">🪜</div>
+                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">เดินขึ้นบันไดแทนการกดใช้ลิฟต์</h4>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+1 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.0244 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">(มอเตอร์ 4 kW, ใช้เวลา 45 วินาที):</p>
+                                    <p>1 ครั้ง × 0.05 kWh × 0.4872 kgCO₂e/kWh = 0.0244 kgCO₂e</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
+                                <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
+                                <input type="file" id="file-1" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
+                                <button onclick="submitSpecificMission('เดินขึ้นบันไดแทนการกดใช้ลิฟต์', 'file-1', this, 'box-mission-1')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. ใช้ถุงผ้า -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ใช้ถุงผ้าแทนถุงพลาสติก" id="box-mission-2">
                             <div>
                                 <div class="text-3xl text-center my-1">🛍️</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ใช้ถุงผ้าแทนถุงพลาสติก</h4>
                                 <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+1 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.04 kgCO₂e/ครั้ง</p>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.0395 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
                                     <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
                                     <p>1 ถุง × 0.015 kg/ถุง × 2.6300 kgCO₂e/kg = 0.0395 kgCO₂e</p>
@@ -160,27 +179,8 @@
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
-                                <input type="file" id="file-1" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ใช้ถุงผ้าแทนถุงพลาสติก', 'file-1', this, 'box-mission-1')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
-                            </div>
-                        </div>
-
-                        <!-- 2. พกขวดน้ำ -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกขวดน้ำส่วนตัว" id="box-mission-2">
-                            <div>
-                                <div class="text-3xl text-center my-1">🥤</div>
-                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">พกขวดน้ำส่วนตัว</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+2 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.20 kgCO₂e/ครั้ง</p>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
-                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
-                                    <p>1 ขวด × 0.095 kg/ขวด × 2.1500 kgCO₂e/kg = 0.2043 kgCO₂e</p>
-                                </div>
-                            </div>
-                            <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
-                                <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-2" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-2', this, 'box-mission-2')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ใช้ถุงผ้าแทนถุงพลาสติก', 'file-2', this, 'box-mission-2')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -190,9 +190,9 @@
                                 <div class="text-3xl text-center my-1">🔌</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ปิดไฟห้องพัก</h4>
                                 <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+2 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.07 kgCO₂e/ครั้ง</p>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.0731 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
-                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ (หลอด 30W, 5 ชม.):</p>
+                                    <p class="font-semibold text-emerald-700">(หลอดไฟรวม 30W, ปิด 5 ชม.):</p>
                                     <p>1 ครั้ง × 0.15 kWh × 0.4872 kgCO₂e/kWh = 0.0731 kgCO₂e</p>
                                 </div>
                             </div>
@@ -203,32 +203,51 @@
                             </div>
                         </div>
 
-                        <!-- 4. เดินขึ้นบันได -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="เดินขึ้นบันไดแทนการกดใช้ลิฟต์" id="box-mission-4">
+                        <!-- 4. พกขวดน้ำ -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกขวดน้ำส่วนตัว" id="box-mission-4">
                             <div>
-                                <div class="text-3xl text-center my-1">🪜</div>
-                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">เดินขึ้นบันไดแทนการกดใช้ลิฟต์</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+3 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.02 kgCO₂e/ครั้ง</p>
+                                <div class="text-3xl text-center my-1">🥤</div>
+                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">พกขวดน้ำส่วนตัว</h4>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+2 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.2043 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
-                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ (มอเตอร์ 4 kW, 45 วินาที):</p>
-                                    <p>1 ครั้ง × 0.05 kWh × 0.4872 kgCO₂e/kWh = 0.0244 kgCO₂e</p>
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 ขวด × 0.095 kg/ขวด × 2.1500 kgCO₂e/kg = 0.2043 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-4" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('เดินขึ้นบันไดแทนการกดใช้ลิฟต์', 'file-4', this, 'box-mission-4')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-4', this, 'box-mission-4')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 5. กินอาหารหมดจาน -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="กินอาหารหมดจาน" id="box-mission-5">
+                        <!-- 5. ประดิษฐ์ของใช้ -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ประดิษฐ์ของใช้จากวัสดุเหลือใช้" id="box-mission-5">
+                            <div>
+                                <div class="text-3xl text-center my-1">📦</div>
+                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ประดิษฐ์ของใช้จากวัสดุเหลือใช้</h4>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+2 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.2320 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 ชิ้น × 0.1 kg × 2.3200 kgCO₂e/kg = 0.2320 kgCO₂e</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
+                                <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
+                                <input type="file" id="file-5" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
+                                <button onclick="submitSpecificMission('ประดิษฐ์ของใช้จากวัสดุเหลือใช้', 'file-5', this, 'box-mission-5')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                            </div>
+                        </div>
+
+                        <!-- 6. กินอาหารหมดจาน -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="กินอาหารหมดจาน" id="box-mission-6">
                             <div>
                                 <div class="text-3xl text-center my-1">🍽️</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">กินอาหารหมดจาน</h4>
                                 <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+3 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.25 kgCO₂e/ครั้ง</p>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.2520 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
                                     <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
                                     <p>1 จาน × 0.45 kg × 0.5600 kgCO₂e/kg = 0.2520 kgCO₂e</p>
@@ -236,27 +255,8 @@
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
-                                <input type="file" id="file-5" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('กินอาหารหมดจาน', 'file-5', this, 'box-mission-5')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
-                            </div>
-                        </div>
-
-                        <!-- 6. แยกขยะถูกประเภท -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="แยกขยะถูกประเภท" id="box-mission-6">
-                            <div>
-                                <div class="text-3xl text-center my-1">♻️</div>
-                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">แยกขยะถูกประเภท</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+3 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.42 kgCO₂e/ครั้ง</p>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
-                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
-                                    <p>1 ชิ้น × 0.2 kg × 2.1026 kgCO₂e/kg = 0.4205 kgCO₂e</p>
-                                </div>
-                            </div>
-                            <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
-                                <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-6" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('แยกขยะถูกประเภท', 'file-6', this, 'box-mission-6')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('กินอาหารหมดจาน', 'file-6', this, 'box-mission-6')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -266,7 +266,7 @@
                                 <div class="text-3xl text-center my-1">🚲</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ปั่นจักรยานแทนการใช้รถจักรยานยนต์</h4>
                                 <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+4 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.30 kgCO₂e/ครั้ง</p>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.2979 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
                                     <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
                                     <p>4/30 × 1 L ≈ 0.133 L × 2.2394 kgCO₂e/L = 0.2979 kgCO₂e</p>
@@ -279,22 +279,22 @@
                             </div>
                         </div>
 
-                        <!-- 8. ประดิษฐ์ของใช้ -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ประดิษฐ์ของใช้จากวัสดุเหลือใช้" id="box-mission-8">
+                        <!-- 8. แยกขยะถูกประเภท -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="แยกขยะถูกประเภท" id="box-mission-8">
                             <div>
-                                <div class="text-3xl text-center my-1">📦</div>
-                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ประดิษฐ์ของใช้จากวัสดุเหลือใช้</h4>
+                                <div class="text-3xl text-center my-1">♻️</div>
+                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">แยกขยะถูกประเภท</h4>
                                 <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+5 คะแนน</span></div>
-                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.23 kgCO₂e/ครั้ง</p>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.4205 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
                                     <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
-                                    <p>1 ชิ้น × 0.1 kg × 2.3200 kgCO₂e/kg = 0.2320 kgCO₂e</p>
+                                    <p>1 ชิ้น × 0.2 kg × 2.1026 kgCO₂e/kg = 0.4205 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-8" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ประดิษฐ์ของใช้จากวัสดุเหลือใช้', 'file-8', this, 'box-mission-8')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('แยกขยะถูกประเภท', 'file-8', this, 'box-mission-8')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -328,7 +328,7 @@
                             <tfoot id="user-history-footer" class="bg-emerald-50/70 font-bold border-t border-emerald-200">
                                 <tr>
                                     <td colspan="4" class="p-3 text-stone-700 text-right">รวมทั้งหมดที่อนุมัติแล้ว:</td>
-                                    <td class="p-3 text-right text-teal-800 text-sm md:text-base" id="user-total-approved-co2">0.00 kgCO₂e</td>
+                                    <td class="p-3 text-right text-teal-800 text-sm md:text-base" id="user-total-approved-co2">0.0000 kgCO₂e</td>
                                     <td class="p-3 text-right text-emerald-700 text-sm md:text-base" id="user-total-approved-points">0 คะแนน</td>
                                 </tr>
                             </tfoot>
@@ -418,7 +418,7 @@
                     </div>
                     <div class="bg-teal-50 text-teal-900 p-4 rounded-2xl border border-teal-200 text-center">
                         <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-total-co2">0.00</span> <span class="text-xs font-normal">kg</span></p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-total-co2">0.0000</span> <span class="text-xs font-normal">kg</span></p>
                     </div>
                     <div class="bg-amber-50 text-amber-900 p-4 rounded-2xl border border-amber-200 text-center">
                         <p class="text-[11px] md:text-xs text-amber-700 font-medium uppercase tracking-wider">ภารกิจค้างตรวจ</p>
@@ -595,7 +595,7 @@
                 <div class="pb-3 border-b">
                     <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                     <h3 class="text-lg md:text-xl font-bold text-stone-800">👥 จัดการสมาชิกและประวัติภารกิจรายบุคคล</h3>
-                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ หรือกดปุ่มลบเพื่อลบบัญชีผู้ใช้ถาวร</p>
+                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ หรือกดปุ่มลบเพื่อลบบัญชีออกจากระบบถาวร</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -635,7 +635,7 @@
                         <div id="admin-user-detail-footer" class="hidden bg-emerald-50/70 p-3 rounded-xl font-bold border border-emerald-200 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs md:text-sm mt-3 gap-1">
                             <span class="text-stone-700">รวมทั้งหมดที่อนุมัติของสมาชิกคนนี้:</span>
                             <div class="flex gap-4">
-                                <span class="text-teal-800 font-bold">ลด CO₂ รวม: <span id="admin-user-total-approved-co2">0.00</span> kgCO₂e</span>
+                                <span class="text-teal-800 font-bold">ลด CO₂ รวม: <span id="admin-user-total-approved-co2">0.0000</span> kgCO₂e</span>
                                 <span class="text-emerald-700 font-bold">คะแนนรวม: <span id="admin-user-total-approved-points">0</span> คะแนน</span>
                             </div>
                         </div>
@@ -710,7 +710,7 @@
 
         </section>
 
-        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Real-time Storage Meter ของแท้ แสดงทศนิยม 2 ตำแหน่ง) -->
+        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล -->
         <div id="admin-storage-footer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 mt-6 space-y-2">
             <div class="flex justify-between items-center text-xs md:text-sm font-bold text-stone-700">
                 <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ (Realtime Database)</span>
@@ -776,14 +776,14 @@
         let countdownTimerInterval = null;
 
         function getMissionMeta(name) {
-            if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0395, id: 'box-mission-1' };
-            if (name.includes("พกขวดน้ำ")) return { points: 2, co2: 0.2043, id: 'box-mission-2' };
+            if (name.includes("เดินขึ้นบันได")) return { points: 1, co2: 0.0244, id: 'box-mission-1' };
+            if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0395, id: 'box-mission-2' };
             if (name.includes("ปิดไฟห้องพัก")) return { points: 2, co2: 0.0731, id: 'box-mission-3' };
-            if (name.includes("เดินขึ้นบันได")) return { points: 3, co2: 0.0244, id: 'box-mission-4' };
-            if (name.includes("กินอาหารหมดจาน")) return { points: 3, co2: 0.2520, id: 'box-mission-5' };
-            if (name.includes("แยกขยะ")) return { points: 3, co2: 0.4205, id: 'box-mission-6' };
+            if (name.includes("พกขวดน้ำ")) return { points: 2, co2: 0.2043, id: 'box-mission-4' };
+            if (name.includes("ประดิษฐ์ของใช้")) return { points: 2, co2: 0.2320, id: 'box-mission-5' };
+            if (name.includes("กินอาหารหมดจาน")) return { points: 3, co2: 0.2520, id: 'box-mission-6' };
             if (name.includes("ปั่นจักรยาน")) return { points: 4, co2: 0.2979, id: 'box-mission-7' };
-            if (name.includes("ประดิษฐ์ของใช้")) return { points: 5, co2: 0.2320, id: 'box-mission-8' };
+            if (name.includes("แยกขยะ")) return { points: 5, co2: 0.4205, id: 'box-mission-8' };
             return { points: 0, co2: 0, id: '' };
         }
 
@@ -1058,7 +1058,7 @@
             document.getElementById('user-dashboard').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.add('hidden');
             document.getElementById('admin-storage-footer').classList.add('hidden');
-            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('auth-section').classList.remove('hidden');
             document.getElementById('nav-auth').innerHTML = '';
             
             const loginId = document.getElementById('login-studentid');
@@ -1072,7 +1072,7 @@
         function updateUserStats() {
             if(currentUser.role !== 'user') return;
             document.getElementById('user-points').innerText = currentUser.points || 0;
-            document.getElementById('user-co2').innerText = Number(currentUser.co2 || 0).toFixed(2);
+            document.getElementById('user-co2').innerText = Number(currentUser.co2 || 0).toFixed(4);
         }
 
         function listenToLeaderboard() {
@@ -1110,7 +1110,7 @@
                                     <div class="font-medium">${user.name}</div>
                                     <div class="text-[11px] text-stone-400">รหัส: ${user.studentId} ${isCurrent ? '<span class="text-emerald-600 font-bold">(คุณ)</span>' : ''}</div>
                                 </td>
-                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(2)} kg</td>
+                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(4)} kg</td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -1133,7 +1133,7 @@
                                     <div class="font-medium">${user.name}</div>
                                     <div class="text-[11px] text-stone-400">รหัส: ${user.studentId}</div>
                                 </td>
-                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(2)} kg</td>
+                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(4)} kg</td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -1150,7 +1150,7 @@
             return `${y}-${m}-${d}`;
         }
 
-        // ฟังก์ชันส่งภารกิจพร้อมระบบตรวจสอบรูปภาพซ้ำ (Duplicate Image Check) และจำกัดสูงสุด 5 ครั้ง
+        // ระบบส่งภารกิจพร้อมตรวจสอบรูปซ้ำและจำกัดสูงสุด 5 ครั้ง
         function submitSpecificMission(missionName, inputId, btnElement, boxId) {
             const fileInput = document.getElementById(inputId);
             if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
@@ -1177,7 +1177,7 @@
                     
                     const compressedBase64 = canvas.toDataURL('image/jpeg', 0.45);
 
-                    // ตรวจสอบรูปภาพซ้ำจากฐานข้อมูลทั้งหมดของผู้ใช้รายนี้
+                    // ตรวจสอบรูปภาพซ้ำในระบบ
                     database.ref('missions').once('value', (snapshot) => {
                         let isDuplicateImage = false;
                         snapshot.forEach(child => {
@@ -1261,7 +1261,6 @@
                             todayCo2Total += meta.co2;
                         }
 
-                        // นับจำนวนครั้งที่ส่งภายใน 24 ชั่วโมงล่าสุด
                         if ((nowTime - (m.submitTime || 0)) < TWENTY_FOUR_HOURS) {
                             globalUserMissionCounts[m.missionName] = (globalUserMissionCounts[m.missionName] || 0) + 1;
                         }
@@ -1272,7 +1271,7 @@
                     }
                 });
 
-                document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(2);
+                document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(4);
                 updateMissionCountdownUI();
 
                 if (countdownTimerInterval) clearInterval(countdownTimerInterval);
@@ -1281,7 +1280,7 @@
                 if(!hasData) {
                     tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">ยังไม่ได้ส่งภารกิจใดๆ ในระบบ</td></tr>`;
                     document.getElementById('user-total-approved-points').innerText = `0 คะแนน`;
-                    document.getElementById('user-total-approved-co2').innerText = `0.00 kgCO₂e`;
+                    document.getElementById('user-total-approved-co2').innerText = `0.0000 kgCO₂e`;
                     return;
                 }
 
@@ -1308,17 +1307,16 @@
                             <td class="p-3 text-stone-500 text-xs">${m.timestamp || '-'}</td>
                             <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg shadow-2xs cursor-pointer hover:opacity-80"></td>
                             <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusColor}">${m.status}</span>${reasonText}</td>
-                            <td class="p-3 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(2) : '0.00'} kgCO₂e</td>
+                            <td class="p-3 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(4) : '0.0000'} kgCO₂e</td>
                             <td class="p-3 text-right font-bold ${earnedPoints > 0 ? 'text-emerald-600' : 'text-gray-400'}">${earnedPoints > 0 ? '+' + earnedPoints : '0'} คะแนน</td>
                         </tr>`;
                 });
 
                 document.getElementById('user-total-approved-points').innerText = `${totalApprovedPoints} คะแนน`;
-                document.getElementById('user-total-approved-co2').innerText = `${totalApprovedCo2.toFixed(2)} kgCO₂e`;
+                document.getElementById('user-total-approved-co2').innerText = `${totalApprovedCo2.toFixed(4)} kgCO₂e`;
             });
         }
 
-        // ระบบอัปเดตปุ่มส่งภารกิจ: สูงสุด 5 ครั้ง หากครบ 5 ครั้งให้จับเวลาถอยหลัง 24 ชม.
         function updateMissionCountdownUI() {
             const nowTime = new Date().getTime();
             const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
@@ -1795,7 +1793,7 @@
                     });
 
                     const adminCo2El = document.getElementById('admin-stat-total-co2');
-                    if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(2);
+                    if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(4);
 
                     document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
                     const cardBadgeMissions = document.getElementById('card-badge-missions');
@@ -1909,7 +1907,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            document.getElementById('btn-close-admin-chat').classList.add('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -2100,14 +2098,14 @@
                         <td class="p-2 text-stone-700">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
                         <td class="p-2"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg border cursor-pointer"></td>
                         <td class="p-2"><span class="px-2 py-0.5 rounded-sm font-semibold text-xs ${badgeStyle}">${m.status}</span>${reasonText}</td>
-                        <td class="p-2 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(2) : '0.00'} kgCO₂e</td>
+                        <td class="p-2 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(4) : '0.0000'} kgCO₂e</td>
                         <td class="p-2 text-right font-bold ${earnedPoints > 0 ? 'text-emerald-600' : 'text-gray-400'}">${earnedPoints > 0 ? '+' + earnedPoints : '0'} คะแนน</td>
                     </tr>
                 `;
             });
 
             document.getElementById('admin-user-total-approved-points').innerText = totalApproved;
-            document.getElementById('admin-user-total-approved-co2').innerText = totalApprovedCo2.toFixed(2);
+            document.getElementById('admin-user-total-approved-co2').innerText = totalApprovedCo2.toFixed(4);
             footer.classList.remove('hidden');
         }
 
@@ -2131,7 +2129,7 @@
                     if (action === 'approve') {
                         const meta = getMissionMeta(mission.missionName);
                         userData.points = (userData.points || 0) + meta.points;
-                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(2));
+                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(4));
                     }
 
                     const updates = {};
@@ -2227,7 +2225,7 @@
                         <tr style="border-bottom: 1px solid #e5e7eb; font-size: 9.5pt;">
                             <td style="padding: 8px 10px; color: #374151;">${name}</td>
                             <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(4)} kg</td>
                             <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
                         </tr>
                     `;
@@ -2246,7 +2244,7 @@
                             <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
                             <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 8.5pt;">(รหัส: ${usr.studentId})</span></td>
                             <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
-                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(4)} kg</td>
                             <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
                         </tr>
                     `;
@@ -2299,7 +2297,7 @@
                         </div>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
-                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 8.5pt; font-weight: normal;">kg</span></div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(4)} <span style="font-size: 8.5pt; font-weight: normal;">kg</span></div>
                         </div>
                         <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #047857; font-weight: bold; margin-bottom: 2px;">คะแนนรวมสะสม</div>
@@ -2325,7 +2323,7 @@
                             <tr style="background: #ecfdf5; font-weight: bold; font-size: 9.5pt;">
                                 <td style="padding: 8px 10px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
                                 <td style="padding: 8px 10px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
-                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(4)} kg</td>
                                 <td style="padding: 8px 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
                             </tr>
                         </tfoot>
