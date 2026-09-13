@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Green Passport - ระบบสะสมการลดก๊าซเรือนกระจก</title>
+    <title>Green Passport - ระบบสะสมแต้มรักษ์โลก</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     
@@ -19,7 +19,7 @@
 </head>
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
 
-    <!-- Navbar -->
+    <!-- Navbar แถบสีเขียวด้านบน -->
     <nav class="bg-emerald-600 text-white px-3 py-2.5 sm:px-4 sm:py-3 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 shrink-0">
             <span class="text-xl sm:text-2xl">📗</span>
@@ -102,22 +102,25 @@
                 </button>
             </div>
 
-            <!-- สรุปตัวเลขคาร์บอน (ปรับแก้ไขชื่อแถบขวามือเป็น "ลด CO₂ สะสมทั้งหมด") -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                 <div class="bg-stone-50 text-stone-800 p-3.5 md:p-4 rounded-2xl shadow-xs border border-stone-200 text-center">
                     <p class="text-[11px] md:text-xs text-stone-600 font-medium uppercase tracking-wider">ลด CO₂ ในวันนี้</p>
-                    <p class="text-2xl md:text-3xl font-bold mt-1 text-stone-700"><span id="user-today-co2">0.0000</span> <span class="text-sm font-normal">kgCO₂e</span></p>
+                    <p class="text-2xl md:text-3xl font-bold mt-1 text-stone-700"><span id="user-today-co2">0.00</span> <span class="text-sm font-normal">kgCO₂e</span></p>
                 </div>
-                <div class="bg-emerald-600 text-white p-3.5 md:p-4 rounded-2xl shadow-xs text-center">
-                    <p class="text-[11px] md:text-xs text-emerald-100 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
-                    <p class="text-2xl md:text-3xl font-bold mt-1 text-white"><span id="user-co2">0.0000</span> <span class="text-sm font-normal">kgCO₂e</span></p>
+                <div class="bg-stone-800 text-white p-3.5 md:p-4 rounded-2xl shadow-xs text-center">
+                    <p class="text-[11px] md:text-xs text-stone-400 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
+                    <p class="text-2xl md:text-3xl font-bold mt-1 text-emerald-400"><span id="user-co2">0.00</span> <span class="text-sm font-normal">kgCO₂e</span></p>
+                </div>
+                <div class="bg-emerald-50 text-emerald-900 p-3.5 md:p-4 rounded-2xl shadow-xs border border-emerald-200 text-center">
+                    <p class="text-[11px] md:text-xs text-emerald-700 font-medium uppercase tracking-wider">คะแนนสะสมของคุณ</p>
+                    <p class="text-2xl md:text-3xl font-bold mt-1"><span id="user-points">0</span> คะแนน</p>
                 </div>
             </div>
 
             <div id="user-tab-missions" class="space-y-4 md:space-y-6">
                 <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <h3 class="text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
-                        🏆 อันดับผู้ลดก๊าซเรือนกระจกสูงสุด (Leaderboard)
+                        🏆 อันดับคะแนนสะสมสูงสุด (Leaderboard)
                     </h3>
                     <div class="overflow-y-auto max-h-52 border border-stone-100 rounded-xl">
                         <table class="w-full text-left text-xs md:text-sm border-collapse">
@@ -125,7 +128,8 @@
                                 <tr class="text-stone-600 border-b">
                                     <th class="p-2.5 w-16 text-center">อันดับ</th>
                                     <th class="p-2.5">ผู้ใช้งาน</th>
-                                    <th class="p-2.5 text-right">ลด CO₂ สะสม</th>
+                                    <th class="p-2.5 text-right">ลด CO₂</th>
+                                    <th class="p-2.5 text-right">คะแนนสะสม</th>
                                 </tr>
                             </thead>
                             <tbody id="leaderboard-table"></tbody>
@@ -134,189 +138,198 @@
                 </div>
 
                 <div class="bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-stone-200">
-                    <div class="mb-3">
-                        <h3 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
-                        <p class="text-xs text-emerald-800 bg-emerald-50 p-2.5 rounded-xl mt-2 inline-block border border-emerald-200">
-                            🌿 <strong>หมายเหตุ:</strong> ข้อมูลการคำนวณในแต่ละกิจกรรมเป็นการประมาณค่าในการลดปริมาณคาร์บอนไดออกไซด์ในหนึ่งครั้งภารกิจ (ระบบไม่อนุญาตให้ใช้รูปภาพซ้ำ)
-                        </p>
-                    </div>
+                    <h3 class="text-lg md:text-xl font-bold text-gray-800 mb-1 flex items-center gap-2">🚀 ส่งหลักฐานภารกิจรักษ์โลก</h3>
+                    <p class="text-xs text-amber-700 bg-amber-50 p-2.5 rounded-xl mb-2 inline-block">⚠️ เงื่อนไข: แต่ละภารกิจส่งได้สูงสุด 5 ครั้ง และต้องเว้นระยะ 24 ชั่วโมง (ห้ามใช้รูปซ้ำ)</p>
+                    <p class="text-[11px] text-stone-500 bg-stone-50 p-2.5 rounded-xl mb-4 border border-stone-200">
+                        📌 <strong>หมายเหตุ:</strong> ค่าการลด CO₂e ของแต่ละกิจกรรมเป็นค่าประมาณการต่อการปฏิบัติกิจกรรม 1 ครั้ง ซึ่งกำหนดขึ้นเพื่อใช้เป็นค่าอ้างอิงในการคำนวณ
+                    </p>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                        <!-- 1 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        
+                        <!-- 1. ใช้ถุงผ้า -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ใช้ถุงผ้าแทนถุงพลาสติก" id="box-mission-1">
                             <div>
                                 <div class="text-3xl text-center my-1">🛍️</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ใช้ถุงผ้าแทนถุงพลาสติก</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.0395 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>1 ถุง × 0.015 kg/ถุง × 2.6300 kgCO₂e/kg = <strong>0.0395 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+1 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.04 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 ถุง × 0.015 kg/ถุง × 2.6300 kgCO₂e/kg = 0.0395 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-1" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ใช้ถุงผ้าแทนถุงพลาสติก', 'file-1', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ใช้ถุงผ้าแทนถุงพลาสติก', 'file-1', this, 'box-mission-1')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 2 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 2. พกขวดน้ำ -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกขวดน้ำส่วนตัว" id="box-mission-2">
                             <div>
                                 <div class="text-3xl text-center my-1">🥤</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">พกขวดน้ำส่วนตัว</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.2043 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>1 ขวด × 0.095 kg/ขวด × 2.1500 kgCO₂e/kg = <strong>0.2043 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+2 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.20 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 ขวด × 0.095 kg/ขวด × 2.1500 kgCO₂e/kg = 0.2043 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-2" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-2', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-2', this, 'box-mission-2')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 3 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 3. ปิดไฟห้องพัก -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ปิดไฟห้องพัก" id="box-mission-3">
                             <div>
-                                <div class="text-3xl text-center my-1">💡</div>
+                                <div class="text-3xl text-center my-1">🔌</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ปิดไฟห้องพัก</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.0731 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>(หลอดไฟรวม 30W, ปิด 5 ชม.)</p>
-                                    <p>1 ครั้ง × 0.15 kWh × 0.4872 kgCO₂e/kWh = <strong>0.0731 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+2 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.07 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ (หลอด 30W, 5 ชม.):</p>
+                                    <p>1 ครั้ง × 0.15 kWh × 0.4872 kgCO₂e/kWh = 0.0731 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-3" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ปิดไฟห้องพัก', 'file-3', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ปิดไฟห้องพัก', 'file-3', this, 'box-mission-3')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 4 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 4. เดินขึ้นบันได -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="เดินขึ้นบันไดแทนการกดใช้ลิฟต์" id="box-mission-4">
                             <div>
                                 <div class="text-3xl text-center my-1">🪜</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">เดินขึ้นบันไดแทนการกดใช้ลิฟต์</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.0244 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>(มอเตอร์ 4 kW, ใช้เวลา 45 วินาที)</p>
-                                    <p>1 ครั้ง × 0.05 kWh × 0.4872 kgCO₂e/kWh = <strong>0.0244 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+3 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.02 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ (มอเตอร์ 4 kW, 45 วินาที):</p>
+                                    <p>1 ครั้ง × 0.05 kWh × 0.4872 kgCO₂e/kWh = 0.0244 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-4" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('เดินขึ้นบันไดแทนการกดใช้ลิฟต์', 'file-4', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('เดินขึ้นบันไดแทนการกดใช้ลิฟต์', 'file-4', this, 'box-mission-4')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 5 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 5. กินอาหารหมดจาน -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="กินอาหารหมดจาน" id="box-mission-5">
                             <div>
                                 <div class="text-3xl text-center my-1">🍽️</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">กินอาหารหมดจาน</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.2520 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>1 จาน × 0.45 kg × 0.5600 kgCO₂e/kg = <strong>0.2520 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+3 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.25 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 จาน × 0.45 kg × 0.5600 kgCO₂e/kg = 0.2520 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-5" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('กินอาหารหมดจาน', 'file-5', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('กินอาหารหมดจาน', 'file-5', this, 'box-mission-5')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 6 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 6. แยกขยะถูกประเภท -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="แยกขยะถูกประเภท" id="box-mission-6">
                             <div>
                                 <div class="text-3xl text-center my-1">♻️</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">แยกขยะถูกประเภท</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.4205 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>1 ชิ้น × 0.2 kg × 2.1026 kgCO₂e/kg = <strong>0.4205 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+3 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.42 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 ชิ้น × 0.2 kg × 2.1026 kgCO₂e/kg = 0.4205 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-6" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('แยกขยะถูกประเภท', 'file-6', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('แยกขยะถูกประเภท', 'file-6', this, 'box-mission-6')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 7 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 7. ปั่นจักรยาน -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ปั่นจักรยานแทนการใช้รถจักรยานยนต์" id="box-mission-7">
                             <div>
                                 <div class="text-3xl text-center my-1">🚲</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ปั่นจักรยานแทนการใช้รถจักรยานยนต์</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.2979 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>4/30 × 1 L ≈ 0.133 L × 2.2394 kgCO₂e/L = <strong>0.2979 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+4 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.30 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>4/30 × 1 L ≈ 0.133 L × 2.2394 kgCO₂e/L = 0.2979 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-7" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ปั่นจักรยานแทนการใช้รถจักรยานยนต์', 'file-7', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ปั่นจักรยานแทนการใช้รถจักรยานยนต์', 'file-7', this, 'box-mission-7')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
-                        <!-- 8 -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs">
+                        <!-- 8. ประดิษฐ์ของใช้ -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="ประดิษฐ์ของใช้จากวัสดุเหลือใช้" id="box-mission-8">
                             <div>
                                 <div class="text-3xl text-center my-1">📦</div>
                                 <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">ประดิษฐ์ของใช้จากวัสดุเหลือใช้</h4>
-                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">ลดได้ 0.2320 kgCO₂e</span></div>
-                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5 leading-relaxed">
-                                    <p class="font-semibold text-emerald-700">สูตรการคำนวณ:</p>
-                                    <p>1 ชิ้น × 0.1 kg × 2.3200 kgCO₂e/kg = <strong>0.2320 kgCO₂e</strong></p>
+                                <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+5 คะแนน</span></div>
+                                <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.23 kgCO₂e/ครั้ง</p>
+                                <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
+                                    <p class="font-semibold text-emerald-700">สูตรคำนวณ:</p>
+                                    <p>1 ชิ้น × 0.1 kg × 2.3200 kgCO₂e/kg = 0.2320 kgCO₂e</p>
                                 </div>
                             </div>
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-8" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ประดิษฐ์ของใช้จากวัสดุเหลือใช้', 'file-8', this)" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ประดิษฐ์ของใช้จากวัสดุเหลือใช้', 'file-8', this, 'box-mission-8')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
 
-            <!-- แท็บที่ 2: ประวัติภารกิจ -->
+            <!-- แท็บที่ 2: ประวัติภารกิจของคุณ -->
             <div id="user-tab-history" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-3 pb-2 border-b">
                         <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
                             📜 ประวัติการส่งภารกิจรักษ์โลกของคุณ
                         </h3>
-                        <p class="text-xs text-stone-500">ตรวจสอบสถานะการอนุมัติ วันเวลาที่ส่ง และปริมาณคาร์บอนที่ลดได้</p>
+                        <p class="text-xs text-stone-500">ตรวจสอบสถานะการอนุมัติ วันเวลาที่ส่ง คะแนน และปริมาณคาร์บอนที่ลดได้</p>
                     </div>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[550px]">
+                        <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[600px]">
                             <thead>
                                 <tr class="bg-stone-100 text-stone-700 border-b">
                                     <th class="p-3 rounded-l-lg">ภารกิจที่ส่ง</th>
                                     <th class="p-3">วัน-เวลาที่ส่ง</th>
                                     <th class="p-3">หลักฐาน</th>
                                     <th class="p-3">สถานะ / เหตุผล</th>
-                                    <th class="p-3 text-right rounded-r-lg">ลด CO₂</th>
+                                    <th class="p-3 text-right">ลด CO₂</th>
+                                    <th class="p-3 text-right rounded-r-lg">คะแนน</th>
                                 </tr>
                             </thead>
                             <tbody id="user-history-table"></tbody>
                             <tfoot id="user-history-footer" class="bg-emerald-50/70 font-bold border-t border-emerald-200">
                                 <tr>
-                                    <td colspan="4" class="p-3 text-stone-700 text-right">รวม CO₂ ทั้งหมดที่อนุมัติแล้ว:</td>
-                                    <td class="p-3 text-right text-teal-800 text-sm md:text-base" id="user-total-approved-co2">0.0000 kgCO₂e</td>
+                                    <td colspan="4" class="p-3 text-stone-700 text-right">รวมทั้งหมดที่อนุมัติแล้ว:</td>
+                                    <td class="p-3 text-right text-teal-800 text-sm md:text-base" id="user-total-approved-co2">0.00 kgCO₂e</td>
+                                    <td class="p-3 text-right text-emerald-700 text-sm md:text-base" id="user-total-approved-points">0 คะแนน</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -328,49 +341,49 @@
             <div id="user-tab-rewards" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
-                        <h3 class="text-lg md:text-xl font-bold text-gray-800">🎁 แลกรางวัลด้วยการลดคาร์บอน</h3>
-                        <p class="text-xs text-gray-500">เลือกของรางวัลที่คุณต้องการแลกโดยใช้ปริมาณ CO₂ สะสมที่คุณช่วยลดให้โลก</p>
+                        <h3 class="text-lg md:text-xl font-bold text-gray-800">🎁 แลกรางวัล</h3>
+                        <p class="text-xs text-gray-500">เลือกของรางวัลที่คุณต้องการแลกโดยใช้คะแนนสะสม (รอแอดมินอนุมัติเพื่อรับของ)</p>
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">ใช้ 1.00 kgCO₂e</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">50 คะแนน</span>
                                 <div class="text-4xl my-2">🖊️</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">ปากกา</h4>
                                 <p class="text-xs text-stone-500 mt-1">ปากการักษ์โลกเขียนลื่น ใช้งานได้ยาวนาน</p>
                             </div>
-                            <button onclick="claimReward(1.00, 'ปากกา')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(50, 'ปากกา')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">ใช้ 2.50 kgCO₂e</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">100 คะแนน</span>
                                 <div class="text-4xl my-2">📓</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">สมุดโน้ต</h4>
                                 <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตารีไซเคิล</p>
                             </div>
-                            <button onclick="claimReward(2.50, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(100, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">ใช้ 4.00 kgCO₂e</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">150 คะแนน</span>
                                 <div class="text-4xl my-2">🛍️</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">ถุงผ้า</h4>
                                 <p class="text-xs text-stone-500 mt-1">ถุงผ้าหนาทนทาน พกพาสะดวก ใช้ซ้ำได้</p>
                             </div>
-                            <button onclick="claimReward(4.00, 'ถุงผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(150, 'ถุงผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">ใช้ 5.00 kgCO₂e</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">200 คะแนน</span>
                                 <div class="text-4xl my-2">🥤</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">กระบอกน้ำ</h4>
                                 <p class="text-xs text-stone-500 mt-1">กระบอกน้ำเก็บความเย็น พกพาสะดวก</p>
                             </div>
-                            <button onclick="claimReward(5.00, 'กระบอกน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(200, 'กระบอกน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
                     </div>
 
@@ -381,7 +394,7 @@
                                 <thead>
                                     <tr class="bg-stone-100 text-stone-700 border-b">
                                         <th class="p-3 rounded-l-lg">ของรางวัลที่ขอแลก</th>
-                                        <th class="p-3">CO₂ ที่ใช้</th>
+                                        <th class="p-3">คะแนนที่ใช้</th>
                                         <th class="p-3">วันที่ส่งคำขอ</th>
                                         <th class="p-3 text-right rounded-r-lg">สถานะ / เหตุผล</th>
                                     </tr>
@@ -398,26 +411,30 @@
         <section id="admin-dashboard" class="hidden space-y-4 md:space-y-6">
             
             <div id="admin-main-overview" class="space-y-4 md:space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
                     <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl border border-blue-200 text-center">
                         <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
                         <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0</span> คน</p>
                     </div>
                     <div class="bg-teal-50 text-teal-900 p-4 rounded-2xl border border-teal-200 text-center">
-                        <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งระบบ</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1 text-teal-800"><span id="admin-stat-total-co2">0.0000</span> <span class="text-xs font-normal">kgCO₂e</span></p>
+                        <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-total-co2">0.00</span> <span class="text-xs font-normal">kg</span></p>
                     </div>
                     <div class="bg-amber-50 text-amber-900 p-4 rounded-2xl border border-amber-200 text-center">
                         <p class="text-[11px] md:text-xs text-amber-700 font-medium uppercase tracking-wider">ภารกิจค้างตรวจ</p>
                         <p class="text-xl md:text-3xl font-bold mt-1 text-amber-700"><span id="admin-stat-pending-missions">0</span> รายการ</p>
                     </div>
+                    <div class="bg-purple-50 text-purple-900 p-4 rounded-2xl border border-purple-200 text-center">
+                        <p class="text-[11px] md:text-xs text-purple-700 font-medium uppercase tracking-wider">แลกรางวัลค้างตรวจ</p>
+                        <p class="text-xl md:text-3xl font-bold mt-1 text-purple-700"><span id="admin-stat-pending-rewards">0</span> รายการ</p>
+                    </div>
                 </div>
 
-                <!-- Leaderboard Admin -->
+                <!-- ตารางอันดับคะแนน (Leaderboard) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
-                            🏆 อันดับการลดคาร์บอนสมาชิกทั้งหมด (Leaderboard)
+                            🏆 อันดับคะแนนสะสมสมาชิกทั้งหมด (Leaderboard)
                         </h3>
                         <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">อัปเดตเรียลไทม์</span>
                     </div>
@@ -427,7 +444,8 @@
                                 <tr class="text-stone-600 border-b">
                                     <th class="p-2.5 w-16 text-center">อันดับ</th>
                                     <th class="p-2.5">ผู้ใช้งาน</th>
-                                    <th class="p-2.5 text-right">ลด CO₂ สะสม</th>
+                                    <th class="p-2.5 text-right">ลด CO₂</th>
+                                    <th class="p-2.5 text-right">คะแนนสะสม</th>
                                 </tr>
                             </thead>
                             <tbody id="admin-leaderboard-table"></tbody>
@@ -436,10 +454,10 @@
                 </div>
             </div>
 
-            <!-- เมนูการจัดการ -->
+            <!-- เมนูการจัดการ 5 กรอบหลัก -->
             <div id="admin-menu-cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 
-                <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
+                <div onclick="openAdminSection('section-pending-missions')" class="bg-white p-5 rounded-2xl border-2 border-amber-200 hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between relative overflow-hidden">
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">📥</span>
@@ -451,14 +469,14 @@
                     <div class="mt-4 text-xs font-semibold text-amber-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
-                <div onclick="openAdminSection('section-rewards-hub')" class="bg-white p-5 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
+                <div onclick="openAdminSection('section-rewards-hub')" class="bg-white p-5 rounded-2xl border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between relative overflow-hidden">
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">🎁</span>
                             <span id="card-badge-rewards-pill" class="bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm">0 ค้างตรวจ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">คำขอแลกรางวัล & ประวัติการแลก</h4>
-                        <p class="text-xs text-stone-500 mt-1">อนุมัติคำขอแลกของรางวัลที่ใช้คาร์บอนแลก</p>
+                        <p class="text-xs text-stone-500 mt-1">อนุมัติคำขอแลกของรางวัล และดูประวัติการแลกทั้งหมดของระบบที่ด้านล่าง</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-purple-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -470,7 +488,7 @@
                             <span id="card-badge-chat" class="bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full">0 ข้อความ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ระบบแชทตอบกลับสมาชิก</h4>
-                        <p class="text-xs text-stone-500 mt-1">สนทนากับสมาชิกแบบเรียลไทม์ ส่งรูปภาพและตอบคำถาม</p>
+                        <p class="text-xs text-stone-500 mt-1">สนทนากับสมาชิกแบบเรียลไทม์ ส่งรูปภาพ พร้อมดูจำนวนข้อความที่สมาชิกทักเข้ามา</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-blue-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -479,7 +497,7 @@
                     <div>
                         <span class="text-3xl">👥</span>
                         <h4 class="font-bold text-base text-stone-800 mt-3">จัดการสมาชิก & ประวัติรายคน</h4>
-                        <p class="text-xs text-stone-500 mt-1">ดูประวัติการลด CO₂ ของสมาชิกรายคน หรือลบบัญชีผู้ใช้</p>
+                        <p class="text-xs text-stone-500 mt-1">ดูรายละเอียดประวัติภารกิจของสมาชิกรายคน หรือลบบัญชีผู้ใช้ถาวร</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-stone-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -488,12 +506,14 @@
                     <div>
                         <span class="text-3xl">📄</span>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ออกรายงาน PDF สรุปผล</h4>
-                        <p class="text-xs text-stone-500 mt-1">สรุปข้อมูลองค์รวมทั้งระบบ (เลือกวัน/สัปดาห์/เดือน) พร้อมตารางสถิติ</p>
+                        <p class="text-xs text-stone-500 mt-1">สรุปข้อมูลองค์รวมทั้งระบบ (เลือกวัน/สัปดาห์/เดือน) พร้อมตารางรายชื่อบุคคล</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-emerald-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
 
             </div>
+
+            <!-- ================= หน้ารายละเอียด ================= -->
 
             <!-- ส่วนที่ 1: ภารกิจรอตรวจสอบ -->
             <div id="section-pending-missions" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-amber-500 space-y-4">
@@ -519,7 +539,7 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 2: คำขอแลกรางวัล & ประวัติ -->
+            <!-- ส่วนที่ 2: คำขอแลกรางวัล & ประวัติทั้งหมด -->
             <div id="section-rewards-hub" class="admin-detail-view hidden space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-purple-500 space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b">
@@ -535,7 +555,7 @@
                                 <tr class="bg-purple-100/70 text-purple-900 font-semibold">
                                     <th class="p-3 rounded-l-lg">ผู้ขอแลก</th>
                                     <th class="p-3">ของรางวัล</th>
-                                    <th class="p-3">CO₂ ที่ใช้</th>
+                                    <th class="p-3">คะแนนที่ใช้</th>
                                     <th class="p-3">วันที่ขอแลก</th>
                                     <th class="p-3 text-center rounded-r-lg">จัดการคำขอ</th>
                                 </tr>
@@ -549,6 +569,7 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b">
                         <div>
                             <h3 class="text-lg md:text-xl font-bold text-teal-800">📜 ประวัติการคัดกรองคำขอแลกของรางวัลทั้งหมด</h3>
+                            <p class="text-xs text-stone-500">รายการที่ได้รับการอนุมัติมอบของหรือปฏิเสธคืนคะแนนแล้วทั้งหมด</p>
                         </div>
                         <input type="text" id="search-history-rewards" oninput="listenToAdminData()" placeholder="🔍 ค้นหาในประวัติแลกรางวัล..." class="p-2 border border-stone-300 rounded-xl text-xs w-full sm:w-64 bg-stone-50">
                     </div>
@@ -558,7 +579,7 @@
                                 <tr class="bg-teal-50 text-teal-900 font-semibold border-b border-teal-200">
                                     <th class="p-3 rounded-l-lg">ผู้ขอแลก</th>
                                     <th class="p-3">ของรางวัล</th>
-                                    <th class="p-3">CO₂ ที่ใช้</th>
+                                    <th class="p-3">คะแนนที่ใช้</th>
                                     <th class="p-3">วันที่ขอแลก</th>
                                     <th class="p-3 text-center rounded-r-lg">ผลการตรวจสอบ / เหตุผล</th>
                                 </tr>
@@ -569,11 +590,12 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 3: จัดการสมาชิก -->
+            <!-- ส่วนที่ 3: จัดการสมาชิก & ประวัติรายบุคคล -->
             <div id="section-user-management" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-stone-500 space-y-4">
                 <div class="pb-3 border-b">
                     <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
                     <h3 class="text-lg md:text-xl font-bold text-stone-800">👥 จัดการสมาชิกและประวัติภารกิจรายบุคคล</h3>
+                    <p class="text-xs text-gray-500">คลิกเลือกสมาชิกด้านซ้ายเพื่อดูประวัติ หรือกดปุ่มลบเพื่อลบบัญชีผู้ใช้ถาวร</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
@@ -587,7 +609,7 @@
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 mb-3 gap-2">
                                 <h4 id="admin-selected-user-title" class="font-bold text-emerald-800 text-xs md:text-sm">โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ</h4>
                                 <div id="selected-user-actions" class="hidden flex gap-2">
-                                    <button id="btn-delete-viewing-user" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-300 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer">
+                                    <button id="btn-delete-viewing-user" onclick="" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-300 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer">
                                         🗑️ ลบบัญชีคนนี้
                                     </button>
                                 </div>
@@ -599,25 +621,29 @@
                                             <th class="p-2 rounded-l-lg">ภารกิจที่ส่ง</th>
                                             <th class="p-2">รูปถ่าย</th>
                                             <th class="p-2">ผลการตรวจ/เหตุผล</th>
-                                            <th class="p-2 text-right rounded-r-lg">ลด CO₂</th>
+                                            <th class="p-2 text-right">ลด CO₂</th>
+                                            <th class="p-2 text-right rounded-r-lg">คะแนน</th>
                                         </tr>
                                     </thead>
                                     <tbody id="admin-user-detail-table">
-                                        <tr><td colspan="4" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>
+                                        <tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <div id="admin-user-detail-footer" class="hidden bg-emerald-50/70 p-3 rounded-xl font-bold border border-emerald-200 flex justify-between items-center text-xs md:text-sm mt-3">
-                            <span class="text-stone-700">ลด CO₂ สะสมที่อนุมัติของสมาชิกคนนี้:</span>
-                            <span class="text-teal-800 font-bold"><span id="admin-user-total-approved-co2">0.0000</span> kgCO₂e</span>
+                        <div id="admin-user-detail-footer" class="hidden bg-emerald-50/70 p-3 rounded-xl font-bold border border-emerald-200 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs md:text-sm mt-3 gap-1">
+                            <span class="text-stone-700">รวมทั้งหมดที่อนุมัติของสมาชิกคนนี้:</span>
+                            <div class="flex gap-4">
+                                <span class="text-teal-800 font-bold">ลด CO₂ รวม: <span id="admin-user-total-approved-co2">0.00</span> kgCO₂e</span>
+                                <span class="text-emerald-700 font-bold">คะแนนรวม: <span id="admin-user-total-approved-points">0</span> คะแนน</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ส่วนที่ 4: แชทแอดมิน -->
+            <!-- ส่วนที่ 4: ระบบแชทแอดมิน -->
             <div id="section-chat" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-blue-500 space-y-4">
                 <div class="flex justify-between items-center pb-3 border-b">
                     <div>
@@ -644,13 +670,13 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 5: ออกรายงาน PDF -->
+            <!-- ส่วนที่ 5: ออกรายงาน PDF ภาพรวมองค์รวม พร้อมปฏิทินจริง -->
             <div id="section-pdf-report" class="admin-detail-view hidden bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500 max-w-xl mx-auto space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b">
                     <div>
                         <button onclick="closeAdminSection()" class="text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg mb-2 transition cursor-pointer">⬅️ ย้อนกลับไปหน้าหลัก</button>
-                        <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลภาพรวม</h3>
-                        <p class="text-xs text-stone-500">สร้างเอกสารสรุปสถิติการลดก๊าซเรือนกระจก CO₂ สุทธิ</p>
+                        <h3 class="text-lg md:text-xl font-bold text-emerald-800">📄 ออกรายงาน PDF สรุปผลภาพรวมองค์รวม</h3>
+                        <p class="text-xs text-stone-500">เลือกช่วงเวลารายงานเพื่อสร้างเอกสารสรุปสถิติทั่วทั้งระบบและรายชื่อบุคคล</p>
                     </div>
                 </div>
 
@@ -672,32 +698,33 @@
 
                     <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
                         <p class="font-bold">ℹ️ รายงานนี้ประกอบด้วย:</p>
-                        <p>• สรุปผลรวม CO₂ สุทธิที่ลดได้ และสถิติตามหมวดหมู่ภารกิจ</p>
-                        <p>• ตารางอันดับและสถิติรายชื่อบุคคล</p>
+                        <p>• กล่อง Box สรุปภาพรวม (ผู้เข้าร่วม, ภารกิจ, CO₂ สุทธิ, คะแนน)</p>
+                        <p>• ตารางแจกแจงตามประเภทภารกิจ และตารางรายชื่อบุคคลด้านล่าง</p>
                     </div>
 
                     <button onclick="generateSystemSummaryPDF()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition cursor-pointer shadow-sm flex items-center justify-center gap-2">
-                        📥 พิมพ์ / บันทึกรายงาน PDF
+                        📥 พิมพ์ / บันทึกรายงาน PDF องค์รวม
                     </button>
                 </div>
             </div>
 
         </section>
 
-        <!-- Storage Meter Footer -->
+        <!-- แถบแสดงสถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูล (Real-time Storage Meter ของแท้ แสดงทศนิยม 2 ตำแหน่ง) -->
         <div id="admin-storage-footer" class="hidden bg-white p-4 rounded-2xl shadow-sm border border-stone-200 mt-6 space-y-2">
             <div class="flex justify-between items-center text-xs md:text-sm font-bold text-stone-700">
-                <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลระบบ (Realtime Database)</span>
+                <span>🗄️ สถานะพื้นที่จัดเก็บข้อมูลฐานข้อมูลระบบ (Realtime Database)</span>
                 <span id="storage-size-text" class="text-emerald-600">กำลังเชื่อมต่อฐานข้อมูล...</span>
             </div>
             <div class="w-full bg-stone-200 rounded-full h-2.5 overflow-hidden">
                 <div id="storage-progress-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
+            <p class="text-[11px] text-stone-400">อ้างอิงจากขนาดข้อมูล Realtime Database จริงแบบเรียลไทม์ (โควต้าแพ็กเกจ Spark ฟรี 1 GB / 1,000,000 KB)</p>
         </div>
 
     </main>
 
-    <!-- Modal แชทผู้ใช้ -->
+    <!-- Modal แชทยูเซอร์ -->
     <div id="user-chat-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 md:p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-xl flex flex-col h-[85vh] max-h-[550px] overflow-hidden">
             <div class="bg-emerald-600 text-white p-3.5 flex justify-between items-center shrink-0">
@@ -746,27 +773,18 @@
         let selectedAdminViewUserData = null;
         let isUserChatOpen = false;
         let allUsersCache = {};
+        let countdownTimerInterval = null;
 
-        // ฟังก์ชันกำหนดค่าการลด CO2 แต่ละภารกิจตามสูตรที่กำหนด
         function getMissionMeta(name) {
-            if (name.includes("ใช้ถุงผ้า")) return { co2: 0.0395 };
-            if (name.includes("พกขวดน้ำ")) return { co2: 0.2043 };
-            if (name.includes("ปิดไฟห้องพัก")) return { co2: 0.0731 };
-            if (name.includes("เดินขึ้นบันได")) return { co2: 0.0244 };
-            if (name.includes("กินอาหารหมดจาน")) return { co2: 0.2520 };
-            if (name.includes("แยกขยะ")) return { co2: 0.4205 };
-            if (name.includes("ปั่นจักรยาน")) return { co2: 0.2979 };
-            if (name.includes("ประดิษฐ์ของใช้")) return { co2: 0.2320 };
-            return { co2: 0.0000 };
-        }
-
-        // คำนวณ SHA-256 Hash เพื่อตรวจสอบรูปซ้ำ
-        async function calculateImageHash(dataUrl) {
-            const base64Data = dataUrl.split(',')[1] || dataUrl;
-            const msgBuffer = new TextEncoder().encode(base64Data);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0395, id: 'box-mission-1' };
+            if (name.includes("พกขวดน้ำ")) return { points: 2, co2: 0.2043, id: 'box-mission-2' };
+            if (name.includes("ปิดไฟห้องพัก")) return { points: 2, co2: 0.0731, id: 'box-mission-3' };
+            if (name.includes("เดินขึ้นบันได")) return { points: 3, co2: 0.0244, id: 'box-mission-4' };
+            if (name.includes("กินอาหารหมดจาน")) return { points: 3, co2: 0.2520, id: 'box-mission-5' };
+            if (name.includes("แยกขยะ")) return { points: 3, co2: 0.4205, id: 'box-mission-6' };
+            if (name.includes("ปั่นจักรยาน")) return { points: 4, co2: 0.2979, id: 'box-mission-7' };
+            if (name.includes("ประดิษฐ์ของใช้")) return { points: 5, co2: 0.2320, id: 'box-mission-8' };
+            return { points: 0, co2: 0, id: '' };
         }
 
         function switchAuthTab(tab) {
@@ -853,6 +871,7 @@
                     name: fullName,
                     username: fullName,
                     password: password,
+                    points: 0,
                     co2: 0.0
                 }).then(() => {
                     alert('🎉 ลงทะเบียนสมาชิกสำเร็จแล้ว! สามารถเข้าสู่ระบบได้ทันที');
@@ -955,7 +974,7 @@
                             fetchUserRewardHistory();
                             listenToLeaderboard();
                         } else {
-                            alert('⚠️ บัญชีของคุณถูกลบออกจากระบบ');
+                            alert('⚠️ บัญชีของคุณถูกลบออกจากระบบ กรุณาลงทะเบียนใหม่');
                             logout();
                         }
                     });
@@ -1034,11 +1053,12 @@
         function logout() {
             currentUser = null;
             localStorage.removeItem('green_passport_session');
+            if (countdownTimerInterval) clearInterval(countdownTimerInterval);
             
             document.getElementById('user-dashboard').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.add('hidden');
             document.getElementById('admin-storage-footer').classList.add('hidden');
-            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('nav-auth').innerHTML = '';
             
             const loginId = document.getElementById('login-studentid');
@@ -1051,7 +1071,8 @@
 
         function updateUserStats() {
             if(currentUser.role !== 'user') return;
-            document.getElementById('user-co2').innerText = Number(currentUser.co2 || 0).toFixed(4);
+            document.getElementById('user-points').innerText = currentUser.points || 0;
+            document.getElementById('user-co2').innerText = Number(currentUser.co2 || 0).toFixed(2);
         }
 
         function listenToLeaderboard() {
@@ -1063,11 +1084,12 @@
                     list.push({
                         studentId: u.studentId || key,
                         name: u.name || u.username || key,
-                        co2: Number(u.co2 || 0)
+                        points: u.points || 0,
+                        co2: u.co2 || 0
                     });
                 });
 
-                list.sort((a, b) => b.co2 - a.co2);
+                list.sort((a, b) => b.points - a.points);
 
                 const userTbody = document.getElementById('leaderboard-table');
                 if (userTbody) {
@@ -1088,7 +1110,8 @@
                                     <div class="font-medium">${user.name}</div>
                                     <div class="text-[11px] text-stone-400">รหัส: ${user.studentId} ${isCurrent ? '<span class="text-emerald-600 font-bold">(คุณ)</span>' : ''}</div>
                                 </td>
-                                <td class="p-2.5 text-right font-bold text-teal-700">${user.co2.toFixed(4)} kgCO₂e</td>
+                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(2)} kg</td>
+                                <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
                     });
@@ -1110,7 +1133,8 @@
                                     <div class="font-medium">${user.name}</div>
                                     <div class="text-[11px] text-stone-400">รหัส: ${user.studentId}</div>
                                 </td>
-                                <td class="p-2.5 text-right font-bold text-teal-700">${user.co2.toFixed(4)} kgCO₂e</td>
+                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(2)} kg</td>
+                                <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
                     });
@@ -1126,13 +1150,10 @@
             return `${y}-${m}-${d}`;
         }
 
-        // ส่งภารกิจ + ตรวจสอบรูปภาพซ้ำ
-        function submitSpecificMission(missionName, inputId, btnElement) {
+        // ฟังก์ชันส่งภารกิจพร้อมระบบตรวจสอบรูปภาพซ้ำ (Duplicate Image Check) และจำกัดสูงสุด 5 ครั้ง
+        function submitSpecificMission(missionName, inputId, btnElement, boxId) {
             const fileInput = document.getElementById(inputId);
-            if (fileInput.files.length === 0) { 
-                alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); 
-                return; 
-            }
+            if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
 
             const userIdentifier = currentUser.studentId;
             const originalText = btnElement.innerText;
@@ -1141,11 +1162,11 @@
 
             const file = fileInput.files[0];
             const reader = new FileReader();
-            reader.onload = async function(event) {
+            reader.onload = function(event) {
                 const img = new Image();
-                img.onload = async function() {
+                img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 500; 
+                    const MAX_WIDTH = 450; 
                     let width = img.width;
                     let height = img.height;
                     if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
@@ -1154,55 +1175,52 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.5);
-                    const imageHash = await calculateImageHash(compressedBase64);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.45);
 
-                    // ตรวจสอบรูปภาพซ้ำในระบบ
-                    const checkSnapshot = await database.ref('image_hashes/' + imageHash).once('value');
-                    if (checkSnapshot.exists()) {
-                        alert('⚠️ ตรวจพบรูปภาพซ้ำ! รูปนี้เคยถูกใช้ส่งภารกิจในระบบแล้ว กรุณาถ่ายหรือแนบรูปภาพใหม่');
-                        btnElement.disabled = false;
-                        btnElement.innerText = originalText;
-                        fileInput.value = '';
-                        return;
-                    }
+                    // ตรวจสอบรูปภาพซ้ำจากฐานข้อมูลทั้งหมดของผู้ใช้รายนี้
+                    database.ref('missions').once('value', (snapshot) => {
+                        let isDuplicateImage = false;
+                        snapshot.forEach(child => {
+                            const m = child.val();
+                            if (m.userIdentifier === userIdentifier && m.image === compressedBase64) {
+                                isDuplicateImage = true;
+                            }
+                        });
 
-                    btnElement.innerText = 'กำลังส่ง...';
-                    const missionId = Date.now().toString();
-                    const now = new Date();
-                    const timeStr = now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
-                    const dateFormatted = now.toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric'});
-                    
-                    const newMission = {
-                        id: missionId,
-                        userIdentifier: userIdentifier,
-                        userName: currentUser.name || currentUser.username || userIdentifier,
-                        missionName: missionName,
-                        submitTime: now.getTime(),
-                        dateStr: getTodayDateString(),
-                        image: compressedBase64,
-                        imageHash: imageHash,
-                        status: 'รออนุมัติ',
-                        timestamp: `${dateFormatted} เวลา ${timeStr} น.`
-                    };
+                        if (isDuplicateImage) {
+                            alert('⚠️ ตรวจพบว่าคุณเคยใช้รูปภาพนี้ส่งภารกิจไปแล้ว! กรุณาใช้รูปถ่ายใหม่ที่ไม่ซ้ำกัน');
+                            btnElement.disabled = false;
+                            btnElement.innerText = originalText;
+                            return;
+                        }
 
-                    const updates = {};
-                    updates['missions/' + missionId] = newMission;
-                    updates['image_hashes/' + imageHash] = {
-                        missionId: missionId,
-                        userIdentifier: userIdentifier,
-                        createdAt: now.getTime()
-                    };
+                        const missionId = Date.now().toString();
+                        const now = new Date();
+                        const timeStr = now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'});
+                        const dateFormatted = now.toLocaleDateString('th-TH', {day: '2-digit', month: '2-digit', year: 'numeric'});
+                        
+                        const newMission = {
+                            id: missionId,
+                            userIdentifier: userIdentifier,
+                            userName: currentUser.name || currentUser.username || userIdentifier,
+                            missionName: missionName,
+                            submitTime: now.getTime(),
+                            dateStr: getTodayDateString(),
+                            image: compressedBase64,
+                            status: 'รออนุมัติ',
+                            timestamp: `${dateFormatted} เวลา ${timeStr} น.`
+                        };
 
-                    database.ref().update(updates).then(() => {
-                        alert(`⚡ ส่งภารกิจ "${missionName}" สำเร็จ! ข้อมูลถูกส่งให้แอดมินตรวจสอบแล้ว`);
-                        fileInput.value = '';
-                        btnElement.disabled = false;
-                        btnElement.innerText = originalText;
-                    }).catch(err => {
-                        alert("เกิดข้อผิดพลาด: " + err.message);
-                        btnElement.disabled = false;
-                        btnElement.innerText = originalText;
+                        database.ref('missions/' + missionId).set(newMission).then(() => {
+                            alert(`⚡ ส่งภารกิจ "${missionName}" สำเร็จ! ข้อมูลถูกส่งให้แอดมินตรวจสอบแล้ว`);
+                            fileInput.value = '';
+                            btnElement.disabled = false;
+                            btnElement.innerText = originalText;
+                        }).catch(err => {
+                            alert("เกิดข้อผิดพลาด: " + err.message);
+                            btnElement.disabled = false;
+                            btnElement.innerText = originalText;
+                        });
                     });
                 };
                 img.src = event.target.result;
@@ -1210,16 +1228,25 @@
             reader.readAsDataURL(file);
         }
 
+        let globalUserMissionCounts = {};
+        let globalLatestMissionTime = {};
+
         function fetchUserMissions() {
             const userIdentifier = currentUser.studentId;
             database.ref('missions').on('value', (snapshot) => {
                 const tbody = document.getElementById('user-history-table');
                 tbody.innerHTML = '';
                 let hasData = false;
+                let totalApprovedPoints = 0;
                 let totalApprovedCo2 = 0;
                 let todayCo2Total = 0;
                 const todayStr = getTodayDateString();
                 const list = [];
+                
+                globalUserMissionCounts = {};
+                globalLatestMissionTime = {};
+                const nowTime = new Date().getTime();
+                const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
                 snapshot.forEach(child => {
                     const m = child.val();
@@ -1233,26 +1260,43 @@
                             const meta = getMissionMeta(m.missionName);
                             todayCo2Total += meta.co2;
                         }
+
+                        // นับจำนวนครั้งที่ส่งภายใน 24 ชั่วโมงล่าสุด
+                        if ((nowTime - (m.submitTime || 0)) < TWENTY_FOUR_HOURS) {
+                            globalUserMissionCounts[m.missionName] = (globalUserMissionCounts[m.missionName] || 0) + 1;
+                        }
+
+                        if (!globalLatestMissionTime[m.missionName] || m.submitTime > globalLatestMissionTime[m.missionName]) {
+                            globalLatestMissionTime[m.missionName] = m.submitTime || 0;
+                        }
                     }
                 });
 
-                document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(4);
+                document.getElementById('user-today-co2').innerText = todayCo2Total.toFixed(2);
+                updateMissionCountdownUI();
+
+                if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+                countdownTimerInterval = setInterval(updateMissionCountdownUI, 1000);
 
                 if(!hasData) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้ส่งภารกิจใดๆ ในระบบ</td></tr>`;
-                    document.getElementById('user-total-approved-co2').innerText = `0.0000 kgCO₂e`;
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400">ยังไม่ได้ส่งภารกิจใดๆ ในระบบ</td></tr>`;
+                    document.getElementById('user-total-approved-points').innerText = `0 คะแนน`;
+                    document.getElementById('user-total-approved-co2').innerText = `0.00 kgCO₂e`;
                     return;
                 }
 
                 list.reverse().forEach(m => {
                     let statusColor = 'text-amber-600 bg-amber-50';
+                    let earnedPoints = 0;
                     let earnedCo2 = 0;
                     let reasonText = m.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${m.reason}</span>` : '';
                     
                     if (m.status === 'อนุมัติแล้ว') {
                         statusColor = 'text-emerald-600 bg-emerald-50';
                         const meta = getMissionMeta(m.missionName);
+                        earnedPoints = meta.points;
                         earnedCo2 = meta.co2;
+                        totalApprovedPoints += earnedPoints;
                         totalApprovedCo2 += earnedCo2;
                     } else if (m.status === 'ปฏิเสธ') {
                         statusColor = 'text-red-600 bg-red-50';
@@ -1264,11 +1308,51 @@
                             <td class="p-3 text-stone-500 text-xs">${m.timestamp || '-'}</td>
                             <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg shadow-2xs cursor-pointer hover:opacity-80"></td>
                             <td class="p-3"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusColor}">${m.status}</span>${reasonText}</td>
-                            <td class="p-3 text-right font-bold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(4) : '0.0000'} kgCO₂e</td>
+                            <td class="p-3 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(2) : '0.00'} kgCO₂e</td>
+                            <td class="p-3 text-right font-bold ${earnedPoints > 0 ? 'text-emerald-600' : 'text-gray-400'}">${earnedPoints > 0 ? '+' + earnedPoints : '0'} คะแนน</td>
                         </tr>`;
                 });
 
-                document.getElementById('user-total-approved-co2').innerText = `${totalApprovedCo2.toFixed(4)} kgCO₂e`;
+                document.getElementById('user-total-approved-points').innerText = `${totalApprovedPoints} คะแนน`;
+                document.getElementById('user-total-approved-co2').innerText = `${totalApprovedCo2.toFixed(2)} kgCO₂e`;
+            });
+        }
+
+        // ระบบอัปเดตปุ่มส่งภารกิจ: สูงสุด 5 ครั้ง หากครบ 5 ครั้งให้จับเวลาถอยหลัง 24 ชม.
+        function updateMissionCountdownUI() {
+            const nowTime = new Date().getTime();
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+            document.querySelectorAll('.mission-box').forEach(box => {
+                const missionName = box.getAttribute('data-mission-name');
+                const btn = box.querySelector('.btn-mission');
+                if (!btn) return;
+
+                const countToday = globalUserMissionCounts[missionName] || 0;
+                const lastTime = globalLatestMissionTime[missionName] || 0;
+                const timeLeft = (lastTime + TWENTY_FOUR_HOURS) - nowTime;
+
+                if (countToday >= 5 && timeLeft > 0) {
+                    btn.disabled = true;
+                    btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
+                    btn.classList.add('bg-stone-300', 'text-stone-700', 'cursor-not-allowed');
+
+                    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                    const padH = String(hours).padStart(2, '0');
+                    const padM = String(minutes).padStart(2, '0');
+                    const padS = String(seconds).padStart(2, '0');
+
+                    btn.innerText = `⏳ ครบ 5 ครั้ง (รอ ${padH}:${padM}:${padS})`;
+                } else {
+                    btn.disabled = false;
+                    btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'active:bg-emerald-800');
+                    btn.classList.remove('bg-stone-300', 'text-stone-700', 'cursor-not-allowed');
+                    const remainingSend = 5 - countToday;
+                    btn.innerText = `ส่งภารกิจนี้ (ส่งได้อีก ${remainingSend} ครั้ง)`;
+                }
             });
         }
 
@@ -1298,12 +1382,12 @@
                     let reasonText = item.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${item.reason}</span>` : '';
 
                     if (item.status === 'อนุมัติแล้ว') badgeColor = 'text-emerald-700 bg-emerald-100';
-                    if (item.status === 'ปฏิเสธ (คืน CO₂)') badgeColor = 'text-red-700 bg-red-100';
+                    if (item.status === 'ปฏิเสธ (คืนคะแนน)') badgeColor = 'text-red-700 bg-red-100';
 
                     tbody.innerHTML += `
                         <tr class="border-b border-stone-100 hover:bg-stone-50">
                             <td class="p-3 font-semibold text-stone-800">${item.rewardName}</td>
-                            <td class="p-3 text-amber-700 font-bold">-${Number(item.co2Cost).toFixed(4)} kgCO₂e</td>
+                            <td class="p-3 text-amber-700 font-bold">-${item.cost} คะแนน</td>
                             <td class="p-3 text-gray-500 text-xs">${item.timestamp}</td>
                             <td class="p-3 text-right"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeColor}">${item.status}</span>${reasonText}</td>
                         </tr>
@@ -1312,21 +1396,18 @@
             });
         }
 
-        // แลกรางวัลโดยใช้ CO2
-        function claimReward(co2Cost, rewardName) {
+        function claimReward(cost, rewardName) {
             const userIdentifier = currentUser.studentId;
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
-            const userAvailableCo2 = Number(currentUser.co2 || 0);
-
-            if (userAvailableCo2 < co2Cost) { 
-                alert(`ปริมาณ CO₂ สะสมของคุณยังไม่พอ (ต้องใช้ ${co2Cost.toFixed(2)} kgCO₂e แต่คุณมี ${userAvailableCo2.toFixed(4)} kgCO₂e)`); 
+            if ((currentUser.points || 0) < cost) { 
+                alert(`คะแนนสะสมของคุณยังไม่พอ (ต้องใช้ ${cost} คะแนน)`); 
                 return; 
             }
             
-            if (confirm(`คุณต้องการใช้ ${co2Cost.toFixed(2)} kgCO₂e เพื่อขอแลก "${rewardName}" ใช่หรือไม่?`)) {
+            if (confirm(`คุณต้องการใช้ ${cost} คะแนนเพื่อขอแลก "${rewardName}" ใช่หรือไม่?`)) {
                 database.ref('users/' + safeKey).once('value', (snapshot) => {
                     let userData = snapshot.val();
-                    userData.co2 = Number((Number(userData.co2 || 0) - co2Cost).toFixed(4));
+                    userData.points -= cost;
                     
                     const claimId = Date.now().toString();
                     const now = new Date();
@@ -1335,7 +1416,7 @@
                         userIdentifier: userIdentifier,
                         userName: currentUser.name || currentUser.username || userIdentifier,
                         rewardName: rewardName,
-                        co2Cost: co2Cost,
+                        cost: cost,
                         status: 'รอแอดมินอนุมัติ',
                         timestamp: now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
                     };
@@ -1345,7 +1426,7 @@
                     updates['reward_claims/' + claimId] = newClaim;
 
                     database.ref().update(updates).then(() => {
-                        alert(`🎉 ส่งคำขอแลก "${rewardName}" เรียบร้อยแล้ว! โปรดรอแอดมินอนุมัติ`);
+                        alert(`🎉 ส่งคำขอแลก "${rewardName}" เรียบร้อยแล้ว! โปรดรอแอดมินอนุมัติและรับของรางวัลที่จุดบริการ`);
                     });
                 });
             }
@@ -1492,7 +1573,7 @@
             }
         }
 
-        // --- ระบบ Admin ---
+        // --- ระบบแอดมิน ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -1526,14 +1607,20 @@
 
                         document.getElementById('admin-stat-users').innerText = Object.keys(usersData).length;
 
+                        let totalPoints = 0;
+                        let systemTotalMessages = 0;
                         let systemTotalUnread = 0;
 
                         Object.entries(usersData).forEach(([key, u]) => {
+                            totalPoints += (u.points || 0);
                             const studentId = u.studentId || key;
                             const name = u.name || u.username || studentId;
                             const displayName = `${name} (${studentId})`;
 
                             const userMsgs = allChats[key] || {};
+                            const totalMsgs = Object.keys(userMsgs).length;
+                            systemTotalMessages += totalMsgs;
+                            
                             let unreadMsgs = 0;
                             Object.values(userMsgs).forEach(m => {
                                 if (m.sender !== 'แอดมิน' && !m.read) {
@@ -1551,8 +1638,8 @@
                                             </button>
                                         </div>
                                         <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
-                                            <span class="text-teal-700 font-bold">ลด CO₂: ${Number(u.co2 || 0).toFixed(4)} kg</span>
-                                            <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชี">
+                                            <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
+                                            <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
                                                 🗑️ ลบ
                                             </button>
                                         </div>
@@ -1561,7 +1648,7 @@
                             }
 
                             let isSelected = selectedAdminChatId === key;
-                            let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-md ring-2 ring-blue-300' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
+                            let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
                             
                             let badgeHtml = unreadMsgs > 0 
                                 ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
@@ -1574,6 +1661,8 @@
                                 </button>
                             `;
                         });
+
+                        document.getElementById('admin-stat-points').innerText = totalPoints;
 
                         const chatCardBadge = document.getElementById('card-badge-chat');
                         if (chatCardBadge) {
@@ -1617,6 +1706,10 @@
                         }
                     });
 
+                    document.getElementById('admin-stat-pending-rewards').innerText = pendingRewardsCount;
+                    const cardBadgeRewards = document.getElementById('card-badge-rewards');
+                    if (cardBadgeRewards) cardBadgeRewards.innerText = pendingRewardsCount;
+
                     const pillRewards = document.getElementById('card-badge-rewards-pill');
                     if (pillRewards) {
                         if (pendingRewardsCount > 0) {
@@ -1637,12 +1730,12 @@
                                 <tr class="border-b border-stone-200 hover:bg-purple-50/40">
                                     <td class="p-3 font-semibold text-stone-800">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                     <td class="p-3 font-bold text-purple-900">${claim.rewardName}</td>
-                                    <td class="p-3 font-bold text-amber-700">-${Number(claim.co2Cost).toFixed(4)} kgCO₂e</td>
+                                    <td class="p-3 font-bold text-amber-700">-${claim.cost} คะแนน</td>
                                     <td class="p-3 text-xs text-gray-500">${claim.timestamp}</td>
                                     <td class="p-3 text-center">
                                         <div class="flex justify-center gap-1.5">
-                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.co2Cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.co2Cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -1662,7 +1755,7 @@
                                 <tr class="border-b border-stone-100 hover:bg-stone-50 text-xs md:text-sm">
                                     <td class="p-3 font-medium text-stone-700">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                     <td class="p-3 font-semibold text-stone-800">${claim.rewardName}</td>
-                                    <td class="p-3 font-bold text-stone-600">-${Number(claim.co2Cost).toFixed(4)} kgCO₂e</td>
+                                    <td class="p-3 font-bold text-stone-600">-${claim.cost} คะแนน</td>
                                     <td class="p-3 text-xs text-gray-400">${claim.timestamp}</td>
                                     <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeStyle}">${claim.status}</span>${reasonText}</td>
                                 </tr>
@@ -1702,9 +1795,11 @@
                     });
 
                     const adminCo2El = document.getElementById('admin-stat-total-co2');
-                    if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(4);
+                    if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(2);
 
                     document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
+                    const cardBadgeMissions = document.getElementById('card-badge-missions');
+                    if (cardBadgeMissions) cardBadgeMissions.innerText = pendingMissionsCount;
 
                     const pillMissions = document.getElementById('card-badge-missions-pill');
                     if (pillMissions) {
@@ -1765,7 +1860,7 @@
         }
 
         function deleteUserPermanently(userKey) {
-            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?`)) {
+            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?\n\n(ผู้ใช้รายนี้จะไม่สามารถเข้าสู่ระบบได้ และหากต้องการเข้าใช้งานจะต้องทำการลงทะเบียนใหม่ทั้งหมด)`)) {
                 return;
             }
 
@@ -1778,7 +1873,6 @@
                     const m = child.val();
                     if (m.userIdentifier === userKey) {
                         updates[`missions/${child.key}`] = null;
-                        if (m.imageHash) updates[`image_hashes/${m.imageHash}`] = null;
                     }
                 });
 
@@ -1794,7 +1888,7 @@
                         alert(`✅ ลบบัญชีผู้ใช้ "${userKey}" สำเร็จแล้ว!`);
                         document.getElementById('admin-selected-user-title').innerText = 'โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ';
                         document.getElementById('selected-user-actions').classList.add('hidden');
-                        document.getElementById('admin-user-detail-table').innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>`;
+                        document.getElementById('admin-user-detail-table').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>`;
                         document.getElementById('admin-user-detail-footer').classList.add('hidden');
                         selectedAdminViewUserId = null;
 
@@ -1815,7 +1909,7 @@
             document.getElementById('btn-admin-send-chat').disabled = false;
             document.getElementById('admin-chat-file').disabled = false;
             document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.add('hidden');
+            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -1924,7 +2018,7 @@
             }
         }
 
-        function reviewRewardClaim(claimId, userIdentifier, co2Cost, action) {
+        function reviewRewardClaim(claimId, userIdentifier, cost, action) {
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             let reason = "";
 
@@ -1935,21 +2029,21 @@
             }
 
             database.ref('users/' + safeKey).once('value', (snapshot) => {
-                let userData = snapshot.val() || { co2: 0 };
+                let userData = snapshot.val() || { points: 0 };
 
                 if (action === 'reject') {
-                    userData.co2 = Number((Number(userData.co2 || 0) + Number(co2Cost)).toFixed(4));
+                    userData.points = (userData.points || 0) + cost;
                 }
 
                 const updates = {};
-                updates['reward_claims/' + claimId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืน CO₂)';
+                updates['reward_claims/' + claimId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืนคะแนน)';
                 if (action === 'reject') {
                     updates['reward_claims/' + claimId + '/reason'] = reason;
                     updates['users/' + safeKey] = userData;
                 }
 
                 database.ref().update(updates).then(() => {
-                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลเรียบร้อย!' : 'ปฏิเสธคำขอและคืน CO₂ ให้ผู้ใช้เรียบร้อยแล้ว');
+                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลเรียบร้อย!' : 'ปฏิเสธคำขอและคืนคะแนนให้ผู้ใช้เรียบร้อยแล้ว');
                 });
             });
         }
@@ -1977,21 +2071,25 @@
             const userMissions = allMissionsCache.filter(m => m.userIdentifier === userKey);
 
             if (userMissions.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">ไม่พบประวัติภารกิจของสมาชิกท่านนี้</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ไม่พบประวัติภารกิจของสมาชิกท่านนี้</td></tr>`;
                 footer.classList.add('hidden');
                 return;
             }
 
+            let totalApproved = 0;
             let totalApprovedCo2 = 0;
             userMissions.reverse().forEach(m => {
                 let badgeStyle = 'text-amber-700 bg-amber-100';
+                let earnedPoints = 0;
                 let earnedCo2 = 0;
                 let reasonText = m.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${m.reason}</span>` : '';
 
                 if (m.status === 'อนุมัติแล้ว') {
                     badgeStyle = 'text-emerald-700 bg-emerald-100';
                     const meta = getMissionMeta(m.missionName);
+                    earnedPoints = meta.points;
                     earnedCo2 = meta.co2;
+                    totalApproved += earnedPoints;
                     totalApprovedCo2 += earnedCo2;
                 } else if (m.status === 'ปฏิเสธ') {
                     badgeStyle = 'text-red-700 bg-red-100';
@@ -2002,12 +2100,14 @@
                         <td class="p-2 text-stone-700">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
                         <td class="p-2"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg border cursor-pointer"></td>
                         <td class="p-2"><span class="px-2 py-0.5 rounded-sm font-semibold text-xs ${badgeStyle}">${m.status}</span>${reasonText}</td>
-                        <td class="p-2 text-right font-bold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(4) : '0.0000'} kgCO₂e</td>
+                        <td class="p-2 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(2) : '0.00'} kgCO₂e</td>
+                        <td class="p-2 text-right font-bold ${earnedPoints > 0 ? 'text-emerald-600' : 'text-gray-400'}">${earnedPoints > 0 ? '+' + earnedPoints : '0'} คะแนน</td>
                     </tr>
                 `;
             });
 
-            document.getElementById('admin-user-total-approved-co2').innerText = totalApprovedCo2.toFixed(4);
+            document.getElementById('admin-user-total-approved-points').innerText = totalApproved;
+            document.getElementById('admin-user-total-approved-co2').innerText = totalApprovedCo2.toFixed(2);
             footer.classList.remove('hidden');
         }
 
@@ -2030,7 +2130,8 @@
                     
                     if (action === 'approve') {
                         const meta = getMissionMeta(mission.missionName);
-                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(4));
+                        userData.points = (userData.points || 0) + meta.points;
+                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(2));
                     }
 
                     const updates = {};
@@ -2047,7 +2148,7 @@
             });
         }
 
-        // รายงาน PDF สรุปเฉพาะปริมาณคาร์บอน
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
@@ -2090,31 +2191,35 @@
             }
 
             const activeUsersMap = {};
+            let totalPoints = 0;
             let totalCo2 = 0;
             const breakdown = {};
 
             approvedMissions.forEach(m => {
                 const meta = getMissionMeta(m.missionName);
+                totalPoints += meta.points;
                 totalCo2 += meta.co2;
 
                 if (!breakdown[m.missionName]) {
-                    breakdown[m.missionName] = { count: 0, co2: 0 };
+                    breakdown[m.missionName] = { count: 0, points: 0, co2: 0 };
                 }
                 breakdown[m.missionName].count += 1;
+                breakdown[m.missionName].points += meta.points;
                 breakdown[m.missionName].co2 += meta.co2;
 
                 const uid = m.userIdentifier;
                 if (!activeUsersMap[uid]) {
-                    activeUsersMap[uid] = { name: m.userName || uid, studentId: uid, count: 0, co2: 0 };
+                    activeUsersMap[uid] = { name: m.userName || uid, studentId: uid, count: 0, points: 0, co2: 0 };
                 }
                 activeUsersMap[uid].count += 1;
+                activeUsersMap[uid].points += meta.points;
                 activeUsersMap[uid].co2 += meta.co2;
             });
 
             let breakdownRows = '';
             const missionKeys = Object.keys(breakdown);
             if (missionKeys.length === 0) {
-                breakdownRows = `<tr><td colspan="3" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
+                breakdownRows = `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 missionKeys.forEach(name => {
                     const item = breakdown[name];
@@ -2122,7 +2227,8 @@
                         <tr style="border-bottom: 1px solid #e5e7eb; font-size: 9.5pt;">
                             <td style="padding: 8px 10px; color: #374151;">${name}</td>
                             <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(4)} kgCO₂e</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(2)} kg</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
                         </tr>
                     `;
                 });
@@ -2131,7 +2237,7 @@
             let userSummaryRows = '';
             const userKeys = Object.keys(activeUsersMap);
             if (userKeys.length === 0) {
-                userSummaryRows = `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
+                userSummaryRows = `<tr><td colspan="5" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
             } else {
                 userKeys.forEach((uid, idx) => {
                     const usr = activeUsersMap[uid];
@@ -2140,7 +2246,8 @@
                             <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
                             <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 8.5pt;">(รหัส: ${usr.studentId})</span></td>
                             <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
-                            <td style="padding: 6px 8px; text-align: right; color: #047857; font-weight: bold;">${usr.co2.toFixed(4)} kgCO₂e</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(2)} kg</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
                         </tr>
                     `;
                 });
@@ -2150,7 +2257,7 @@
             printWindow.document.write(`
                 <html>
                 <head>
-                    <title>GreenPassport_Report_${type}</title>
+                    <title>GreenPassport_System_Report_${type}</title>
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
                     <style>
                         body { font-family: 'Kanit', sans-serif; color: #1f2937; padding: 25px; margin: 0; background: #fff; font-size: 10pt; line-height: 1.4; }
@@ -2163,22 +2270,25 @@
                     </style>
                 </head>
                 <body>
+                    <!-- Header -->
                     <div style="border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
-                            <h1 style="color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL CARBON REPORT</h1>
-                            <p style="font-size: 9.5pt; color: #4b5563; margin: 2px 0 0 0;">รายงานสรุปผลการลดก๊าซเรือนกระจก (Carbon Footprint Reduction)</p>
+                            <h1 style="color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL REPORT</h1>
+                            <p style="font-size: 9.5pt; color: #4b5563; margin: 2px 0 0 0;">รายงานสรุปผลการดำเนินงานด้านสิ่งแวดล้อมภาพรวมองค์รวมระบบสะสมแต้ม</p>
                         </div>
                         <div style="text-align: right; font-size: 8.5pt; color: #6b7280;">
                             <div>วันที่ออกรายงาน: ${now.toLocaleDateString('th-TH')}</div>
                         </div>
                     </div>
 
+                    <!-- Period Badge -->
                     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 10.5pt; color: #166534;">
                         <strong>รอบรายงาน:</strong> ${periodTitle}
                     </div>
 
+                    <!-- KPI Boxes -->
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 8px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
                         <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #be185d; font-weight: bold; margin-bottom: 2px;">ผู้เข้าร่วมกิจกรรม</div>
                             <div style="font-size: 13pt; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 8.5pt; font-weight: normal;">คน</span></div>
@@ -2189,17 +2299,23 @@
                         </div>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
-                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(4)} <span style="font-size: 8.5pt; font-weight: normal;">kgCO₂e</span></div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(2)} <span style="font-size: 8.5pt; font-weight: normal;">kg</span></div>
+                        </div>
+                        <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; text-align: center;">
+                            <div style="font-size: 8.5pt; color: #047857; font-weight: bold; margin-bottom: 2px;">คะแนนรวมสะสม</div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 8.5pt; font-weight: normal;">แต้ม</span></div>
                         </div>
                     </div>
 
+                    <!-- Breakdown Table -->
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <thead>
                             <tr style="background: #f3f4f6; color: #374151; font-size: 9.5pt; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 8px 10px; text-align: left;">ประเภทภารกิจ</th>
-                                <th style="padding: 8px 10px; text-align: center; width: 120px;">จำนวนครั้ง</th>
-                                <th style="padding: 8px 10px; text-align: right; width: 140px;">ลด CO₂ สุทธิ</th>
+                                <th style="padding: 8px 10px; text-align: center; width: 90px;">จำนวนครั้ง</th>
+                                <th style="padding: 8px 10px; text-align: right; width: 110px;">CO₂ (kgCO₂e)</th>
+                                <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนนรวม</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2209,19 +2325,22 @@
                             <tr style="background: #ecfdf5; font-weight: bold; font-size: 9.5pt;">
                                 <td style="padding: 8px 10px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
                                 <td style="padding: 8px 10px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
-                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(4)} kgCO₂e</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(2)} kg</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
                             </tr>
                         </tfoot>
                     </table>
 
+                    <!-- User Summary Table -->
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                         <thead>
                             <tr style="background: #f3f4f6; color: #374151; font-size: 9.5pt; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 6px 8px; width: 35px; text-align: center;">ลำดับ</th>
                                 <th style="padding: 6px 8px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
-                                <th style="padding: 6px 8px; text-align: center; width: 90px;">ภารกิจที่ทำ</th>
-                                <th style="padding: 6px 8px; text-align: right; width: 120px;">ลด CO₂ สะสม</th>
+                                <th style="padding: 6px 8px; text-align: center; width: 80px;">ภารกิจที่ทำ</th>
+                                <th style="padding: 6px 8px; text-align: right; width: 90px;">ลด CO₂</th>
+                                <th style="padding: 6px 8px; text-align: right; width: 80px;">คะแนน</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2229,16 +2348,18 @@
                         </tbody>
                     </table>
 
+                    <!-- Signature & Footer -->
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 35px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 8.5pt; color: #6b7280;">
-                        <div>ระบบสะสมการลดก๊าซเรือนกระจก Green Passport Project (Official Document)</div>
+                        <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project (Official Document)</div>
                         <div style="text-align: center;">
                             <div style="border-bottom: 1px solid #9ca3af; width: 140px; margin-bottom: 3px;"></div>
                             <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
                         </div>
                     </div>
 
+                    <!-- Print Button -->
                     <div style="text-align: center; margin-top: 30px;">
-                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 10pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif;">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 10pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
                     </div>
                 </body>
                 </html>
