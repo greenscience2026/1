@@ -17,7 +17,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-stone-100 min-h-screen pb-12 text-stone-800" onclick="handleGlobalClick(event)">
+<body class="bg-stone-100 min-h-screen pb-12 text-stone-800 text-xs sm:text-sm" onclick="handleGlobalClick(event)">
 
     <!-- Navbar แถบสีเขียวด้านบน -->
     <nav class="bg-emerald-600 text-white px-3 py-2.5 sm:px-4 sm:py-3 shadow-md sticky top-0 z-30 flex items-center justify-between gap-2">
@@ -127,8 +127,8 @@
                     <h3 class="text-base md:text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
                         🏆 อันดับคะแนนสะสมสูงสุด (Leaderboard)
                     </h3>
-                    <div class="overflow-y-auto max-h-52 border border-stone-100 rounded-xl">
-                        <table class="w-full text-left text-xs md:text-sm border-collapse">
+                    <div class="overflow-x-auto max-h-52 border border-stone-100 rounded-xl">
+                        <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
                             <thead class="sticky top-0 bg-stone-100 z-10">
                                 <tr class="text-stone-600 border-b">
                                     <th class="p-2.5 w-16 text-center">อันดับ</th>
@@ -419,7 +419,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
                     <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl border border-blue-200 text-center">
                         <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0 / 50</span></p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0 / 50</span> <span class="text-xs font-normal">คน</span></p>
                     </div>
                     <div class="bg-teal-50 text-teal-900 p-4 rounded-2xl border border-teal-200 text-center">
                         <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
@@ -443,8 +443,8 @@
                         </h3>
                         <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">อัปเดตเรียลไทม์</span>
                     </div>
-                    <div class="overflow-y-auto max-h-52 border border-stone-100 rounded-xl">
-                        <table class="w-full text-left text-xs md:text-sm border-collapse">
+                    <div class="overflow-x-auto max-h-52 border border-stone-100 rounded-xl">
+                        <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
                             <thead class="sticky top-0 bg-stone-100 z-10">
                                 <tr class="text-stone-600 border-b">
                                     <th class="p-2.5 w-16 text-center">อันดับ</th>
@@ -1968,7 +1968,7 @@
                 const messages = snapshot.val() || {};
 
                 if (Object.keys(messages).length === 0) {
-                    chatBox.innerHTML = `<p class="text-center text-gray-400 text-xs my-auto">ยังไม่มีข้อความสนทนากับ ${userKey}</p>`;
+                    chatBox.innerHTML = `<p class="text-center text-gray-400 text-xs my-auto">ยังไม่ได้ส่งข้อความสนทนากับ ${userKey}</p>`;
                     return;
                 }
 
@@ -2334,7 +2334,7 @@
                             <div style="font-size: 13pt; font-weight: bold; color: #92400e;">${approvedMissions.length} <span style="font-size: 8.5pt; font-weight: normal;">รายการ</span></div>
                         </div>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 10px; text-align: center;">
-                            <div style="font-size: 8.5pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
+                            <div style="font-size: 8.5pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">ปริมาณ CO₂ ที่ลดได้สุทธิ</div>
                             <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(4)} <span style="font-size: 8.5pt; font-weight: normal;">kgCO₂e</span></div>
                         </div>
                         <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; text-align: center;">
@@ -2405,4 +2405,3 @@
     </script>
 </body>
 </html>
-
