@@ -418,11 +418,11 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
                     <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl border border-blue-200 text-center">
                         <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0 / 50</span></p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0 / 50</span> <span class="text-xs font-normal">คน</span></p>
                     </div>
                     <div class="bg-teal-50 text-teal-900 p-4 rounded-2xl border border-teal-200 text-center">
                         <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-total-co2">0.0000</span> <span class="text-xs font-normal">kg</span></p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-total-co2">0.0000</span> <span class="text-xs font-normal">kgCO₂e</span></p>
                     </div>
                     <div class="bg-amber-50 text-amber-900 p-4 rounded-2xl border border-amber-200 text-center">
                         <p class="text-[11px] md:text-xs text-amber-700 font-medium uppercase tracking-wider">ภารกิจค้างตรวจ</p>
@@ -1154,7 +1154,7 @@
                                     <div class="font-medium">${user.name}</div>
                                     <div class="text-[11px] text-stone-400">รหัส: ${user.studentId} ${isCurrent ? '<span class="text-emerald-600 font-bold">(คุณ)</span>' : ''}</div>
                                 </td>
-                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(4)} kg</td>
+                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(4)} kgCO₂e</td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -1177,7 +1177,7 @@
                                     <div class="font-medium">${user.name}</div>
                                     <div class="text-[11px] text-stone-400">รหัส: ${user.studentId}</div>
                                 </td>
-                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(4)} kg</td>
+                                <td class="p-2.5 text-right font-semibold text-teal-700">${Number(user.co2 || 0).toFixed(4)} kgCO₂e</td>
                                 <td class="p-2.5 text-right font-bold text-emerald-700">${user.points} คะแนน</td>
                             </tr>
                         `;
@@ -2262,7 +2262,7 @@
                         <tr style="border-bottom: 1px solid #e5e7eb; font-size: 9.5pt;">
                             <td style="padding: 8px 10px; color: #374151;">${name}</td>
                             <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count} ครั้ง</td>
-                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(4)} kg</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(4)} kgCO₂e</td>
                             <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${item.points} คะแนน</td>
                         </tr>
                     `;
@@ -2281,7 +2281,7 @@
                             <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
                             <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 8.5pt;">(รหัส: ${usr.studentId})</span></td>
                             <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count} รายการ</td>
-                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(4)} kg</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(4)} kgCO₂e</td>
                             <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points} แต้ม</td>
                         </tr>
                     `;
@@ -2334,7 +2334,7 @@
                         </div>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #0f766e; font-weight: bold; margin-bottom: 2px;">CO₂ ที่ลดได้สุทธิ</div>
-                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(4)} <span style="font-size: 8.5pt; font-weight: normal;">kg</span></div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #115e59;">${totalCo2.toFixed(4)} <span style="font-size: 8.5pt; font-weight: normal;">kgCO₂e</span></div>
                         </div>
                         <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #047857; font-weight: bold; margin-bottom: 2px;">คะแนนรวมสะสม</div>
@@ -2360,7 +2360,7 @@
                             <tr style="background: #ecfdf5; font-weight: bold; font-size: 9.5pt;">
                                 <td style="padding: 8px 10px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
                                 <td style="padding: 8px 10px; text-align: center; color: #065f46;">${approvedMissions.length}</td>
-                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(4)} kg</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(4)} kgCO₂e</td>
                                 <td style="padding: 8px 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
                             </tr>
                         </tfoot>
