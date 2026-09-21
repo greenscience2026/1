@@ -791,13 +791,13 @@
         let countdownTimerInterval = null;
 
         function getMissionMeta(name) {
-            if (name.includes("เดินขึ้นบันได")) return { points: 1, co2: 0.0309, id: 'box-mission-1' };
-            if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0139, id: 'box-mission-2' };
-            if (name.includes("ปิดไฟห้องพัก")) return { points: 2, co2: 0.1335, id: 'box-mission-3' };
-            if (name.includes("พกขวดน้ำ")) return { points: 1.5, co2: 0.0861, id: 'box-mission-4' };
-            if (name.includes("ประดิษฐ์ของใช้")) return { points: 3, co2: 0.1974, id: 'box-mission-5' };
-            if (name.includes("กินอาหารหมดจาน")) return { points: 2, co2: 0.1329, id: 'box-mission-6' };
-            if (name.includes("ปั่นจักรยาน")) return { points: 2, co2: 0.1431, id: 'box-mission-7' };
+            if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0139, id: 'box-mission-1' };
+            if (name.includes("เดินขึ้นบันได")) return { points: 1, co2: 0.0309, id: 'box-mission-2' };
+            if (name.includes("พกขวดน้ำ")) return { points: 1.5, co2: 0.0861, id: 'box-mission-3' };
+            if (name.includes("กินอาหารหมดจาน")) return { points: 2, co2: 0.1329, id: 'box-mission-4' };
+            if (name.includes("ปิดไฟห้องพัก")) return { points: 2, co2: 0.1335, id: 'box-mission-5' };
+            if (name.includes("ปั่นจักรยาน")) return { points: 2, co2: 0.1431, id: 'box-mission-6' };
+            if (name.includes("ประดิษฐ์ของใช้")) return { points: 3, co2: 0.1974, id: 'box-mission-7' };
             if (name.includes("แยกขยะ")) return { points: 4, co2: 0.4156, id: 'box-mission-8' };
             return { points: 0, co2: 0, id: '' };
         }
@@ -1623,7 +1623,7 @@
             }
         }
 
-        // --- ระบบแอดมิน ---
+        // --- ระบบแอดมิน (ปรับปรุงประสิทธิภาพเพื่อป้องกันอาการค้าง) ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -2421,4 +2421,3 @@
     </script>
 </body>
 </html>
-
