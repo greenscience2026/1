@@ -66,7 +66,12 @@
                 <div id="form-register" class="space-y-4 hidden">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="reg-studentid" maxlength="11" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                        <input type="text" id="reg-studentid" maxlength="11" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา 11 หลัก">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">สาขาวิชา</label>
+                        <input type="text" id="reg-major" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="เช่น รังสีเทคนิค">
                     </div>
 
                     <div>
@@ -363,42 +368,42 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">80 คะแนน</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">30 คะแนน</span>
                                 <div class="text-4xl my-2">🖊️</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">ปากกา</h4>
                                 <p class="text-xs text-stone-500 mt-1">ปากการักษ์โลกเขียนลื่น ใช้งานได้ยาวนาน</p>
                             </div>
-                            <button onclick="claimReward(80, 'ปากกา')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(30, 'ปากกา')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">180 คะแนน</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">60 คะแนน</span>
                                 <div class="text-4xl my-2">📓</div>
-                                <h4 class="font-bold text-base md:text-lg text-stone-800">สมุด</h4>
+                                <h4 class="font-bold text-base md:text-lg text-stone-800">สมุดโน้ต</h4>
                                 <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตารีไซเคิล</p>
                             </div>
-                            <button onclick="claimReward(180, 'สมุด')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(60, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">280 คะแนน</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">120 คะแนน</span>
                                 <div class="text-4xl my-2">🛍️</div>
-                                <h4 class="font-bold text-base md:text-lg text-stone-800">ถุงผ้า</h4>
-                                <p class="text-xs text-stone-500 mt-1">ถุงผ้าหนาทนทาน พกพาสะดวก ใช้ซ้ำได้</p>
+                                <h4 class="font-bold text-base md:text-lg text-stone-800">กระเป๋าผ้า</h4>
+                                <p class="text-xs text-stone-500 mt-1">กระเป๋าผ้าหนาทนทาน พกพาสะดวก ใช้ซ้ำได้</p>
                             </div>
-                            <button onclick="claimReward(280, 'ถุงผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(120, 'กระเป๋าผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
-                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">400 คะแนน</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">240 คะแนน</span>
                                 <div class="text-4xl my-2">🥤</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">แก้วน้ำ</h4>
-                                <p class="text-xs text-stone-500 mt-1">แก้วน้ำเก็บความเย็น พกพาสะดวก</p>
+                                <p class="text-xs text-stone-500 mt-1">แก้วน้ำทั่วไป พกพาสะดวก ใช้งานง่าย</p>
                             </div>
-                            <button onclick="claimReward(400, 'แก้วน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button onclick="claimReward(240, 'แก้วน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
                     </div>
 
@@ -451,7 +456,6 @@
                         <h3 class="text-base md:text-lg font-bold text-gray-800 flex items-center gap-2">
                             🏆 อันดับคะแนนสะสมสมาชิกทั้งหมด (Leaderboard)
                         </h3>
-                        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">อัปเดตเรียลไทม์</span>
                     </div>
                     <div class="overflow-x-auto max-h-52 border border-stone-100 rounded-xl">
                         <table class="w-full text-left text-xs md:text-sm border-collapse min-w-[500px]">
@@ -884,11 +888,12 @@
 
         function handleRegister() {
             const studentId = document.getElementById('reg-studentid').value.trim();
+            const major = document.getElementById('reg-major').value.trim();
             const fullName = document.getElementById('reg-fullname').value.trim();
             const password = document.getElementById('reg-password').value.trim();
             const pdpaCheckbox = document.getElementById('pdpa-consent-checkbox');
 
-            if (!studentId || !fullName || !password) {
+            if (!studentId || !major || !fullName || !password) {
                 alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
                 return;
             }
@@ -925,6 +930,7 @@
 
                     database.ref('users/' + safeKey).set({
                         studentId: studentId,
+                        major: major,
                         name: fullName,
                         username: fullName,
                         password: password,
@@ -1623,7 +1629,7 @@
             }
         }
 
-        // --- ระบบแอดมิน (ปรับปรุงประสิทธิภาพเพื่อป้องกันอาการค้าง) ---
+        // --- ระบบแอดมิน (ปรับปรุงประสิทธิภาพแบบ High Performance) ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -1666,6 +1672,7 @@
                             totalPoints += (u.points || 0);
                             const studentId = u.studentId || key;
                             const name = u.name || u.username || studentId;
+                            const major = u.major || 'ไม่ระบุสาขา';
                             const displayName = `${name} (${studentId})`;
 
                             const userMsgs = allChats[key] || {};
@@ -1680,12 +1687,13 @@
                                 }
                             });
 
-                            if (!searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm)) {
+                            if (!searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm)) {
                                 userListContainer.innerHTML += `
                                     <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
                                         <div class="flex justify-between items-start">
                                             <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
-                                                👤 ${displayName}
+                                                👤 ${displayName}<br>
+                                                <span class="text-[11px] font-normal text-stone-500">สาขา: ${major}</span>
                                             </button>
                                         </div>
                                         <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
@@ -2108,7 +2116,8 @@
                 selectedAdminViewUserData = u;
                 const name = u.name || u.username || userKey;
                 const studentId = u.studentId || userKey;
-                document.getElementById('admin-selected-user-title').innerText = `📜 ข้อมูลสมาชิก: ${name} (รหัส: ${studentId})`;
+                const major = u.major || 'ไม่ระบุสาขา';
+                document.getElementById('admin-selected-user-title').innerHTML = `📜 ข้อมูลสมาชิก: ${name} (รหัส: ${studentId})<br><span class="text-stone-500 text-xs font-normal">สาขาวิชา: ${major}</span>`;
             });
             
             const actionsDiv = document.getElementById('selected-user-actions');
