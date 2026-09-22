@@ -75,6 +75,16 @@
                     </div>
 
                     <div>
+                        <label class="block text-xs sm:text-sm font-medium text-stone-700">ชั้นปี</label>
+                        <select id="reg-year" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm bg-white">
+                            <option value="1">ชั้นปีที่ 1</option>
+                            <option value="2">ชั้นปีที่ 2</option>
+                            <option value="3">ชั้นปีที่ 3</option>
+                            <option value="4">ชั้นปีที่ 4</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">ชื่อ - นามสกุล</label>
                         <input type="text" id="reg-fullname" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="เช่น สมชาย สายเขียว">
                     </div>
@@ -357,7 +367,7 @@
                 </div>
             </div>
 
-            <!-- แท็บที่ 3: แลกรางวัล (อัปเดตของรางวัลและคะแนนใหม่ พร้อมโควตาคงเหลือ Real-time) -->
+            <!-- แท็บที่ 3: แลกรางวัล (ปากกา 30, สมุดโน้ต 60, ถุงผ้า 120, แก้วน้ำ 240) -->
             <div id="user-tab-rewards" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
@@ -672,7 +682,7 @@
                     <div class="md:col-span-2 border border-stone-200 rounded-xl p-3 md:p-4 bg-white flex flex-col justify-between">
                         <div>
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 mb-3 gap-2">
-                                <h4 id="admin-selected-user-title" class="font-bold text-emerald-800 text-xs md:text-sm">โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ</h4>
+                                <div id="admin-selected-user-title" class="font-bold text-emerald-800 text-xs md:text-sm">โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ</div>
                                 <div id="selected-user-actions" class="hidden flex gap-2">
                                     <button id="btn-delete-viewing-user" onclick="" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-300 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer">
                                         🗑️ ลบบัญชีคนนี้
@@ -815,6 +825,31 @@
         </div>
     </div>
 
+    <!-- Modal ประวัติผู้ใช้ (เมื่อคลิกชื่อตัวเองที่ Navbar) -->
+    <div id="user-profile-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 md:p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl flex flex-col overflow-hidden">
+            <div class="bg-emerald-600 text-white p-3.5 flex justify-between items-center shrink-0">
+                <h3 class="font-bold text-sm md:text-base flex items-center gap-2">👤 ข้อมูลประวัติผู้ใช้งาน</h3>
+                <button onclick="toggleUserProfileModal(false)" class="text-white hover:bg-emerald-700 rounded-full w-7 h-7 flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="p-5 space-y-3 text-stone-700 text-xs sm:text-sm bg-stone-50">
+                <div class="bg-white p-3.5 rounded-xl border border-stone-200 space-y-2">
+                    <p><strong>รหัสนักศึกษา :</strong> <span id="profile-modal-studentid">-</span></p>
+                    <p><strong>ชื่อ-นามสกุล :</strong> <span id="profile-modal-fullname">-</span></p>
+                    <p><strong>ชั้นปีที่ :</strong> <span id="profile-modal-year">-</span></p>
+                    <p><strong>สาขาวิชา :</strong> <span id="profile-modal-major">-</span></p>
+                    <hr class="border-stone-100 my-1">
+                    <p><strong>คณะ :</strong> สาธารณสุขศาสตร์และสหเวชศาสตร์</p>
+                    <p><strong>วิทยาลัย :</strong> วิทยาลัยเทคโนโลยีทางการแพทย์และสาธารณสุข กาญจนาภิเษก</p>
+                    <p><strong>สถาบัน :</strong> สถาบันพระบรมราชชนก</p>
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t text-center">
+                <button onclick="toggleUserProfileModal(false)" class="bg-stone-200 hover:bg-stone-300 font-bold py-2 px-6 rounded-xl text-xs transition cursor-pointer">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCtyBewXd2f20-Vf_5vp2w25wdPuCU4YkE",
@@ -890,7 +925,6 @@
             }
         });
 
-        // ฟังชันก์อัปเดตสต็อกของรางวัลแบบ Real-time และแสดงผลหน้ายูเซอร์
         database.ref('rewards_stock').on('value', (snapshot) => {
             const stock = snapshot.val() || {
                 "ปากกา": 50,
@@ -902,7 +936,6 @@
             ['ปากกา', 'สมุดโน้ต', 'ถุงผ้า', 'แก้วน้ำ'].forEach(itemName => {
                 const qty = stock[itemName] !== undefined ? stock[itemName] : 0;
                 
-                // อัปเดตฝั่งยูเซอร์
                 const txtEl = document.getElementById(`stock-txt-${itemName}`);
                 const btnEl = document.getElementById(`btn-claim-${itemName}`);
                 if(txtEl) {
@@ -924,7 +957,6 @@
                     }
                 }
 
-                // อัปเดตช่องอินพุตฝั่งแอดมิน
                 const inputAdminEl = document.getElementById(`admin-stock-input-${itemName}`);
                 if(inputAdminEl && document.activeElement !== inputAdminEl) {
                     inputAdminEl.value = qty;
@@ -992,6 +1024,7 @@
         function handleRegister() {
             const studentId = document.getElementById('reg-studentid').value.trim();
             const major = document.getElementById('reg-major').value.trim();
+            const year = document.getElementById('reg-year').value;
             const fullName = document.getElementById('reg-fullname').value.trim();
             const password = document.getElementById('reg-password').value.trim();
             const pdpaCheckbox = document.getElementById('pdpa-consent-checkbox');
@@ -1034,6 +1067,7 @@
                     database.ref('users/' + safeKey).set({
                         studentId: studentId,
                         major: major,
+                        year: year,
                         name: fullName,
                         username: fullName,
                         password: password,
@@ -1188,19 +1222,44 @@
             document.getElementById('image-modal').classList.add('hidden');
         }
 
+        function toggleUserProfileModal(show) {
+            const modal = document.getElementById('user-profile-modal');
+            if (show) {
+                document.getElementById('profile-modal-studentid').innerText = currentUser.studentId || '-';
+                document.getElementById('profile-modal-fullname').innerText = currentUser.name || currentUser.username || '-';
+                document.getElementById('profile-modal-year').innerText = currentUser.year ? `ปีที่ ${currentUser.year}` : '-';
+                document.getElementById('profile-modal-major').innerText = currentUser.major || '-';
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
         function showDashboard() {
             document.getElementById('auth-section').classList.add('hidden');
             const displayName = currentUser.name || currentUser.studentId || currentUser.username || 'ผู้ใช้';
             
-            document.getElementById('nav-auth').innerHTML = `
-                <div class="flex items-center gap-1.5 max-w-[140px] sm:max-w-xs bg-emerald-700/80 px-2.5 py-1 rounded-full border border-emerald-400/50">
-                    <span class="text-[11px]">👤</span>
-                    <span class="truncate text-xs font-medium text-white" title="${displayName}">${displayName}</span>
-                </div>
-                <button onclick="logout()" class="text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded-lg border border-red-500 transition cursor-pointer shadow-xs">
-                    ออกจากระบบ
-                </button>
-            `;
+            if (currentUser.role === 'admin') {
+                document.getElementById('nav-auth').innerHTML = `
+                    <div class="flex items-center gap-1.5 max-w-[140px] sm:max-w-xs bg-emerald-700/85 px-2.5 py-1 rounded-full border border-emerald-400/50">
+                        <span class="text-[11px]">🛡️</span>
+                        <span class="truncate text-xs font-medium text-white">${displayName}</span>
+                    </div>
+                    <button onclick="logout()" class="text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded-lg border border-red-500 transition cursor-pointer shadow-xs">
+                        ออกจากระบบ
+                    </button>
+                `;
+            } else {
+                document.getElementById('nav-auth').innerHTML = `
+                    <div onclick="toggleUserProfileModal(true)" class="flex items-center gap-1.5 max-w-[140px] sm:max-w-xs bg-emerald-700/85 px-2.5 py-1 rounded-full border border-emerald-400/50 cursor-pointer hover:bg-emerald-800 transition" title="คลิกเพื่อดูประวัติส่วนตัว">
+                        <span class="text-[11px]">👤</span>
+                        <span class="truncate text-xs font-medium text-white underline">${displayName}</span>
+                    </div>
+                    <button onclick="logout()" class="text-xs font-bold text-white bg-red-600 hover:bg-red-700 active:bg-red-800 px-3 py-1 rounded-lg border border-red-500 transition cursor-pointer shadow-xs">
+                        ออกจากระบบ
+                    </button>
+                `;
+            }
 
             if (currentUser.role === 'admin') {
                 document.getElementById('admin-dashboard').classList.remove('hidden');
@@ -1590,7 +1649,6 @@
                         updates['users/' + safeKey] = userData;
                         updates['reward_claims/' + claimId] = newClaim;
 
-                        // ตัดสต็อกทันทีที่กดแลก หรือจะรอแอดมินอนุมัติก็ได้ (ในที่นี้ตัดเมื่อแอดมินอนุมัติ เพื่อป้องกันคนกดเล่นแล้วสต็อกหมดเกลี้ยง)
                         database.ref().update(updates).then(() => {
                             alert(`🎉 ส่งคำขอแลก "${rewardName}" เรียบร้อยแล้ว! โปรดรอแอดมินอนุมัติและรับของรางวัลที่จุดบริการ`);
                         });
@@ -1785,6 +1843,7 @@
                             const studentId = u.studentId || key;
                             const name = u.name || u.username || studentId;
                             const major = u.major || 'ไม่ระบุสาขา';
+                            const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
                             const displayName = `${name} (${studentId})`;
 
                             const userMsgs = allChats[key] || {};
@@ -1805,7 +1864,7 @@
                                         <div class="flex justify-between items-start">
                                             <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
                                                 👤 ${displayName}<br>
-                                                <span class="text-[11px] font-normal text-stone-500">สาขา: ${major}</span>
+                                                <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
                                             </button>
                                         </div>
                                         <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
@@ -2190,44 +2249,6 @@
             }
         }
 
-        function reviewRewardClaim(claimId, userIdentifier, cost, rewardName, action) {
-            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
-            let reason = "";
-
-            if (action === 'reject') {
-                reason = prompt("โปรดระบุเหตุผลที่ปฏิเสธการแลกของรางวัล:");
-                if (reason === null) return;
-                if (!reason.trim()) reason = "ไม่ระบุเหตุผล";
-            }
-
-            database.ref('users/' + safeKey).once('value', (snapshot) => {
-                let userData = snapshot.val() || { points: 0 };
-
-                if (action === 'reject') {
-                    userData.points = (userData.points || 0) + cost;
-                } else if (action === 'approve') {
-                    // ตัดสต็อกจริงเมื่อแอดมินกดอนุมัติ
-                    database.ref('rewards_stock/' + rewardName).once('value', (stockSnap) => {
-                        let currentStock = stockSnap.val() || 0;
-                        if (currentStock > 0) {
-                            database.ref('rewards_stock/' + rewardName).set(currentStock - 1);
-                        }
-                    });
-                }
-
-                const updates = {};
-                updates['reward_claims/' + claimId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืนคะแนน)';
-                if (action === 'reject') {
-                    updates['reward_claims/' + claimId + '/reason'] = reason;
-                    updates['users/' + safeKey] = userData;
-                }
-
-                database.ref().update(updates).then(() => {
-                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลและตัดสต็อกเรียบร้อย!' : 'ปฏิเสธคำขอและคืนคะแนนให้ผู้ใช้เรียบร้อยแล้ว');
-                });
-            });
-        }
-
         function renderAdminUserDetail(userKey) {
             selectedAdminViewUserId = userKey;
             
@@ -2237,7 +2258,8 @@
                 const name = u.name || u.username || userKey;
                 const studentId = u.studentId || userKey;
                 const major = u.major || 'ไม่ระบุสาขา';
-                document.getElementById('admin-selected-user-title').innerHTML = `📜 ข้อมูลสมาชิก: ${name} (รหัส: ${studentId})<br><span class="text-stone-500 text-xs font-normal">สาขาวิชา: ${major}</span>`;
+                const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
+                document.getElementById('admin-selected-user-title').innerHTML = `📜 ข้อมูลสมาชิก: ${name} (รหัส: ${studentId})<br><span class="text-stone-500 text-xs font-normal">สาขาวิชา: ${major} | ${year}</span>`;
             });
             
             const actionsDiv = document.getElementById('selected-user-actions');
@@ -2292,44 +2314,7 @@
             footer.classList.remove('hidden');
         }
 
-        function reviewMission(missionId, userIdentifier, action) {
-            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
-            let reason = "";
-
-            if (action === 'reject') {
-                reason = prompt("โปรดระบุเหตุผลที่ปฏิเสธภารกิจนี้:");
-                if (reason === null) return;
-                if (!reason.trim()) reason = "ไม่ระบุเหตุผล";
-            }
-            
-            database.ref('users/' + safeKey).once('value', (snapshot) => {
-                if(!snapshot.exists()) return;
-                let userData = snapshot.val();
-                
-                database.ref('missions/' + missionId).once('value', (mSnapshot) => {
-                    const mission = mSnapshot.val();
-                    
-                    if (action === 'approve') {
-                        const meta = getMissionMeta(mission.missionName);
-                        userData.points = (userData.points || 0) + meta.points;
-                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(4));
-                    }
-
-                    const updates = {};
-                    updates['missions/' + missionId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ';
-                    if (action === 'reject') {
-                        updates['missions/' + missionId + '/reason'] = reason;
-                    }
-                    if (action === 'approve') {
-                        updates['users/' + safeKey] = userData;
-                    }
-                    
-                    database.ref().update(updates);
-                });
-            });
-        }
-
-        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม ดีไซน์ทางการและสวยงาม =================
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม พร้อมแสดงสาขาและชั้นปีใต้ชื่อ =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
@@ -2390,7 +2375,16 @@
 
                 const uid = m.userIdentifier;
                 if (!activeUsersMap[uid]) {
-                    activeUsersMap[uid] = { name: m.userName || uid, studentId: uid, count: 0, points: 0, co2: 0 };
+                    const uInfo = allUsersCache[uid.replace(/[.#$[\]]/g, '_')] || {};
+                    activeUsersMap[uid] = { 
+                        name: m.userName || uid, 
+                        studentId: uid, 
+                        major: uInfo.major || 'ไม่ระบุสาขา',
+                        year: uInfo.year ? `ปีที่ ${uInfo.year}` : '',
+                        count: 0, 
+                        points: 0, 
+                        co2: 0 
+                    };
                 }
                 activeUsersMap[uid].count += 1;
                 activeUsersMap[uid].points += meta.points;
@@ -2425,7 +2419,10 @@
                     userSummaryRows += `
                         <tr style="border-bottom: 1px solid #f3f4f6; font-size: 9.5pt;">
                             <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
-                            <td style="padding: 6px 8px; color: #1f2937;">${usr.name} <span style="color: #6b7280; font-size: 8.5pt;">(รหัส: ${usr.studentId})</span></td>
+                            <td style="padding: 6px 8px; color: #1f2937;">
+                                <div style="font-weight: 600;">${usr.name} <span style="color: #6b7280; font-weight: normal; font-size: 8.5pt;">(${usr.studentId})</span></div>
+                                <div style="color: #4b5563; font-size: 8.5pt;">สาขา: ${usr.major} ${usr.year ? '| ' + usr.year : ''}</div>
+                            </td>
                             <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count}</td>
                             <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(4)}</td>
                             <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points}</td>
@@ -2550,3 +2547,4 @@
     </script>
 </body>
 </html>
+
