@@ -739,7 +739,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -2249,6 +2249,43 @@
             }
         }
 
+        function reviewRewardClaim(claimId, userIdentifier, cost, rewardName, action) {
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
+            let reason = "";
+
+            if (action === 'reject') {
+                reason = prompt("โปรดระบุเหตุผลที่ปฏิเสธการแลกของรางวัล:");
+                if (reason === null) return;
+                if (!reason.trim()) reason = "ไม่ระบุเหตุผล";
+            }
+
+            database.ref('users/' + safeKey).once('value', (snapshot) => {
+                let userData = snapshot.val() || { points: 0 };
+
+                if (action === 'reject') {
+                    userData.points = (userData.points || 0) + cost;
+                } else if (action === 'approve') {
+                    database.ref('rewards_stock/' + rewardName).once('value', (stockSnap) => {
+                        let currentStock = stockSnap.val() || 0;
+                        if (currentStock > 0) {
+                            database.ref('rewards_stock/' + rewardName).set(currentStock - 1);
+                        }
+                    });
+                }
+
+                const updates = {};
+                updates['reward_claims/' + claimId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืนคะแนน)';
+                if (action === 'reject') {
+                    updates['reward_claims/' + claimId + '/reason'] = reason;
+                    updates['users/' + safeKey] = userData;
+                }
+
+                database.ref().update(updates).then(() => {
+                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลและตัดสต็อกเรียบร้อย!' : 'ปฏิเสธคำขอและคืนคะแนนให้ผู้ใช้เรียบร้อยแล้ว');
+                });
+            });
+        }
+
         function renderAdminUserDetail(userKey) {
             selectedAdminViewUserId = userKey;
             
@@ -2312,6 +2349,47 @@
             document.getElementById('admin-user-total-approved-points').innerText = totalApproved;
             document.getElementById('admin-user-total-approved-co2').innerText = totalApprovedCo2.toFixed(4);
             footer.classList.remove('hidden');
+        }
+
+        function reviewMission(missionId, userIdentifier, action) {
+            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
+            let reason = "";
+
+            if (action === 'reject') {
+                reason = prompt("โปรดระบุเหตุผลที่ปฏิเสธภารกิจนี้:");
+                if (reason === null) return;
+                if (!reason.trim()) reason = "ไม่ระบุเหตุผล";
+            }
+            
+            database.ref('users/' + safeKey).once('value', (snapshot) => {
+                if(!snapshot.exists()) return;
+                let userData = snapshot.val();
+                
+                database.ref('missions/' + missionId).once('value', (mSnapshot) => {
+                    const mission = mSnapshot.val();
+                    
+                    if (action === 'approve') {
+                        const meta = getMissionMeta(mission.missionName);
+                        userData.points = (userData.points || 0) + meta.points;
+                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(4));
+                    }
+
+                    const updates = {};
+                    updates['missions/' + missionId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ';
+                    if (action === 'reject') {
+                        updates['missions/' + missionId + '/reason'] = reason;
+                    }
+                    if (action === 'approve') {
+                        updates['users/' + safeKey] = userData;
+                    }
+                    
+                    database.ref().update(updates).then(() => {
+                        // อัปเดตตารางรายการรอตรวจสอบแบบทันที (Optimistic UI update)เพื่อความลื่นไหลสูงสุด
+                        const row = document.querySelector(`button[onclick*="reviewMission('${missionId}'"]`)?.closest('tr');
+                        if (row) row.remove();
+                    });
+                });
+            });
         }
 
         // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม พร้อมแสดงสาขาและชั้นปีใต้ชื่อ =================
@@ -2547,4 +2625,3 @@
     </script>
 </body>
 </html>
-
