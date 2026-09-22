@@ -50,7 +50,7 @@
                 <div id="form-login" class="space-y-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="login-studentid" maxlength="11" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา 11 หลัก">
+                        <input type="text" id="login-studentid" maxlength="11" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
                     </div>
 
                     <div>
@@ -357,7 +357,7 @@
                 </div>
             </div>
 
-            <!-- แท็บที่ 3: แลกรางวัล (ปากกา 80, สมุด 180, ถุงผ้า 280, แก้วน้ำ 400) -->
+            <!-- แท็บที่ 3: แลกรางวัล (อัปเดตของรางวัลและคะแนนใหม่ พร้อมโควตาคงเหลือ Real-time) -->
             <div id="user-tab-rewards" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
@@ -366,44 +366,52 @@
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
+                        <!-- ปากกา -->
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">30 คะแนน</span>
                                 <div class="text-4xl my-2">🖊️</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">ปากกา</h4>
                                 <p class="text-xs text-stone-500 mt-1">ปากการักษ์โลกเขียนลื่น ใช้งานได้ยาวนาน</p>
+                                <p id="stock-txt-ปากกา" class="text-xs font-bold text-emerald-700 mt-2">คงเหลือ: กำลังโหลด...</p>
                             </div>
-                            <button onclick="claimReward(30, 'ปากกา')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button id="btn-claim-ปากกา" onclick="claimReward(30, 'ปากกา')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
+                        <!-- สมุดโน้ต -->
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">60 คะแนน</span>
                                 <div class="text-4xl my-2">📓</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">สมุดโน้ต</h4>
                                 <p class="text-xs text-stone-500 mt-1">สมุดโน้ตกระดาษถนอมสายตารีไซเคิล</p>
+                                <p id="stock-txt-สมุดโน้ต" class="text-xs font-bold text-emerald-700 mt-2">คงเหลือ: กำลังโหลด...</p>
                             </div>
-                            <button onclick="claimReward(60, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button id="btn-claim-สมุดโน้ต" onclick="claimReward(60, 'สมุดโน้ต')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
+                        <!-- ถุงผ้า -->
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">120 คะแนน</span>
                                 <div class="text-4xl my-2">🛍️</div>
-                                <h4 class="font-bold text-base md:text-lg text-stone-800">กระเป๋าผ้า</h4>
-                                <p class="text-xs text-stone-500 mt-1">กระเป๋าผ้าหนาทนทาน พกพาสะดวก ใช้ซ้ำได้</p>
+                                <h4 class="font-bold text-base md:text-lg text-stone-800">ถุงผ้า</h4>
+                                <p class="text-xs text-stone-500 mt-1">ถุงผ้าหนาทนทาน พกพาสะดวก ใช้ซ้ำได้</p>
+                                <p id="stock-txt-ถุงผ้า" class="text-xs font-bold text-emerald-700 mt-2">คงเหลือ: กำลังโหลด...</p>
                             </div>
-                            <button onclick="claimReward(120, 'กระเป๋าผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button id="btn-claim-ถุงผ้า" onclick="claimReward(120, 'ถุงผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
+                        <!-- แก้วน้ำ -->
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">240 คะแนน</span>
                                 <div class="text-4xl my-2">🥤</div>
                                 <h4 class="font-bold text-base md:text-lg text-stone-800">แก้วน้ำ</h4>
                                 <p class="text-xs text-stone-500 mt-1">แก้วน้ำทั่วไป พกพาสะดวก ใช้งานง่าย</p>
+                                <p id="stock-txt-แก้วน้ำ" class="text-xs font-bold text-emerald-700 mt-2">คงเหลือ: กำลังโหลด...</p>
                             </div>
-                            <button onclick="claimReward(240, 'แก้วน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
+                            <button id="btn-claim-แก้วน้ำ" onclick="claimReward(240, 'แก้วน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
                     </div>
 
@@ -494,8 +502,8 @@
                             <span class="text-3xl">🎁</span>
                             <span id="card-badge-rewards-pill" class="bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm">0 ค้างตรวจ</span>
                         </div>
-                        <h4 class="font-bold text-base text-stone-800 mt-3">คำขอแลกรางวัล & ประวัติการแลก</h4>
-                        <p class="text-xs text-stone-500 mt-1">อนุมัติคำขอแลกของรางวัล และดูประวัติการแลกทั้งหมดของระบบที่ด้านล่าง</p>
+                        <h4 class="font-bold text-base text-stone-800 mt-3">คำขอแลกรางวัล & จัดการสต็อก</h4>
+                        <p class="text-xs text-stone-500 mt-1">อนุมัติคำขอแลกของรางวัล เติมสต็อกของรางวัล และดูประวัติการแลกทั้งหมด</p>
                     </div>
                     <div class="mt-4 text-xs font-semibold text-purple-700 flex items-center gap-1">คลิกเข้าจัดการ ➜</div>
                 </div>
@@ -558,8 +566,46 @@
                 </div>
             </div>
 
-            <!-- ส่วนที่ 2: คำขอแลกรางวัล & ประวัติทั้งหมด -->
+            <!-- ส่วนที่ 2: คำขอแลกรางวัล & จัดการสต็อกของรางวัล -->
             <div id="section-rewards-hub" class="admin-detail-view hidden space-y-6">
+                <!-- แถบจัดการสต็อกของรางวัล (เพิ่มไว้บนสุด) -->
+                <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500 space-y-4">
+                    <div class="pb-2 border-b flex justify-between items-center">
+                        <h3 class="text-base md:text-lg font-bold text-emerald-800">📦 จัดการและอัปเดตจำนวนสต็อกของรางวัล</h3>
+                        <span class="text-xs text-stone-500">อัปเดตจำนวนโควตาสดให้อัตโนมัติ</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 flex flex-col justify-between">
+                            <span class="font-bold text-stone-700 text-xs">🖊️ ปากกา</span>
+                            <div class="flex items-center gap-1 mt-2">
+                                <input type="number" id="admin-stock-input-ปากกา" class="w-16 p-1 text-center border rounded-lg bg-white text-xs font-bold" min="0">
+                                <button onclick="updateRewardStock('ปากกา')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-2 rounded-lg text-xs transition cursor-pointer">อัปเดต</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 flex flex-col justify-between">
+                            <span class="font-bold text-stone-700 text-xs">📓 สมุดโน้ต</span>
+                            <div class="flex items-center gap-1 mt-2">
+                                <input type="number" id="admin-stock-input-สมุดโน้ต" class="w-16 p-1 text-center border rounded-lg bg-white text-xs font-bold" min="0">
+                                <button onclick="updateRewardStock('สมุดโน้ต')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-2 rounded-lg text-xs transition cursor-pointer">อัปเดต</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 flex flex-col justify-between">
+                            <span class="font-bold text-stone-700 text-xs">🛍️ ถุงผ้า</span>
+                            <div class="flex items-center gap-1 mt-2">
+                                <input type="number" id="admin-stock-input-ถุงผ้า" class="w-16 p-1 text-center border rounded-lg bg-white text-xs font-bold" min="0">
+                                <button onclick="updateRewardStock('ถุงผ้า')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-2 rounded-lg text-xs transition cursor-pointer">อัปเดต</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 flex flex-col justify-between">
+                            <span class="font-bold text-stone-700 text-xs">🥤 แก้วน้ำ</span>
+                            <div class="flex items-center gap-1 mt-2">
+                                <input type="number" id="admin-stock-input-แก้วน้ำ" class="w-16 p-1 text-center border rounded-lg bg-white text-xs font-bold" min="0">
+                                <button onclick="updateRewardStock('แก้วน้ำ')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-2 rounded-lg text-xs transition cursor-pointer">อัปเดต</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-purple-500 space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b">
                         <div>
@@ -843,6 +889,63 @@
                 adminStatUsers.innerText = `${totalReg} / 50`;
             }
         });
+
+        // ฟังชันก์อัปเดตสต็อกของรางวัลแบบ Real-time และแสดงผลหน้ายูเซอร์
+        database.ref('rewards_stock').on('value', (snapshot) => {
+            const stock = snapshot.val() || {
+                "ปากกา": 50,
+                "สมุดโน้ต": 10,
+                "ถุงผ้า": 10,
+                "แก้วน้ำ": 5
+            };
+
+            ['ปากกา', 'สมุดโน้ต', 'ถุงผ้า', 'แก้วน้ำ'].forEach(itemName => {
+                const qty = stock[itemName] !== undefined ? stock[itemName] : 0;
+                
+                // อัปเดตฝั่งยูเซอร์
+                const txtEl = document.getElementById(`stock-txt-${itemName}`);
+                const btnEl = document.getElementById(`btn-claim-${itemName}`);
+                if(txtEl) {
+                    txtEl.innerText = `คงเหลือ: ${qty} ชิ้น`;
+                    if(qty <= 0) {
+                        txtEl.className = "text-xs font-bold text-red-500 mt-2";
+                        if(btnEl) {
+                            btnEl.disabled = true;
+                            btnEl.innerText = 'สินค้าหมด';
+                            btnEl.className = "mt-4 bg-gray-300 text-stone-500 font-bold py-2 rounded-xl text-xs md:text-sm cursor-not-allowed";
+                        }
+                    } else {
+                        txtEl.className = "text-xs font-bold text-emerald-700 mt-2";
+                        if(btnEl) {
+                            btnEl.disabled = false;
+                            btnEl.innerText = 'แลกรับรางวัล';
+                            btnEl.className = "mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer";
+                        }
+                    }
+                }
+
+                // อัปเดตช่องอินพุตฝั่งแอดมิน
+                const inputAdminEl = document.getElementById(`admin-stock-input-${itemName}`);
+                if(inputAdminEl && document.activeElement !== inputAdminEl) {
+                    inputAdminEl.value = qty;
+                }
+            });
+        });
+
+        function updateRewardStock(itemName) {
+            const inputEl = document.getElementById(`admin-stock-input-${itemName}`);
+            const newQty = parseInt(inputEl.value, 10);
+            if (isNaN(newQty) || newQty < 0) {
+                alert('กรุณากรอกจำนวนตัวเลขที่ถูกต้อง');
+                return;
+            }
+
+            database.ref('rewards_stock/' + itemName).set(newQty).then(() => {
+                alert(`✅ อัปเดตสต็อก "${itemName}" เป็น ${newQty} เรียบร้อยแล้ว`);
+            }).catch(err => {
+                alert('เกิดข้อผิดพลาด: ' + err.message);
+            });
+        }
 
         function handleLogin() {
             const studentId = document.getElementById('login-studentid').value.trim();
@@ -1460,28 +1563,37 @@
             }
             
             if (confirm(`คุณต้องการใช้ ${cost} คะแนนเพื่อขอแลก "${rewardName}" ใช่หรือไม่?`)) {
-                database.ref('users/' + safeKey).once('value', (snapshot) => {
-                    let userData = snapshot.val();
-                    userData.points -= cost;
-                    
-                    const claimId = Date.now().toString();
-                    const now = new Date();
-                    const newClaim = {
-                        id: claimId,
-                        userIdentifier: userIdentifier,
-                        userName: currentUser.name || currentUser.username || userIdentifier,
-                        rewardName: rewardName,
-                        cost: cost,
-                        status: 'รอแอดมินอนุมัติ',
-                        timestamp: now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                    };
+                database.ref('rewards_stock/' + rewardName).once('value', (stockSnap) => {
+                    const currentStock = stockSnap.val();
+                    if (currentStock !== null && currentStock <= 0) {
+                        alert(`⚠️ ขออภัย! สินค้า "${rewardName}" หมดสต็อกแล้ว`);
+                        return;
+                    }
 
-                    const updates = {};
-                    updates['users/' + safeKey] = userData;
-                    updates['reward_claims/' + claimId] = newClaim;
+                    database.ref('users/' + safeKey).once('value', (snapshot) => {
+                        let userData = snapshot.val();
+                        userData.points -= cost;
+                        
+                        const claimId = Date.now().toString();
+                        const now = new Date();
+                        const newClaim = {
+                            id: claimId,
+                            userIdentifier: userIdentifier,
+                            userName: currentUser.name || currentUser.username || userIdentifier,
+                            rewardName: rewardName,
+                            cost: cost,
+                            status: 'รอแอดมินอนุมัติ',
+                            timestamp: now.toLocaleDateString('th-TH') + ' ' + now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                        };
 
-                    database.ref().update(updates).then(() => {
-                        alert(`🎉 ส่งคำขอแลก "${rewardName}" เรียบร้อยแล้ว! โปรดรอแอดมินอนุมัติและรับของรางวัลที่จุดบริการ`);
+                        const updates = {};
+                        updates['users/' + safeKey] = userData;
+                        updates['reward_claims/' + claimId] = newClaim;
+
+                        // ตัดสต็อกทันทีที่กดแลก หรือจะรอแอดมินอนุมัติก็ได้ (ในที่นี้ตัดเมื่อแอดมินอนุมัติ เพื่อป้องกันคนกดเล่นแล้วสต็อกหมดเกลี้ยง)
+                        database.ref().update(updates).then(() => {
+                            alert(`🎉 ส่งคำขอแลก "${rewardName}" เรียบร้อยแล้ว! โปรดรอแอดมินอนุมัติและรับของรางวัลที่จุดบริการ`);
+                        });
                     });
                 });
             }
@@ -1629,7 +1741,7 @@
             }
         }
 
-        // --- ระบบแอดมิน (ปรับปรุงประสิทธิภาพแบบ High Performance) ---
+        // --- ระบบแอดมิน (High Performance Optimized) ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -1793,8 +1905,8 @@
                                     <td class="p-3 text-xs text-gray-500">${claim.timestamp}</td>
                                     <td class="p-3 text-center">
                                         <div class="flex justify-center gap-1.5">
-                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, '${claim.rewardName}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, '${claim.rewardName}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -2078,7 +2190,7 @@
             }
         }
 
-        function reviewRewardClaim(claimId, userIdentifier, cost, action) {
+        function reviewRewardClaim(claimId, userIdentifier, cost, rewardName, action) {
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             let reason = "";
 
@@ -2093,6 +2205,14 @@
 
                 if (action === 'reject') {
                     userData.points = (userData.points || 0) + cost;
+                } else if (action === 'approve') {
+                    // ตัดสต็อกจริงเมื่อแอดมินกดอนุมัติ
+                    database.ref('rewards_stock/' + rewardName).once('value', (stockSnap) => {
+                        let currentStock = stockSnap.val() || 0;
+                        if (currentStock > 0) {
+                            database.ref('rewards_stock/' + rewardName).set(currentStock - 1);
+                        }
+                    });
                 }
 
                 const updates = {};
@@ -2103,7 +2223,7 @@
                 }
 
                 database.ref().update(updates).then(() => {
-                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลเรียบร้อย!' : 'ปฏิเสธคำขอและคืนคะแนนให้ผู้ใช้เรียบร้อยแล้ว');
+                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลและตัดสต็อกเรียบร้อย!' : 'ปฏิเสธคำขอและคืนคะแนนให้ผู้ใช้เรียบร้อยแล้ว');
                 });
             });
         }
