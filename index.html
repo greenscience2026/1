@@ -523,7 +523,7 @@
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">💬</span>
-                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน -->
+                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน (แสดงจำนวนรวมข้อความที่ยังไม่อ่าน) -->
                             <span id="card-badge-chat" class="bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full">0 ข้อความ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ระบบแชทตอบกลับสมาชิก</h4>
@@ -741,7 +741,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -1946,8 +1946,9 @@
                             let isSelected = selectedAdminChatId === key;
                             let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
                             
+                            // เอาวงเล็บรหัสนักศึกษาออกจากการแจ้งเตือนข้อความใหม่ตามขอ
                             let badgeHtml = unreadMsgs > 0 
-                                ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} (${studentId}) ใหม่</span>` 
+                                ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
                                 : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
 
                             chatUserList.innerHTML += `
@@ -2131,7 +2132,7 @@
             }
         }
 
-        // ฟังก์ชันเปิด Modal แก้ไขข้อมูลสมาชิกทั้ง 4 หัวข้อพร้อมรหัสผ่านเดิมในหน้าต่างเดียว
+        // ฟังก์ชันเปิด Modal แก้ไขข้อมูลสมาชิกทั้ง 4 หัวข้อพร้อมรหัสผ่านเดิม
         function openAdminEditUserModal(userKey) {
             database.ref('users/' + userKey).once('value', (snap) => {
                 const u = snap.val();
@@ -2773,4 +2774,3 @@
     </script>
 </body>
 </html>
-
