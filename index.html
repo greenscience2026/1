@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -214,11 +214,11 @@
                             </div>
                         </div>
 
-                        <!-- 3. พกขวดน้ำ -->
-                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกขวดน้ำส่วนตัว" id="box-mission-3">
+                        <!-- 3. พกแก้วน้ำส่วนตัว (เปลี่ยนจากขวดน้ำ) -->
+                        <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกแก้วน้ำส่วนตัว" id="box-mission-3">
                             <div>
                                 <div class="text-3xl text-center my-1">🥤</div>
-                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">พกขวดน้ำส่วนตัว</h4>
+                                <h4 class="font-bold text-xs md:text-sm text-stone-800 text-center">พกแก้วน้ำส่วนตัว</h4>
                                 <div class="text-center mt-1"><span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">+1.5 คะแนน</span></div>
                                 <p class="text-[11px] text-center text-teal-700 font-semibold mt-1">ลดได้ ~0.0861 kgCO₂e/ครั้ง</p>
                                 <div class="bg-white border border-stone-200 rounded-lg p-2 mt-2 text-[10px] text-stone-600 space-y-0.5">
@@ -229,7 +229,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-3" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-3', this, 'box-mission-3')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('พกแก้วน้ำส่วนตัว', 'file-3', this, 'box-mission-3')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -367,7 +367,7 @@
                 </div>
             </div>
 
-            <!-- แท็บที่ 3: แลกรางวัล -->
+            <!-- แท็บที่ 3: แลกรางวัล (อัปเดตคะแนนและรางวัลใหม่) -->
             <div id="user-tab-rewards" class="hidden space-y-4 md:space-y-6">
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
@@ -412,7 +412,7 @@
                             <button id="btn-claim-ถุงผ้า" onclick="claimReward(120, 'ถุงผ้า')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
 
-                        <!-- แก้วน้ำ -->
+                        <!-- แก้วน้ำ (แก้วน้ำทั่วไป) -->
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
                                 <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">240 คะแนน</span>
@@ -878,7 +878,7 @@
         function getMissionMeta(name) {
             if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0139, id: 'box-mission-1' };
             if (name.includes("เดินขึ้นบันได")) return { points: 1, co2: 0.0309, id: 'box-mission-2' };
-            if (name.includes("พกขวดน้ำ")) return { points: 1.5, co2: 0.0861, id: 'box-mission-3' };
+            if (name.includes("พกแก้วน้ำ")) return { points: 1.5, co2: 0.0861, id: 'box-mission-3' };
             if (name.includes("กินอาหารหมดจาน")) return { points: 2, co2: 0.1329, id: 'box-mission-4' };
             if (name.includes("ปิดไฟห้องพัก")) return { points: 2, co2: 0.1335, id: 'box-mission-5' };
             if (name.includes("ปั่นจักรยาน")) return { points: 2, co2: 0.1431, id: 'box-mission-6' };
@@ -1485,7 +1485,6 @@
                             todayCo2Total += meta.co2;
                         }
 
-                        // ถ้ารายการนี้ "อนุมัติแล้ว" หรือ "รออนุมัติ" ให้นับเวลา เพื่อบล็อก/จับเวลา (ถ้าถูก "ปฏิเสธ" จะไม่นับเวลา ทำให้ส่งใหม่ได้ทันที)
                         if (m.status !== 'ปฏิเสธ') {
                             if (!globalLatestMissionTime[m.missionName] || m.submitTime > globalLatestMissionTime[m.missionName]) {
                                 globalLatestMissionTime[m.missionName] = m.submitTime || 0;
@@ -1802,7 +1801,7 @@
             }
         }
 
-        // --- ระบบแอดมิน (High Performance Optimized) ---
+        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบแจ้งเตือนแชทจริง) ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -1861,13 +1860,36 @@
                                 }
                             });
 
+                            // บันทึกฟังก์ชันแก้ไขข้อมูลสมาชิกชั่วคราว
+                            window[`editUserPrompt_${key}`] = function() {
+                                const newName = prompt("แก้ไขชื่อ - นามสกุล:", u.name || '');
+                                if(newName === null) return;
+                                const newMajor = prompt("แก้ไขสาขาวิชา:", u.major || '');
+                                if(newMajor === null) return;
+                                const newYear = prompt("แก้ไขชั้นปี (1-4):", u.year || '1');
+                                if(newYear === null) return;
+
+                                database.ref('users/' + key).update({
+                                    name: newName.trim() || u.name,
+                                    username: newName.trim() || u.name,
+                                    major: newMajor.trim() || u.major,
+                                    year: newYear.trim() || u.year
+                                }).then(() => {
+                                    alert("✅ อัปเดตข้อมูลสมาชิกเรียบร้อยแล้ว");
+                                    renderAdminUserDetail(key);
+                                });
+                            };
+
                             if (!searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm)) {
                                 userListContainer.innerHTML += `
                                     <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
-                                        <div class="flex justify-between items-start">
+                                        <div class="flex justify-between items-start gap-1">
                                             <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
                                                 👤 ${displayName}<br>
                                                 <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
+                                            </button>
+                                            <button onclick="editUserPrompt_${key}()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0" title="แก้ไขข้อมูลสมาชิก">
+                                                ✏️ แก้ไข
                                             </button>
                                         </div>
                                         <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
@@ -1897,10 +1919,11 @@
 
                         document.getElementById('admin-stat-points').innerText = totalPoints;
 
+                        // แจ้งเตือนข้อความแชทใหม่ที่แถบเมนูหลักของแอดมินแบบกะพริบจริง
                         const chatCardBadge = document.getElementById('card-badge-chat');
                         if (chatCardBadge) {
                             if (systemTotalUnread > 0) {
-                                chatCardBadge.className = "bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse";
+                                chatCardBadge.className = "bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
                                 chatCardBadge.innerText = `🔴 ${systemTotalUnread} ข้อความใหม่`;
                             } else {
                                 chatCardBadge.className = "bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full";
@@ -2252,43 +2275,6 @@
             }
         }
 
-        function reviewRewardClaim(claimId, userIdentifier, cost, rewardName, action) {
-            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
-            let reason = "";
-
-            if (action === 'reject') {
-                reason = prompt("โปรดระบุเหตุผลที่ปฏิเสธการแลกของรางวัล:");
-                if (reason === null) return;
-                if (!reason.trim()) reason = "ไม่ระบุเหตุผล";
-            }
-
-            database.ref('users/' + safeKey).once('value', (snapshot) => {
-                let userData = snapshot.val() || { points: 0 };
-
-                if (action === 'reject') {
-                    userData.points = (userData.points || 0) + cost;
-                } else if (action === 'approve') {
-                    database.ref('rewards_stock/' + rewardName).once('value', (stockSnap) => {
-                        let currentStock = stockSnap.val() || 0;
-                        if (currentStock > 0) {
-                            database.ref('rewards_stock/' + rewardName).set(currentStock - 1);
-                        }
-                    });
-                }
-
-                const updates = {};
-                updates['reward_claims/' + claimId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืนคะแนน)';
-                if (action === 'reject') {
-                    updates['reward_claims/' + claimId + '/reason'] = reason;
-                    updates['users/' + safeKey] = userData;
-                }
-
-                database.ref().update(updates).then(() => {
-                    alert(action === 'approve' ? 'อนุมัติการมอบของรางวัลและตัดสต็อกเรียบร้อย!' : 'ปฏิเสธคำขอและคืนคะแนนให้ผู้ใช้เรียบร้อยแล้ว');
-                });
-            });
-        }
-
         function renderAdminUserDetail(userKey) {
             selectedAdminViewUserId = userKey;
             
@@ -2352,46 +2338,6 @@
             document.getElementById('admin-user-total-approved-points').innerText = totalApproved;
             document.getElementById('admin-user-total-approved-co2').innerText = totalApprovedCo2.toFixed(4);
             footer.classList.remove('hidden');
-        }
-
-        // ================= ฟังก์ชันรีวิวภารกิจ (แก้ไขให้ปฏิเสธแล้วเปิดสิทธิ์ให้ส่งใหม่ได้ทันที) =================
-        function reviewMission(missionId, userIdentifier, action) {
-            const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
-            let reason = "";
-
-            if (action === 'reject') {
-                reason = prompt("โปรดระบุเหตุผลที่ปฏิเสธภารกิจนี้:");
-                if (reason === null) return;
-                if (!reason.trim()) reason = "ไม่ระบุเหตุผล";
-            }
-            
-            database.ref('users/' + safeKey).once('value', (snapshot) => {
-                if(!snapshot.exists()) return;
-                let userData = snapshot.val();
-                
-                database.ref('missions/' + missionId).once('value', (mSnapshot) => {
-                    const mission = mSnapshot.val();
-                    
-                    if (action === 'approve') {
-                        const meta = getMissionMeta(mission.missionName);
-                        userData.points = (userData.points || 0) + meta.points;
-                        userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(4));
-                    }
-
-                    const updates = {};
-                    updates['missions/' + missionId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ';
-                    if (action === 'reject') {
-                        updates['missions/' + missionId + '/reason'] = reason;
-                    }
-                    if (action === 'approve') {
-                        updates['users/' + safeKey] = userData;
-                    }
-                    
-                    database.ref().update(updates).then(() => {
-                        alert(action === 'approve' ? 'อนุมัติภารกิจสำเร็จ!' : 'บันทึกการปฏิเสธภารกิจเรียบร้อย');
-                    });
-                });
-            });
         }
 
         // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม พร้อมแสดงสาขาและชั้นปีใต้ชื่อ =================
@@ -2627,4 +2573,3 @@
     </script>
 </body>
 </html>
-
