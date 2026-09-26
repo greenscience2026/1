@@ -214,7 +214,7 @@
                             </div>
                         </div>
 
-                        <!-- 3. พกขวดน้ำส่วนตัว (ชื่อเดิม) -->
+                        <!-- 3. พกขวดน้ำส่วนตัว -->
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกขวดน้ำส่วนตัว" id="box-mission-3">
                             <div>
                                 <div class="text-3xl text-center my-1">🥤</div>
@@ -740,7 +740,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -1085,6 +1085,7 @@
         }
 
         function openAdminSection(sectionId) {
+            localStorage.setItem('green_passport_admin_section', sectionId);
             document.getElementById('admin-main-overview').classList.add('hidden');
             document.getElementById('admin-menu-cards').classList.add('hidden');
             document.getElementById('admin-storage-footer').classList.add('hidden');
@@ -1102,6 +1103,7 @@
         }
 
         function closeAdminSection() {
+            localStorage.removeItem('green_passport_admin_section');
             document.querySelectorAll('.admin-detail-view').forEach(el => el.classList.add('hidden'));
             document.getElementById('admin-main-overview').classList.remove('hidden');
             document.getElementById('admin-menu-cards').classList.remove('hidden');
@@ -1182,10 +1184,17 @@
                     });
                 }
                 showDashboard();
+
+                // คืนสถานะหน้าจอเดิมตอนรีเฟรช
+                const savedAdminSection = localStorage.getItem('green_passport_admin_section');
+                if (currentUser.role === 'admin' && savedAdminSection) {
+                    openAdminSection(savedAdminSection);
+                }
             }
         };
 
         function switchUserTab(tabName) {
+            localStorage.setItem('green_passport_user_tab', tabName);
             const missionsTab = document.getElementById('user-tab-missions');
             const historyTab = document.getElementById('user-tab-history');
             const rewardsTab = document.getElementById('user-tab-rewards');
@@ -1274,12 +1283,20 @@
                 fetchUserRewardHistory();
                 listenToLeaderboard();
                 listenToUserChat();
+
+                // คืนแท็บเดิมของผู้ใช้ตอนรีเฟรช
+                const savedUserTab = localStorage.getItem('green_passport_user_tab');
+                if (savedUserTab) {
+                    switchUserTab(savedUserTab);
+                }
             }
         }
 
         function logout() {
             currentUser = null;
             localStorage.removeItem('green_passport_session');
+            localStorage.removeItem('green_passport_user_tab');
+            localStorage.removeItem('green_passport_admin_section');
             if (countdownTimerInterval) clearInterval(countdownTimerInterval);
             adminDataListenerInitialized = false;
             
@@ -1802,7 +1819,7 @@
             }
         }
 
-        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบค้นหาจริงและแจ้งเตือนแชท) ---
+        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบค้นหาจริงแบบทันทีพิมพ์แค่ตัวเดียว) ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -1861,7 +1878,7 @@
                                 }
                             });
 
-                            // ฟังก์ชันแก้ไขข้อมูลสมาชิกทั้ง 4 รายการ (รหัส, ชื่อ, สาขา, ชั้นปี, รหัสผ่าน)
+                            // ฟังก์ชันแก้ไขข้อมูลสมาชิกทั้ง 4 รายการพร้อมกันในครั้งเดียว
                             window[`editUserPrompt_${key}`] = function() {
                                 database.ref('users/' + key).once('value', (uSnap) => {
                                     const curr = uSnap.val() || {};
@@ -1879,7 +1896,7 @@
                                     const newYear = prompt("แก้ไขชั้นปี (1, 2, 3, 4):", curr.year || '1');
                                     if(newYear === null) return;
 
-                                    const newPass = prompt("แก้ไขรหัสผ่านใหม่ (ปล่อยว่างถ้าไม่ต้องการเปลี่ยน):", "");
+                                    const newPass = prompt("แก้ไขรหัสผ่านใหม่ (แสดงรหัสเดิม / ปล่อยผ่านถ้าไม่เปลี่ยน):", curr.password || '');
                                     if(newPass === null) return;
 
                                     const updatePayload = {
