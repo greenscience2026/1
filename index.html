@@ -434,7 +434,7 @@
                                     <tr class="bg-stone-100 text-stone-700 border-b">
                                         <th class="p-3 rounded-l-lg">ของรางวัลที่ขอแลก</th>
                                         <th class="p-3">คะแนนที่ใช้ (คะแนน)</th>
-                                        <th class="p-3">วันที่ขอแลก</th>
+                                        <th class="p-3">วันที่ส่งคำขอ</th>
                                         <th class="p-3 text-right rounded-r-lg">สถานะ / เหตุผล</th>
                                     </tr>
                                 </thead>
@@ -741,7 +741,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -2131,6 +2131,83 @@
             }
         }
 
+        // ฟังก์ชันเปิด Modal แก้ไขข้อมูลสมาชิกทั้ง 4 หัวข้อพร้อมรหัสผ่านเดิมในหน้าต่างเดียว
+        function openAdminEditUserModal(userKey) {
+            database.ref('users/' + userKey).once('value', (snap) => {
+                const u = snap.val();
+                if(!u) return;
+                document.getElementById('edit-modal-orig-key').value = userKey;
+                document.getElementById('edit-modal-studentid').value = u.studentId || '';
+                document.getElementById('edit-modal-name').value = u.name || '';
+                document.getElementById('edit-modal-major').value = u.major || '';
+                document.getElementById('edit-modal-year').value = u.year || '1';
+                document.getElementById('edit-modal-password').value = u.password || '';
+                toggleAdminEditUserModal(true);
+            });
+        }
+
+        function toggleAdminEditUserModal(show) {
+            const modal = document.getElementById('admin-edit-user-modal');
+            if(show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function submitAdminEditUser() {
+            const origKey = document.getElementById('edit-modal-orig-key').value;
+            const newStudentId = document.getElementById('edit-modal-studentid').value.trim();
+            const newName = document.getElementById('edit-modal-name').value.trim();
+            const newMajor = document.getElementById('edit-modal-major').value.trim();
+            const newYear = document.getElementById('edit-modal-year').value;
+            const newPass = document.getElementById('edit-modal-password').value.trim();
+
+            if (!newStudentId || !newName || !newMajor || !newPass) {
+                alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+                return;
+            }
+
+            if (newStudentId.length !== 11) {
+                alert('⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                alert('⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+                return;
+            }
+
+            database.ref('users/' + origKey).once('value', (snap) => {
+                const curr = snap.val() || {};
+                const updatePayload = {
+                    studentId: newStudentId,
+                    name: newName,
+                    username: newName,
+                    major: newMajor,
+                    year: newYear,
+                    password: newPass
+                };
+
+                if (newStudentId !== curr.studentId) {
+                    const newSafeKey = newStudentId.replace(/[.#$[\]]/g, '_');
+                    database.ref('users/' + newSafeKey).set({ ...curr, ...updatePayload }).then(() => {
+                        database.ref('users/' + origKey).remove();
+                        toggleAdminEditUserModal(false);
+                        alert('✅ แก้ไขข้อมูลและย้ายรหัสนักศึกษาสำเร็จ');
+                        listenToAdminData();
+                    });
+                } else {
+                    database.ref('users/' + origKey).update(updatePayload).then(() => {
+                        toggleAdminEditUserModal(false);
+                        alert('✅ แก้ไขข้อมูลสมาชิกสำเร็จ');
+                        listenToAdminData();
+                        if (selectedAdminViewUserId === origKey) renderAdminUserDetail(origKey);
+                    });
+                }
+            });
+        }
+
         function updateStorageMeterRealtime() {
             database.ref().on('value', (snapshot) => {
                 const dataString = JSON.stringify(snapshot.val() || {});
@@ -2696,3 +2773,4 @@
     </script>
 </body>
 </html>
+
