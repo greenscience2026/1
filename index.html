@@ -214,7 +214,7 @@
                             </div>
                         </div>
 
-                        <!-- 3. พกขวดน้ำส่วนตัว (ชื่อเดิมตามขอ) -->
+                        <!-- 3. พกขวดน้ำส่วนตัว (ชื่อเดิม) -->
                         <div class="border-2 border-stone-200 p-3.5 rounded-2xl bg-stone-50 flex flex-col justify-between shadow-xs mission-box" data-mission-name="พกขวดน้ำส่วนตัว" id="box-mission-3">
                             <div>
                                 <div class="text-3xl text-center my-1">🥤</div>
@@ -740,7 +740,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -1861,48 +1861,55 @@
                                 }
                             });
 
-                            // ฟังก์ชันแก้ไขข้อมูลสมาชิกรายบุคคลจากฝั่งแอดมิน
+                            // ฟังก์ชันแก้ไขข้อมูลสมาชิกทั้ง 4 รายการ (รหัส, ชื่อ, สาขา, ชั้นปี, รหัสผ่าน)
                             window[`editUserPrompt_${key}`] = function() {
-                                const newStudentId = prompt("แก้ไขรหัสนักศึกษา (11 หลัก):", u.studentId || '');
-                                if(newStudentId === null) return;
-                                if(newStudentId.trim().length !== 11) { alert("⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก"); return; }
-                                
-                                const newName = prompt("แก้ไขชื่อ - นามสกุล:", u.name || '');
-                                if(newName === null) return;
-                                const newMajor = prompt("แก้ไขสาขาวิชา:", u.major || '');
-                                if(newMajor === null) return;
-                                const newYear = prompt("แก้ไขชั้นปี (1-4):", u.year || '1');
-                                if(newYear === null) return;
-                                const newPass = prompt("แก้ไขรหัสผ่านใหม่ (ปล่อยว่างถ้าไม่เปลี่ยน):", "");
-                                if(newPass === null) return;
+                                database.ref('users/' + key).once('value', (uSnap) => {
+                                    const curr = uSnap.val() || {};
+                                    
+                                    const newStudentId = prompt("แก้ไขรหัสนักศึกษา (11 หลัก):", curr.studentId || '');
+                                    if(newStudentId === null) return;
+                                    if(newStudentId.trim().length !== 11) { alert("⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก"); return; }
+                                    
+                                    const newName = prompt("แก้ไขชื่อ - นามสกุล:", curr.name || '');
+                                    if(newName === null) return;
+                                    
+                                    const newMajor = prompt("แก้ไขสาขาวิชา:", curr.major || '');
+                                    if(newMajor === null) return;
 
-                                const updatePayload = {
-                                    studentId: newStudentId.trim(),
-                                    name: newName.trim() || u.name,
-                                    username: newName.trim() || u.name,
-                                    major: newMajor.trim() || u.major,
-                                    year: newYear.trim() || u.year
-                                };
-                                if(newPass.trim().length > 0) {
-                                    if(newPass.trim().length < 6) { alert("⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"); return; }
-                                    updatePayload.password = newPass.trim();
-                                }
+                                    const newYear = prompt("แก้ไขชั้นปี (1, 2, 3, 4):", curr.year || '1');
+                                    if(newYear === null) return;
 
-                                // ถ้ารหัสนักศึกษาเปลี่ยน ต้องย้ายโหนดใน Firebase
-                                if(newStudentId.trim() !== studentId) {
-                                    const newSafeKey = newStudentId.trim().replace(/[.#$[\]]/g, '_');
-                                    database.ref('users/' + newSafeKey).set({ ...u, ...updatePayload }).then(() => {
-                                        database.ref('users/' + key).remove();
-                                        alert("✅ แก้ไขข้อมูลและรหัสนักศึกษาสำเร็จ");
-                                        listenToAdminData();
-                                    });
-                                } else {
-                                    database.ref('users/' + key).update(updatePayload).then(() => {
-                                        alert("✅ แก้ไขข้อมูลสมาชิกสำเร็จ");
-                                        listenToAdminData();
-                                        if(selectedAdminViewUserId === key) renderAdminUserDetail(key);
-                                    });
-                                }
+                                    const newPass = prompt("แก้ไขรหัสผ่านใหม่ (ปล่อยว่างถ้าไม่ต้องการเปลี่ยน):", "");
+                                    if(newPass === null) return;
+
+                                    const updatePayload = {
+                                        studentId: newStudentId.trim(),
+                                        name: newName.trim() || curr.name,
+                                        username: newName.trim() || curr.name,
+                                        major: newMajor.trim() || curr.major,
+                                        year: newYear.trim() || curr.year
+                                    };
+
+                                    if(newPass.trim().length > 0) {
+                                        if(newPass.trim().length < 6) { alert("⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"); return; }
+                                        updatePayload.password = newPass.trim();
+                                    }
+
+                                    if(newStudentId.trim() !== studentId) {
+                                        const newSafeKey = newStudentId.trim().replace(/[.#$[\]]/g, '_');
+                                        database.ref('users/' + newSafeKey).set({ ...curr, ...updatePayload }).then(() => {
+                                            database.ref('users/' + key).remove();
+                                            alert("✅ แก้ไขข้อมูลและย้ายรหัสนักศึกษาสำเร็จ");
+                                            listenToAdminData();
+                                        });
+                                    } else {
+                                        database.ref('users/' + key).update(updatePayload).then(() => {
+                                            alert("✅ แก้ไขข้อมูลสมาชิกสำเร็จ");
+                                            listenToAdminData();
+                                            if(selectedAdminViewUserId === key) renderAdminUserDetail(key);
+                                        });
+                                    }
+                                });
                             };
 
                             const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm);
@@ -1914,7 +1921,7 @@
                                                 👤 ${displayName}<br>
                                                 <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
                                             </button>
-                                            <button onclick="editUserPrompt_${key}()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0" title="แก้ไขข้อมูลสมาชิก">
+                                            <button onclick="editUserPrompt_${key}()" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0" title="แก้ไขข้อมูลสมาชิก">
                                                 ✏️ แก้ไข
                                             </button>
                                         </div>
@@ -1945,7 +1952,7 @@
 
                         document.getElementById('admin-stat-points').innerText = totalPoints;
 
-                        // แจ้งเตือนข้อความแชทใหม่ที่แถบเมนูหลักของแอดมินแบบกะพริบจริง
+                        // แจ้งเตือนข้อความแชทใหม่ที่แถบเมนูหลักของแอดมินแบบกะพริบจริงทันที
                         const chatCardBadge = document.getElementById('card-badge-chat');
                         if (chatCardBadge) {
                             if (systemTotalUnread > 0) {
@@ -2403,7 +2410,6 @@
             footer.classList.remove('hidden');
         }
 
-        // ================= ฟังก์ชันรีวิวภารกิจ (ปฏิเสธแล้วปลดล็อกเวลาให้ส่งใหม่ได้ทันที) =================
         function reviewMission(missionId, userIdentifier, action) {
             const safeKey = userIdentifier.replace(/[.#$[\]]/g, '_');
             let reason = "";
@@ -2676,4 +2682,3 @@
     </script>
 </body>
 </html>
-
