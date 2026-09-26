@@ -50,7 +50,7 @@
                 <div id="form-login" class="space-y-4">
                     <div>
                         <label class="block text-xs sm:text-sm font-medium text-stone-700">รหัสนักศึกษา</label>
-                        <input type="text" id="login-studentid" maxlength="11" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา">
+                        <input type="text" id="login-studentid" maxlength="11" class="w-full mt-1 p-3 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-500 text-sm" placeholder="กรอกรหัสนักศึกษา (หรือ admin)">
                     </div>
 
                     <div>
@@ -372,8 +372,7 @@
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
                         <h3 class="text-lg md:text-xl font-bold text-gray-800">🎁 แลกรางวัล</h3>
-                        <p class="text-xs text-gray-500">เมื่อคะแนนถึงเกณฑ์ สามารถนำแต้มมาแลกของรางวัลได้เลย 🎉
-แต่ถ้าใคร ยังไม่อยากแลกตอนนี้ ก็สามารถเก็บแต้มสะสมต่อไปได้เรื่อย ๆ เพื่อรอแลกรางวัลที่ใช้แต้มสูงกว่า 💚✨ (รอแอดมินอนุมัติเพื่อรับของ)</p>
+                        <p class="text-xs text-gray-500">เลือกของรางวัลที่คุณต้องการแลกโดยใช้คะแนนสะสม (รอแอดมินอนุมัติเพื่อรับของ)</p>
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
@@ -523,7 +522,7 @@
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">💬</span>
-                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน (แสดงจำนวนรวมข้อความที่ยังไม่อ่าน) -->
+                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน (แสดงจำนวนรวมข้อความที่ยังไม่อ่านโดยไม่มีวงเล็บรหัส) -->
                             <span id="card-badge-chat" class="bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full">0 ข้อความ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ระบบแชทตอบกลับสมาชิก</h4>
@@ -741,7 +740,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl font-bold text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -1861,7 +1860,7 @@
             }
         }
 
-        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบค้นหาจริงพิมพ์แค่ตัวเดียวติดเลย) ---
+        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบค้นหาจริงและเรียงแชทใหม่ขึ้นบนสุดอัตโนมัติ) ---
         let allMissionsCache = [];
         let adminDataListenerInitialized = false;
 
@@ -1900,25 +1899,38 @@
                         let systemTotalMessages = 0;
                         let systemTotalUnread = 0;
 
-                        Object.entries(usersData).forEach(([key, u]) => {
+                        // จัดเรียงแชทให้คนล่าสุดขึ้นไปอยู่บนสุดอัตโนมัติ
+                        const userChatEntries = Object.entries(usersData).map(([key, u]) => {
+                            const userMsgs = allChats[key] || {};
+                            let lastMsgTime = 0;
+                            let unreadCount = 0;
+                            Object.values(userMsgs).forEach(m => {
+                                if (m.timestamp) {
+                                    // แปลงเวลามาเทียบคร่าวๆ
+                                    lastTime = 1;
+                                }
+                                if (m.sender !== 'แอดมิน' && !m.read) {
+                                    unreadCount++;
+                                    systemTotalUnread++;
+                                }
+                            });
+                            // เช็คข้อความล่าสุดจาก timestamp
+                            const msgKeys = Object.keys(userMsgs);
+                            if (msgKeys.length > 0) {
+                                lastMsgTime = parseInt(msgKeys[msgKeys.length - 1], 10) || 0;
+                            }
+                            return { key, u, unreadCount, lastMsgTime };
+                        });
+
+                        userChatEntries.sort((a, b) => b.lastMsgTime - a.lastMsgTime);
+
+                        userChatEntries.forEach(({ key, u, unreadCount }) => {
                             totalPoints += (u.points || 0);
                             const studentId = u.studentId || key;
                             const name = u.name || u.username || studentId;
                             const major = u.major || 'ไม่ระบุสาขา';
                             const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
                             const displayName = `${name} (${studentId})`;
-
-                            const userMsgs = allChats[key] || {};
-                            const totalMsgs = Object.keys(userMsgs).length;
-                            systemTotalMessages += totalMsgs;
-                            
-                            let unreadMsgs = 0;
-                            Object.values(userMsgs).forEach(m => {
-                                if (m.sender !== 'แอดมิน' && !m.read) {
-                                    unreadMsgs++;
-                                    systemTotalUnread++;
-                                }
-                            });
 
                             const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm);
                             if (matchSearch) {
@@ -1946,9 +1958,9 @@
                             let isSelected = selectedAdminChatId === key;
                             let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
                             
-                            // เอาวงเล็บรหัสนักศึกษาออกจากการแจ้งเตือนข้อความใหม่ตามขอ
-                            let badgeHtml = unreadMsgs > 0 
-                                ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadMsgs} ใหม่</span>` 
+                            // แจ้งเตือนแชทใหม่เฉพาะตัวเลข โดยไม่วงเล็บรหัสตามขอ
+                            let badgeHtml = unreadCount > 0 
+                                ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadCount} ใหม่</span>` 
                                 : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
 
                             chatUserList.innerHTML += `
@@ -1961,6 +1973,7 @@
 
                         document.getElementById('admin-stat-points').innerText = totalPoints;
 
+                        // แจ้งเตือนข้อความแชทใหม่ที่หน้าแรกสุดของแอดมิน (Main Dashboard)
                         const chatCardBadge = document.getElementById('card-badge-chat');
                         if (chatCardBadge) {
                             if (systemTotalUnread > 0) {
@@ -2132,83 +2145,6 @@
             }
         }
 
-        // ฟังก์ชันเปิด Modal แก้ไขข้อมูลสมาชิกทั้ง 4 หัวข้อพร้อมรหัสผ่านเดิม
-        function openAdminEditUserModal(userKey) {
-            database.ref('users/' + userKey).once('value', (snap) => {
-                const u = snap.val();
-                if(!u) return;
-                document.getElementById('edit-modal-orig-key').value = userKey;
-                document.getElementById('edit-modal-studentid').value = u.studentId || '';
-                document.getElementById('edit-modal-name').value = u.name || '';
-                document.getElementById('edit-modal-major').value = u.major || '';
-                document.getElementById('edit-modal-year').value = u.year || '1';
-                document.getElementById('edit-modal-password').value = u.password || '';
-                toggleAdminEditUserModal(true);
-            });
-        }
-
-        function toggleAdminEditUserModal(show) {
-            const modal = document.getElementById('admin-edit-user-modal');
-            if(show) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-            }
-        }
-
-        function submitAdminEditUser() {
-            const origKey = document.getElementById('edit-modal-orig-key').value;
-            const newStudentId = document.getElementById('edit-modal-studentid').value.trim();
-            const newName = document.getElementById('edit-modal-name').value.trim();
-            const newMajor = document.getElementById('edit-modal-major').value.trim();
-            const newYear = document.getElementById('edit-modal-year').value;
-            const newPass = document.getElementById('edit-modal-password').value.trim();
-
-            if (!newStudentId || !newName || !newMajor || !newPass) {
-                alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
-                return;
-            }
-
-            if (newStudentId.length !== 11) {
-                alert('⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก');
-                return;
-            }
-
-            if (newPass.length < 6) {
-                alert('⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
-                return;
-            }
-
-            database.ref('users/' + origKey).once('value', (snap) => {
-                const curr = snap.val() || {};
-                const updatePayload = {
-                    studentId: newStudentId,
-                    name: newName,
-                    username: newName,
-                    major: newMajor,
-                    year: newYear,
-                    password: newPass
-                };
-
-                if (newStudentId !== curr.studentId) {
-                    const newSafeKey = newStudentId.replace(/[.#$[\]]/g, '_');
-                    database.ref('users/' + newSafeKey).set({ ...curr, ...updatePayload }).then(() => {
-                        database.ref('users/' + origKey).remove();
-                        toggleAdminEditUserModal(false);
-                        alert('✅ แก้ไขข้อมูลและย้ายรหัสนักศึกษาสำเร็จ');
-                        listenToAdminData();
-                    });
-                } else {
-                    database.ref('users/' + origKey).update(updatePayload).then(() => {
-                        toggleAdminEditUserModal(false);
-                        alert('✅ แก้ไขข้อมูลสมาชิกสำเร็จ');
-                        listenToAdminData();
-                        if (selectedAdminViewUserId === origKey) renderAdminUserDetail(origKey);
-                    });
-                }
-            });
-        }
-
         function updateStorageMeterRealtime() {
             database.ref().on('value', (snapshot) => {
                 const dataString = JSON.stringify(snapshot.val() || {});
@@ -2278,12 +2214,16 @@
 
         function selectAdminChatUser(userKey) {
             selectedAdminChatId = userKey;
-            document.getElementById('admin-chat-input').disabled = false;
-            document.getElementById('admin-chat-input').placeholder = `พิมพ์ตอบกลับ ${userKey}...`;
-            document.getElementById('btn-admin-send-chat').disabled = false;
-            document.getElementById('admin-chat-file').disabled = false;
-            document.getElementById('label-admin-chat-file').classList.remove('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.remove('hidden');
+            
+            // ดึงชื่อและรหัสนักศึกษามาแสดงที่หัวห้องแชท
+            database.ref('users/' + userKey).once('value', (snap) => {
+                const u = snap.val() || {};
+                const name = u.name || u.username || userKey;
+                const studentId = u.studentId || userKey;
+                document.getElementById('admin-chat-header-title').innerText = `💬 กำลังสนทนากับ: ${name} (${studentId})`;
+            });
+
+            document.getElementById('admin-chat-modal').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
                 const messages = snapshot.val() || {};
@@ -2296,10 +2236,8 @@
                 if (Object.keys(updates).length > 0) database.ref().update(updates);
             });
 
-            listenToAdminData();
-
             database.ref('chats/' + userKey).on('value', (snapshot) => {
-                const chatBox = document.getElementById('admin-chat-box');
+                const chatBox = document.getElementById('admin-chat-modal-box');
                 if(!chatBox) return;
                 const isAtBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 50;
 
@@ -2307,7 +2245,7 @@
                 const messages = snapshot.val() || {};
 
                 if (Object.keys(messages).length === 0) {
-                    chatBox.innerHTML = `<p class="text-center text-gray-400 text-xs my-auto">ยังไม่ได้ส่งข้อความสนทนากับ ${userKey}</p>`;
+                    chatBox.innerHTML = `<p class="text-center text-gray-400 text-xs my-auto">ยังไม่ได้ส่งข้อความสนทนากับสมาชิกท่านนี้</p>`;
                     return;
                 }
 
@@ -2335,13 +2273,23 @@
             });
         }
 
+        function toggleAdminChatModal(show) {
+            const modal = document.getElementById('admin-chat-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+                selectedAdminChatId = null;
+            }
+        }
+
         let isSendingAdminChat = false;
-        function sendAdminChatMessage(isImage = false) {
+        function sendAdminModalChatMessage(isImage = false) {
             if (!selectedAdminChatId || isSendingAdminChat) return;
             const userKey = selectedAdminChatId;
 
             if (isImage) {
-                const fileInput = document.getElementById('admin-chat-file');
+                const fileInput = document.getElementById('admin-chat-modal-file');
                 if (fileInput.files.length === 0) return;
                 isSendingAdminChat = true;
                 const file = fileInput.files[0];
@@ -2374,7 +2322,7 @@
                 };
                 reader.readAsDataURL(file);
             } else {
-                const input = document.getElementById('admin-chat-input');
+                const input = document.getElementById('admin-chat-modal-input');
                 const text = input.value.trim();
                 if (!text) return;
 
@@ -2713,7 +2661,7 @@
                         <thead>
                             <tr style="background: #f3f4f6; color: #374151; font-size: 9.5pt; border-bottom: 2px solid #e5e7eb;">
                                 <th style="padding: 8px 10px; text-align: left;">ประเภทภารกิจ</th>
-                                <th style="padding: 8px 10px; text-align: center; width: 90px;">จำนวนภารกิจ (ครั้ง)</th>
+                                <th style="padding: 8px 10px; text-align: center; width: 90px;">จำนวนครั้ง (ครั้ง)</th>
                                 <th style="padding: 8px 10px; text-align: right; width: 130px;">ปริมาณ CO₂ ที่ลดได้ (kgCO₂e)</th>
                                 <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนนรวม (คะแนน)</th>
                             </tr>
@@ -2742,7 +2690,7 @@
                                 <tr style="background: #f3f4f6; color: #374151; font-size: 9.5pt; border-bottom: 2px solid #e5e7eb;">
                                     <th style="padding: 6px 8px; width: 35px; text-align: center;">ลำดับ</th>
                                     <th style="padding: 6px 8px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
-                                    <th style="padding: 6px 8px; text-align: center; width: 90px;">จำนวนภารกิจ (ครั้ง)</th>
+                                    <th style="padding: 6px 8px; text-align: center; width: 90px;">จำนวนภารกิจที่ทำ (ครั้ง)</th>
                                     <th style="padding: 6px 8px; text-align: right; width: 130px;">ปริมาณ CO₂ ที่ลดได้ (kgCO₂e)</th>
                                     <th style="padding: 6px 8px; text-align: right; width: 90px;">คะแนนสะสม (คะแนน)</th>
                                 </tr>
