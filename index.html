@@ -522,7 +522,7 @@
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">💬</span>
-                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน (แสดงจำนวนรวมข้อความที่ยังไม่อ่านโดยไม่มีวงเล็บรหัส) -->
+                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน (แสดงจำนวนรวมข้อความที่ยังไม่อ่าน) -->
                             <span id="card-badge-chat" class="bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full">0 ข้อความ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ระบบแชทตอบกลับสมาชิก</h4>
@@ -740,7 +740,7 @@
                             <input type="file" id="admin-chat-file" accept="image/*" class="hidden" disabled onchange="sendAdminChatMessage(true)">
                             
                             <input type="text" id="admin-chat-input" placeholder="เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm" disabled>
-                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
+                            <button onclick="sendAdminChatMessage(false)" id="btn-admin-send-chat" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer disabled:bg-gray-300" disabled>ส่ง</button>
                         </div>
                     </div>
                 </div>
@@ -889,6 +889,24 @@
             <div class="p-3 bg-white border-t flex justify-end gap-2">
                 <button onclick="toggleAdminEditUserModal(false)" class="bg-stone-200 hover:bg-stone-300 font-bold py-2 px-4 rounded-xl text-xs transition cursor-pointer">ยกเลิก</button>
                 <button onclick="submitAdminEditUser()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl text-xs transition cursor-pointer shadow-xs">บันทึกการแก้ไข</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal แชทส่วนตัวของแอดมิน (หัวห้องแสดงชื่อและรหัสนักศึกษาตามขอ) -->
+    <div id="admin-chat-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 md:p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl flex flex-col h-[85vh] max-h-[550px] overflow-hidden">
+            <div class="bg-blue-600 text-white p-3.5 flex justify-between items-center shrink-0">
+                <h3 id="admin-chat-header-title" class="font-bold text-xs sm:text-sm truncate">💬 สนทนากับสมาชิก</h3>
+                <button onclick="toggleAdminChatModal(false)" class="text-white hover:bg-blue-700 rounded-full w-7 h-7 flex items-center justify-center font-bold cursor-pointer">✕</button>
+            </div>
+            <div id="admin-chat-modal-box" class="flex-1 p-3 md:p-4 overflow-y-auto space-y-2 bg-stone-50"></div>
+            <div class="p-3 bg-white border-t flex gap-2 items-center shrink-0">
+                <label for="admin-chat-modal-file" class="cursor-pointer bg-stone-100 hover:bg-stone-200 p-2 rounded-xl text-lg border border-stone-300 transition">📷</label>
+                <input type="file" id="admin-chat-modal-file" accept="image/*" class="hidden" onchange="sendAdminModalChatMessage(true)">
+                
+                <input type="text" id="admin-chat-modal-input" placeholder="พิมพ์ข้อความตอบกลับ..." class="flex-1 p-2 border border-stone-300 rounded-xl text-xs md:text-sm focus:ring-blue-500">
+                <button onclick="sendAdminModalChatMessage(false)" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">ส่ง</button>
             </div>
         </div>
     </div>
@@ -1186,25 +1204,9 @@
             if (currentUser && currentUser.role === 'admin' && selectedAdminChatId) {
                 const chatSection = document.getElementById('section-chat');
                 if (chatSection && !chatSection.contains(event.target)) {
-                    closeAdminChat();
+                    // ปล่อยให้ Modal ทำงานแทน
                 }
             }
-        }
-
-        function closeAdminChat() {
-            selectedAdminChatId = null;
-            document.getElementById('admin-chat-input').disabled = true;
-            document.getElementById('admin-chat-input').value = '';
-            document.getElementById('admin-chat-input').placeholder = 'เลือกสมาชิกฝั่งซ้ายก่อนเพื่อพิมพ์ข้อความ...';
-            document.getElementById('btn-admin-send-chat').disabled = true;
-            document.getElementById('admin-chat-file').disabled = true;
-            document.getElementById('label-admin-chat-file').classList.add('opacity-50');
-            document.getElementById('btn-close-admin-chat').classList.add('hidden');
-            
-            document.getElementById('admin-chat-box').innerHTML = `
-                <p class="text-center text-gray-400 text-xs my-auto">👈 โปรดเลือกสมาชิกจากเมนูด้านซ้ายเพื่อเริ่มการสนทนา</p>
-            `;
-            listenToAdminData();
         }
 
         window.onload = function() {
@@ -1905,16 +1907,11 @@
                             let lastMsgTime = 0;
                             let unreadCount = 0;
                             Object.values(userMsgs).forEach(m => {
-                                if (m.timestamp) {
-                                    // แปลงเวลามาเทียบคร่าวๆ
-                                    lastTime = 1;
-                                }
                                 if (m.sender !== 'แอดมิน' && !m.read) {
                                     unreadCount++;
                                     systemTotalUnread++;
                                 }
                             });
-                            // เช็คข้อความล่าสุดจาก timestamp
                             const msgKeys = Object.keys(userMsgs);
                             if (msgKeys.length > 0) {
                                 lastMsgTime = parseInt(msgKeys[msgKeys.length - 1], 10) || 0;
@@ -1958,7 +1955,7 @@
                             let isSelected = selectedAdminChatId === key;
                             let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
                             
-                            // แจ้งเตือนแชทใหม่เฉพาะตัวเลข โดยไม่วงเล็บรหัสตามขอ
+                            // เอาวงเล็บรหัสนักศึกษาออกจากการแจ้งเตือนข้อความใหม่ตามขอ
                             let badgeHtml = unreadCount > 0 
                                 ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadCount} ใหม่</span>` 
                                 : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
@@ -1973,7 +1970,7 @@
 
                         document.getElementById('admin-stat-points').innerText = totalPoints;
 
-                        // แจ้งเตือนข้อความแชทใหม่ที่หน้าแรกสุดของแอดมิน (Main Dashboard)
+                        // แจ้งเตือนข้อความแชทใหม่ที่หน้าแรกสุดของแอดมิน (Main Dashboard) แสดงจริงแบบเรียลไทม์
                         const chatCardBadge = document.getElementById('card-badge-chat');
                         if (chatCardBadge) {
                             if (systemTotalUnread > 0) {
@@ -2054,7 +2051,7 @@
                     }
 
                     if (historyClaims.length === 0) {
-                        historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ยังไม่มีประวัติการคัดกรองคำขอแลกรางวัล</td></tr>`;
+                        historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ยังไม่ได้มีประวัติการคัดกรองคำขอแลกรางวัล</td></tr>`;
                     } else {
                         historyClaims.reverse().forEach(claim => {
                             let badgeStyle = claim.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100';
@@ -2145,6 +2142,83 @@
             }
         }
 
+        // ฟังก์ชันเปิด Modal แก้ไขข้อมูลสมาชิกทั้ง 4 หัวข้อพร้อมรหัสผ่านเดิมในหน้าต่างเดียว
+        function openAdminEditUserModal(userKey) {
+            database.ref('users/' + userKey).once('value', (snap) => {
+                const u = snap.val();
+                if(!u) return;
+                document.getElementById('edit-modal-orig-key').value = userKey;
+                document.getElementById('edit-modal-studentid').value = u.studentId || '';
+                document.getElementById('edit-modal-name').value = u.name || '';
+                document.getElementById('edit-modal-major').value = u.major || '';
+                document.getElementById('edit-modal-year').value = u.year || '1';
+                document.getElementById('edit-modal-password').value = u.password || '';
+                toggleAdminEditUserModal(true);
+            });
+        }
+
+        function toggleAdminEditUserModal(show) {
+            const modal = document.getElementById('admin-edit-user-modal');
+            if(show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function submitAdminEditUser() {
+            const origKey = document.getElementById('edit-modal-orig-key').value;
+            const newStudentId = document.getElementById('edit-modal-studentid').value.trim();
+            const newName = document.getElementById('edit-modal-name').value.trim();
+            const newMajor = document.getElementById('edit-modal-major').value.trim();
+            const newYear = document.getElementById('edit-modal-year').value;
+            const newPass = document.getElementById('edit-modal-password').value.trim();
+
+            if (!newStudentId || !newName || !newMajor || !newPass) {
+                alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+                return;
+            }
+
+            if (newStudentId.length !== 11) {
+                alert('⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                alert('⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+                return;
+            }
+
+            database.ref('users/' + origKey).once('value', (snap) => {
+                const curr = snap.val() || {};
+                const updatePayload = {
+                    studentId: newStudentId,
+                    name: newName,
+                    username: newName,
+                    major: newMajor,
+                    year: newYear,
+                    password: newPass
+                };
+
+                if (newStudentId !== curr.studentId) {
+                    const newSafeKey = newStudentId.replace(/[.#$[\]]/g, '_');
+                    database.ref('users/' + newSafeKey).set({ ...curr, ...updatePayload }).then(() => {
+                        database.ref('users/' + origKey).remove();
+                        toggleAdminEditUserModal(false);
+                        alert('✅ แก้ไขข้อมูลและย้ายรหัสนักศึกษาสำเร็จ');
+                        listenToAdminData();
+                    });
+                } else {
+                    database.ref('users/' + origKey).update(updatePayload).then(() => {
+                        toggleAdminEditUserModal(false);
+                        alert('✅ แก้ไขข้อมูลสมาชิกสำเร็จ');
+                        listenToAdminData();
+                        if (selectedAdminViewUserId === origKey) renderAdminUserDetail(origKey);
+                    });
+                }
+            });
+        }
+
         function updateStorageMeterRealtime() {
             database.ref().on('value', (snapshot) => {
                 const dataString = JSON.stringify(snapshot.val() || {});
@@ -2215,7 +2289,6 @@
         function selectAdminChatUser(userKey) {
             selectedAdminChatId = userKey;
             
-            // ดึงชื่อและรหัสนักศึกษามาแสดงที่หัวห้องแชท
             database.ref('users/' + userKey).once('value', (snap) => {
                 const u = snap.val() || {};
                 const name = u.name || u.username || userKey;
@@ -2262,7 +2335,7 @@
                             <div class="max-w-[85%] p-2 rounded-xl text-xs ${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white border border-stone-200 text-stone-800 rounded-bl-none shadow-2xs'}">
                                 ${msgContent}
                             </div>
-                            <span class="text-[9px] text-gray-400 mt-0.5 px-1">${msg.sender} (${msg.timestamp}) <strong class="text-blue-600">${readText}</strong></span>
+                            <span class="text-[9px] text-gray-400 mt-0.5 px-1">${msg.timestamp} <strong class="text-blue-600">${readText}</strong></span>
                         </div>
                     `;
                 });
