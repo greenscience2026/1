@@ -12,17 +12,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        body { 
-            font-family: 'Kanit', sans-serif; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-        .no-scrollbar::-webkit-scrollbar { 
-            display: none; 
-        }
-        .no-scrollbar { 
-            -ms-overflow-style: none; 
-            scrollbar-width: none; 
-        }
+        body { font-family: 'Kanit', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-stone-100 min-h-screen pb-12 text-stone-800 text-xs sm:text-sm" onclick="handleGlobalClick(event)">
@@ -199,7 +191,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-1" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ใช้ถุงผ้าแทนถุงพลาสติก', 'file-1', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ใช้ถุงผ้าแทนถุงพลาสติก', 'file-1', this, 'box-mission-1')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -218,7 +210,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-2" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('เดินขึ้นบันไดแทนการกดใช้ลิฟต์', 'file-2', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('เดินขึ้นบันไดแทนการกดใช้ลิฟต์', 'file-2', this, 'box-mission-2')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -237,7 +229,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-3" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-3', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('พกขวดน้ำส่วนตัว', 'file-3', this, 'box-mission-3')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -256,7 +248,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-4" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('กินอาหารหมดจาน', 'file-4', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('กินอาหารหมดจาน', 'file-4', this, 'box-mission-4')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -275,7 +267,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-5" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ปิดไฟห้องพัก', 'file-5', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ปิดไฟห้องพัก', 'file-5', this, 'box-mission-5')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -294,7 +286,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-6" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ปั่นจักรยานแทนการใช้รถจักรยานยนต์', 'file-6', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ปั่นจักรยานแทนการใช้รถจักรยานยนต์', 'file-6', this, 'box-mission-6')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -313,7 +305,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-7" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('ประดิษฐ์ของใช้จากวัสดุเหลือใช้', 'file-7', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('ประดิษฐ์ของใช้จากวัสดุเหลือใช้', 'file-7', this, 'box-mission-7')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -332,7 +324,7 @@
                             <div class="mt-3 pt-2.5 border-t border-stone-200 space-y-2">
                                 <label class="block text-[10px] font-medium text-stone-600">แนบรูปหลักฐาน:</label>
                                 <input type="file" id="file-8" accept="image/*" class="w-full p-1 border border-stone-300 rounded text-[10px] bg-white">
-                                <button onclick="submitSpecificMission('แยกขยะถูกประเภท', 'file-8', this)" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
+                                <button onclick="submitSpecificMission('แยกขยะถูกประเภท', 'file-8', this, 'box-mission-8')" class="btn-mission w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer">ส่งภารกิจนี้</button>
                             </div>
                         </div>
 
@@ -380,11 +372,11 @@
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-stone-200">
                     <div class="mb-4 md:mb-6 pb-4 border-b">
                         <h3 class="text-lg md:text-xl font-bold text-gray-800">🎁 แลกรางวัล</h3>
-                        <p class="text-xs text-gray-500">เมื่อคะแนนถึงเกณฑ์ สามารถนำแต้มมาแลกของรางวัลได้เลย 🎉 (รอแอดมินอนุมัติเพื่อรับของ)</p>
+                        <p class="text-xs text-gray-500">เมื่อคะแนนถึงเกณฑ์ สามารถนำแต้มมาแลกของรางวัลได้เลย 🎉
+แต่ถ้าใคร ยังไม่อยากแลกตอนนี้ ก็สามารถเก็บแต้มสะสมต่อไปได้เรื่อย ๆ เพื่อรอแลกรางวัลที่ใช้แต้มสูงกว่า 💚✨ (รอแอดมินอนุมัติเพื่อรับของ)</p>
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6">
-                        
                         <!-- ปากกา -->
                         <div class="border border-stone-200 p-4 md:p-5 rounded-2xl bg-stone-50 text-center flex flex-col justify-between shadow-xs">
                             <div>
@@ -432,7 +424,6 @@
                             </div>
                             <button id="btn-claim-แก้วน้ำ" onclick="claimReward(240, 'แก้วน้ำ')" class="mt-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-2 rounded-xl text-xs md:text-sm transition cursor-pointer">แลกรับรางวัล</button>
                         </div>
-
                     </div>
 
                     <div class="border-t pt-4 md:pt-6">
@@ -532,6 +523,7 @@
                     <div>
                         <div class="flex justify-between items-start">
                             <span class="text-3xl">💬</span>
+                            <!-- แถบแจ้งเตือนแชทใหม่แบบกะพริบจริงที่หน้าเมนูหลักแอดมิน (แสดงจำนวนรวมข้อความที่ยังไม่อ่าน) -->
                             <span id="card-badge-chat" class="bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full">0 ข้อความ</span>
                         </div>
                         <h4 class="font-bold text-base text-stone-800 mt-3">ระบบแชทตอบกลับสมาชิก</h4>
@@ -588,7 +580,7 @@
 
             <!-- ส่วนที่ 2: คำขอแลกรางวัล & จัดการสต็อกของรางวัล -->
             <div id="section-rewards-hub" class="admin-detail-view hidden space-y-6">
-                <!-- แถบจัดการสต็อกของรางวัล -->
+                <!-- แถบจัดการสต็อกของรางวัล (เพิ่มไว้บนสุด) -->
                 <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border-t-4 border-emerald-500 space-y-4">
                     <div class="pb-2 border-b flex justify-between items-center">
                         <h3 class="text-base md:text-lg font-bold text-emerald-800">📦 จัดการและอัปเดตจำนวนสต็อกของรางวัล</h3>
@@ -835,7 +827,7 @@
         </div>
     </div>
 
-    <!-- Modal ประวัติผู้ใช้ -->
+    <!-- Modal ประวัติผู้ใช้ (เมื่อคลิกชื่อตัวเองที่ Navbar) -->
     <div id="user-profile-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 md:p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-xl flex flex-col overflow-hidden">
             <div class="bg-emerald-600 text-white p-3.5 flex justify-between items-center shrink-0">
@@ -860,7 +852,7 @@
         </div>
     </div>
 
-    <!-- Modal แก้ไขข้อมูลสมาชิก -->
+    <!-- Modal แก้ไขข้อมูลสมาชิก (ขึ้นทีเดียว 4 หัวข้อพร้อมรหัสผ่านเดิม) -->
     <div id="admin-edit-user-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 md:p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-xl flex flex-col overflow-hidden">
             <div class="bg-blue-600 text-white p-3.5 flex justify-between items-center shrink-0">
@@ -902,7 +894,7 @@
         </div>
     </div>
 
-    <!-- Modal แชทส่วนตัวของแอดมิน -->
+    <!-- Modal แชทส่วนตัวของแอดมิน (หัวห้องแสดงชื่อและรหัสนักศึกษาตามขอ) -->
     <div id="admin-chat-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3 md:p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-xl flex flex-col h-[85vh] max-h-[550px] overflow-hidden">
             <div class="bg-blue-600 text-white p-3.5 flex justify-between items-center shrink-0">
@@ -1350,6 +1342,7 @@
             localStorage.removeItem('green_passport_user_tab');
             localStorage.removeItem('green_passport_admin_section');
             if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+            adminDataListenerInitialized = false;
             
             database.ref().off();
 
@@ -1440,7 +1433,15 @@
             });
         }
 
-        function submitSpecificMission(missionName, inputId, btnElement) {
+        function getTodayDateString() {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function submitSpecificMission(missionName, inputId, btnElement, boxId) {
             const fileInput = document.getElementById(inputId);
             if (fileInput.files.length === 0) { alert(`โปรดแนบรูปถ่ายหลักฐานสำหรับภารกิจ "${missionName}"`); return; }
 
@@ -1862,244 +1863,286 @@
             }
         }
 
-        // --- ระบบแอดมิน: จัดการเรียงสมาชิกตามชั้นปี/สาขา, เรียงห้องแชทตามข้อความล่าสุด และแก้ไขระบบค้นหาจริงทุกแท็บ ---
+        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบค้นหาจริงและเรียงแชทใหม่ขึ้นบนสุดอัตโนมัติ) ---
         let allMissionsCache = [];
+        let adminDataListenerInitialized = false;
 
         function listenToAdminData() {
             if (currentUser && currentUser.role === 'admin') {
                 updateStorageMeterRealtime();
             }
 
+            const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase().trim();
+            const searchPendingRewardTerm = (document.getElementById('search-pending-rewards')?.value || '').toLowerCase().trim();
+            const searchHistoryRewardTerm = (document.getElementById('search-history-rewards')?.value || '').toLowerCase().trim();
+            const searchPendingMissionTerm = (document.getElementById('search-pending-missions')?.value || '').toLowerCase().trim();
+
             listenToLeaderboard();
 
-            // 1. ระบบแชทและรายชื่อสมาชิก (เรียงตามชั้นปี/สาขา และเรียงแชทตามข้อความล่าสุด พร้อมฟิลเตอร์ค้นหา)
-            database.ref('chats').on('value', (chatSnapshot) => {
-                const allChats = chatSnapshot.val() || {};
-                database.ref('users').on('value', (userSnapshot) => {
-                    const usersData = userSnapshot.val() || {};
-                    allUsersCache = usersData;
-                    const userListContainer = document.getElementById('admin-user-list');
-                    const chatUserList = document.getElementById('admin-chat-user-list');
+            if (!adminDataListenerInitialized) {
+                adminDataListenerInitialized = true;
+
+                database.ref('chats').on('value', (chatSnapshot) => {
+                    if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                    const allChats = chatSnapshot.val() || {};
                     
-                    if(!userListContainer || !chatUserList) return;
-                    userListContainer.innerHTML = '';
-                    chatUserList.innerHTML = '';
-
-                    const totalRegCount = Object.keys(usersData).length;
-                    document.getElementById('admin-stat-users').innerText = `${totalRegCount} / 60`;
-
-                    let totalPoints = 0;
-                    let systemTotalUnread = 0;
-
-                    // จัดเรียงสมาชิกตาม ชั้นปี (Year) และ สาขาวิชา (Major)
-                    const userListEntries = Object.entries(usersData).map(([key, u]) => ({ key, u }));
-                    userListEntries.sort((a, b) => {
-                        const yearA = parseInt(a.u.year || 0, 10);
-                        const yearB = parseInt(b.u.year || 0, 10);
-                        if (yearA !== yearB) return yearA - yearB;
-                        const majorA = (a.u.major || '').toString();
-                        const majorB = (b.u.major || '').toString();
-                        return majorA.localeCompare(majorB, 'th');
-                    });
-
-                    const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase().trim();
-
-                    userListEntries.forEach(({ key, u }) => {
-                        totalPoints += (u.points || 0);
-                        const studentId = u.studentId || key;
-                        const name = u.name || u.username || studentId;
-                        const major = u.major || 'ไม่ระบุสาขา';
-                        const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
-
-                        // ช่องค้นหารายชื่อสมาชิก (ทำงานจริง)
-                        const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm) || year.toLowerCase().includes(searchUserTerm);
-                        if (matchSearch) {
-                            userListContainer.innerHTML += `
-                                <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
-                                    <div class="flex justify-between items-start gap-1">
-                                        <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
-                                            👤 ${name} (${studentId})<br>
-                                            <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
-                                        </button>
-                                        <button onclick="openAdminEditUserModal('${key}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0">
-                                            ✏️ แก้ไข
-                                        </button>
-                                    </div>
-                                    <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
-                                        <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
-                                        <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer">
-                                            🗑️ ลบ
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    });
-
-                    // เรียงห้องแชทตามความล่าสุดของข้อความ (ทั้งแอดมินส่งหรือสมาชิกทักมา)
-                    const userChatEntries = Object.entries(usersData).map(([key, u]) => {
-                        const userMsgs = allChats[key] || {};
-                        let lastMsgTime = 0;
-                        let unreadCount = 0;
-                        Object.values(userMsgs).forEach(m => {
-                            if (m.sender !== 'แอดมิน' && !m.read) {
-                                unreadCount++;
-                                systemTotalUnread++;
-                            }
-                        });
-                        const msgKeys = Object.keys(userMsgs);
-                        if (msgKeys.length > 0) {
-                            lastMsgTime = parseInt(msgKeys[msgKeys.length - 1], 10) || 0;
-                        }
-                        return { key, u, unreadCount, lastMsgTime };
-                    });
-
-                    userChatEntries.sort((a, b) => b.lastMsgTime - a.lastMsgTime);
-
-                    userChatEntries.forEach(({ key, u, unreadCount }) => {
-                        const studentId = u.studentId || key;
-                        const name = u.name || u.username || studentId;
-                        let isSelected = selectedAdminChatId === key;
-                        let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
+                    database.ref('users').once('value', (userSnapshot) => {
+                        const usersData = userSnapshot.val() || {};
+                        const userListContainer = document.getElementById('admin-user-list');
+                        const chatUserList = document.getElementById('admin-chat-user-list');
                         
-                        let badgeHtml = unreadCount > 0 
-                            ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadCount} ใหม่</span>` 
-                            : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
+                        if(!userListContainer || !chatUserList) return;
+                        userListContainer.innerHTML = '';
+                        chatUserList.innerHTML = '';
 
-                        chatUserList.innerHTML += `
-                            <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer flex justify-between items-center">
-                                <span class="truncate">👤 ${name} (${studentId})</span>
-                                ${badgeHtml}
-                            </button>
-                        `;
+                        const totalRegCount = Object.keys(usersData).length;
+                        document.getElementById('admin-stat-users').innerText = `${totalRegCount} / 60`;
+
+                        let totalPoints = 0;
+                        let systemTotalMessages = 0;
+                        let systemTotalUnread = 0;
+
+                        // จัดเรียงแชทให้คนล่าสุดขึ้นไปอยู่บนสุดอัตโนมัติ
+                        const userChatEntries = Object.entries(usersData).map(([key, u]) => {
+                            const userMsgs = allChats[key] || {};
+                            let lastMsgTime = 0;
+                            let unreadCount = 0;
+                            Object.values(userMsgs).forEach(m => {
+                                if (m.sender !== 'แอดมิน' && !m.read) {
+                                    unreadCount++;
+                                    systemTotalUnread++;
+                                }
+                            });
+                            const msgKeys = Object.keys(userMsgs);
+                            if (msgKeys.length > 0) {
+                                lastMsgTime = parseInt(msgKeys[msgKeys.length - 1], 10) || 0;
+                            }
+                            return { key, u, unreadCount, lastMsgTime };
+                        });
+
+                        userChatEntries.sort((a, b) => b.lastMsgTime - a.lastMsgTime);
+
+                        userChatEntries.forEach(({ key, u, unreadCount }) => {
+                            totalPoints += (u.points || 0);
+                            const studentId = u.studentId || key;
+                            const name = u.name || u.username || studentId;
+                            const major = u.major || 'ไม่ระบุสาขา';
+                            const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
+                            const displayName = `${name} (${studentId})`;
+
+                            const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm);
+                            if (matchSearch) {
+                                userListContainer.innerHTML += `
+                                    <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
+                                        <div class="flex justify-between items-start gap-1">
+                                            <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
+                                                👤 ${displayName}<br>
+                                                <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
+                                            </button>
+                                            <button onclick="openAdminEditUserModal('${key}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0" title="แก้ไขข้อมูลสมาชิก">
+                                                ✏️ แก้ไข
+                                            </button>
+                                        </div>
+                                        <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
+                                            <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
+                                            <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
+                                                🗑️ ลบ
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+
+                            let isSelected = selectedAdminChatId === key;
+                            let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
+                            
+                            let badgeHtml = unreadCount > 0 
+                                ? `<span class="bg-red-500 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-full animate-pulse">🔴 ${unreadCount} ใหม่</span>` 
+                                : `<span class="${isSelected ? 'text-blue-100' : 'text-stone-400'} text-[11px]">0 ข้อความ</span>`;
+
+                            chatUserList.innerHTML += `
+                                <button onclick="selectAdminChatUser('${key}')" class="w-full text-left p-2.5 rounded-xl text-xs transition border ${activeStyle} cursor-pointer flex justify-between items-center">
+                                    <span class="truncate">👤 ${name} (${studentId})</span>
+                                    ${badgeHtml}
+                                </button>
+                            `;
+                        });
+
+                        document.getElementById('admin-stat-points').innerText = totalPoints;
+
+                        // แจ้งเตือนข้อความแชทใหม่ที่หน้าแรกสุดของแอดมิน (Main Dashboard) แสดงจริงแบบเรียลไทม์
+                        const chatCardBadge = document.getElementById('card-badge-chat');
+                        if (chatCardBadge) {
+                            if (systemTotalUnread > 0) {
+                                chatCardBadge.className = "bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
+                                chatCardBadge.innerText = `🔴 ${systemTotalUnread} ข้อความใหม่`;
+                            } else {
+                                chatCardBadge.className = "bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full";
+                                chatCardBadge.innerText = `0 ข้อความ`;
+                            }
+                        }
+                    });
+                });
+
+                database.ref('reward_claims').on('value', (claimSnapshot) => {
+                    if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                    const pendingRewardsTbody = document.getElementById('admin-pending-rewards-table');
+                    const historyRewardsTbody = document.getElementById('admin-reward-history-table');
+                    if(!pendingRewardsTbody) return;
+                    
+                    pendingRewardsTbody.innerHTML = '';
+                    historyRewardsTbody.innerHTML = '';
+                    
+                    let pendingRewardsCount = 0;
+                    const pendingClaims = [];
+                    const historyClaims = [];
+
+                    claimSnapshot.forEach(child => {
+                        const claim = child.val();
+                        const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || ''} ${claim.rewardName || ''}`.toLowerCase();
+
+                        if(claim.status === 'รอแอดมินอนุมัติ') {
+                            pendingRewardsCount++;
+                            if (!searchPendingRewardTerm || searchTarget.includes(searchPendingRewardTerm)) {
+                                pendingClaims.push(claim);
+                            }
+                        } else {
+                            if (!searchHistoryRewardTerm || searchTarget.includes(searchHistoryRewardTerm)) {
+                                historyClaims.push(claim);
+                            }
+                        }
                     });
 
-                    const chatCardBadge = document.getElementById('card-badge-chat');
-                    if (chatCardBadge) {
-                        chatCardBadge.className = systemTotalUnread > 0 ? "bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm" : "bg-blue-100 text-blue-800 font-bold text-xs px-2.5 py-1 rounded-full";
-                        chatCardBadge.innerText = systemTotalUnread > 0 ? `🔴 ${systemTotalUnread} ข้อความใหม่` : `0 ข้อความ`;
+                    document.getElementById('admin-stat-pending-rewards').innerText = pendingRewardsCount;
+                    const cardBadgeRewards = document.getElementById('card-badge-rewards');
+                    if (cardBadgeRewards) cardBadgeRewards.innerText = pendingRewardsCount;
+
+                    const pillRewards = document.getElementById('card-badge-rewards-pill');
+                    if (pillRewards) {
+                        if (pendingRewardsCount > 0) {
+                            pillRewards.className = "bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
+                            pillRewards.innerText = `มีค้างตรวจ (${pendingRewardsCount})`;
+                        } else {
+                            pillRewards.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
+                            pillRewards.innerText = `0 ค้างตรวจ`;
+                        }
                     }
-                });
-            });
 
-            // 2. ระบบคำขอแลกรางวัล (พร้อมช่องค้นหาที่ใช้งานได้จริง)
-            database.ref('reward_claims').on('value', (claimSnapshot) => {
-                const pendingRewardsTbody = document.getElementById('admin-pending-rewards-table');
-                const historyRewardsTbody = document.getElementById('admin-reward-history-table');
-                if(!pendingRewardsTbody) return;
-                
-                pendingRewardsTbody.innerHTML = '';
-                historyRewardsTbody.innerHTML = '';
-                
-                let pendingRewardsCount = 0;
-                const searchPendingRewardTerm = (document.getElementById('search-pending-rewards')?.value || '').toLowerCase().trim();
-                const searchHistoryRewardTerm = (document.getElementById('search-history-rewards')?.value || '').toLowerCase().trim();
-
-                claimSnapshot.forEach(child => {
-                    const claim = child.val();
-                    const searchTarget = `${claim.userName || ''} ${claim.userIdentifier || ''} ${claim.rewardName || ''}`.toLowerCase();
-
-                    if(claim.status === 'รอแอดมินอนุมัติ') {
-                        pendingRewardsCount++;
-                        if (!searchPendingRewardTerm || searchTarget.includes(searchPendingRewardTerm)) {
+                    if (pendingClaims.length === 0) {
+                        pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่มีคำขอแลกของรางวัลที่ค้างตรวจสอบ 🎉</td></tr>`;
+                    } else {
+                        pendingClaims.reverse().forEach(claim => {
+                            const uid = claim.userIdentifier;
                             pendingRewardsTbody.innerHTML += `
                                 <tr class="border-b border-stone-200 hover:bg-purple-50/40">
-                                    <td class="p-3 font-semibold text-stone-800">${claim.userName || claim.userIdentifier} <span class="block text-[10px] text-gray-400">รหัส: ${claim.userIdentifier}</span></td>
+                                    <td class="p-3 font-semibold text-stone-800">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                     <td class="p-3 font-bold text-purple-900">${claim.rewardName}</td>
                                     <td class="p-3 font-bold text-amber-700">-${claim.cost}</td>
                                     <td class="p-3 text-xs text-gray-500">${claim.timestamp}</td>
                                     <td class="p-3 text-center">
                                         <div class="flex justify-center gap-1.5">
-                                            <button onclick="reviewRewardClaim('${claim.id}', '${claim.userIdentifier}', ${claim.cost}, '${claim.rewardName}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                            <button onclick="reviewRewardClaim('${claim.id}', '${claim.userIdentifier}', ${claim.cost}, '${claim.rewardName}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, '${claim.rewardName}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewRewardClaim('${claim.id}', '${uid}', ${claim.cost}, '${claim.rewardName}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
                                         </div>
                                     </td>
                                 </tr>
                             `;
-                        }
+                        });
+                    }
+
+                    if (historyClaims.length === 0) {
+                        historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ยังไม่ได้มีประวัติการคัดกรองคำขอแลกรางวัล</td></tr>`;
                     } else {
-                        if (!searchHistoryRewardTerm || searchTarget.includes(searchHistoryRewardTerm)) {
+                        historyClaims.reverse().forEach(claim => {
                             let badgeStyle = claim.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : 'text-red-700 bg-red-100';
                             let reasonText = claim.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${claim.reason}</span>` : '';
+                            const uid = claim.userIdentifier;
 
                             historyRewardsTbody.innerHTML += `
                                 <tr class="border-b border-stone-100 hover:bg-stone-50 text-xs md:text-sm">
-                                    <td class="p-3 font-medium text-stone-700">${claim.userName || claim.userIdentifier} <span class="block text-[10px] text-gray-400">รหัส: ${claim.userIdentifier}</span></td>
+                                    <td class="p-3 font-medium text-stone-700">${claim.userName || uid} <span class="block text-[10px] text-gray-400">รหัส: ${uid}</span></td>
                                     <td class="p-3 font-semibold text-stone-800">${claim.rewardName}</td>
                                     <td class="p-3 font-bold text-stone-600">-${claim.cost}</td>
                                     <td class="p-3 text-xs text-gray-400">${claim.timestamp}</td>
                                     <td class="p-3 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${badgeStyle}">${claim.status}</span>${reasonText}</td>
                                 </tr>
                             `;
-                        }
+                        });
                     }
                 });
 
-                document.getElementById('admin-stat-pending-rewards').innerText = pendingRewardsCount;
-                const pillRewards = document.getElementById('card-badge-rewards-pill');
-                if (pillRewards) {
-                    pillRewards.className = pendingRewardsCount > 0 ? "bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm" : "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
-                    pillRewards.innerText = pendingRewardsCount > 0 ? `มีค้างตรวจ (${pendingRewardsCount})` : `0 ค้างตรวจ`;
-                }
+                database.ref('missions').on('value', (missionSnapshot) => {
+                    if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                    const pendingTbody = document.getElementById('admin-pending-table');
+                    if(!pendingTbody) return;
+                    
+                    pendingTbody.innerHTML = '';
+                    let pendingMissionsCount = 0;
+                    let totalSystemCo2 = 0;
+                    const pendingList = [];
+                    allMissionsCache = [];
 
-                if(pendingRewardsTbody.innerHTML === '') pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่พบผลการค้นหาคำขอแลกรางวัล</td></tr>`;
-                if(historyRewardsTbody.innerHTML === '') historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ไม่พบผลการค้นหาประวัติแลกรางวัล</td></tr>`;
-            });
+                    missionSnapshot.forEach(child => {
+                        const m = child.val();
+                        allMissionsCache.push(m);
 
-            // 3. ระบบภารกิจรอตรวจสอบ (พร้อมช่องค้นหาที่ใช้งานได้จริง)
-            database.ref('missions').on('value', (missionSnapshot) => {
-                const pendingTbody = document.getElementById('admin-pending-table');
-                if(!pendingTbody) return;
-                
-                pendingTbody.innerHTML = '';
-                let pendingMissionsCount = 0;
-                let totalSystemCo2 = 0;
-                allMissionsCache = [];
-                const searchPendingMissionTerm = (document.getElementById('search-pending-missions')?.value || '').toLowerCase().trim();
+                        if (m.status === 'อนุมัติแล้ว') {
+                            const meta = getMissionMeta(m.missionName);
+                            totalSystemCo2 += meta.co2;
+                        }
 
-                missionSnapshot.forEach(child => {
-                    const m = child.val();
-                    allMissionsCache.push(m);
+                        const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''} ${m.missionName || ''}`.toLowerCase();
 
-                    if (m.status === 'อนุมัติแล้ว') {
-                        totalSystemCo2 += getMissionMeta(m.missionName).co2;
+                        if(m.status === 'รออนุมัติ') {
+                            pendingMissionsCount++;
+                            if (!searchPendingMissionTerm || searchTarget.includes(searchPendingMissionTerm)) {
+                                pendingList.push(m);
+                            }
+                        }
+                    });
+
+                    const adminCo2El = document.getElementById('admin-stat-total-co2');
+                    if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(4);
+
+                    document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
+                    const cardBadgeMissions = document.getElementById('card-badge-missions');
+                    if (cardBadgeMissions) cardBadgeMissions.innerText = pendingMissionsCount;
+
+                    const pillMissions = document.getElementById('card-badge-missions-pill');
+                    if (pillMissions) {
+                        if (pendingMissionsCount > 0) {
+                            pillMissions.className = "bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
+                            pillMissions.innerText = `มีค้างตรวจ (${pendingMissionsCount})`;
+                        } else {
+                            pillMissions.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
+                            pillMissions.innerText = `0 ค้างตรวจ`;
+                        }
                     }
 
-                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''} ${m.missionName || ''}`.toLowerCase();
-
-                    if(m.status === 'รออนุมัติ') {
-                        pendingMissionsCount++;
-                        if (!searchPendingMissionTerm || searchTarget.includes(searchPendingMissionTerm)) {
+                    if(pendingList.length === 0) {
+                        pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
+                    } else {
+                        pendingList.reverse().forEach(m => {
+                            const uid = m.userIdentifier;
                             pendingTbody.innerHTML += `
                                 <tr class="border-b border-stone-200 hover:bg-stone-50">
-                                    <td class="p-3 font-semibold text-stone-700">${m.userName || m.userIdentifier} <span class="block text-[10px] text-stone-400">รหัส: ${m.userIdentifier}</span></td>
+                                    <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-stone-400">รหัส: ${uid}</span></td>
                                     <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
                                     <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
                                     <td class="p-3 text-center">
                                         <div class="flex justify-center gap-1.5">
-                                            <button onclick="reviewMission('${m.id}', '${m.userIdentifier}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                            <button onclick="reviewMission('${m.id}', '${m.userIdentifier}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                            <button onclick="reviewMission('${m.id}', '${uid}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewMission('${m.id}', '${uid}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
                                         </div>
                                     </td>
                                 </tr>`;
-                        }
+                        });
                     }
                 });
-
-                document.getElementById('admin-stat-total-co2').innerText = totalSystemCo2.toFixed(4);
-                document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
-                const pillMissions = document.getElementById('card-badge-missions-pill');
-                if (pillMissions) {
-                    pillMissions.className = pendingMissionsCount > 0 ? "bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm" : "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
-                    pillMissions.innerText = pendingMissionsCount > 0 ? `มีค้างตรวจ (${pendingMissionsCount})` : `0 ค้างตรวจ`;
-                }
-
-                if(pendingTbody.innerHTML === '') {
-                    pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่พบผลการค้นหาภารกิจที่รอตรวจสอบ</td></tr>`;
-                }
-            });
+            }
         }
 
+        // ฟังก์ชันเปิด Modal แก้ไขข้อมูลสมาชิกทั้ง 4 หัวข้อพร้อมรหัสผ่านเดิมในหน้าต่างเดียว
         function openAdminEditUserModal(userKey) {
             database.ref('users/' + userKey).once('value', (snap) => {
                 const u = snap.val();
@@ -2115,7 +2158,12 @@
         }
 
         function toggleAdminEditUserModal(show) {
-            document.getElementById('admin-edit-user-modal').classList.toggle('hidden', !show);
+            const modal = document.getElementById('admin-edit-user-modal');
+            if(show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
         }
 
         function submitAdminEditUser() {
@@ -2126,13 +2174,31 @@
             const newYear = document.getElementById('edit-modal-year').value;
             const newPass = document.getElementById('edit-modal-password').value.trim();
 
-            if (!newStudentId || !newName || !newMajor || !newPass) { alert('กรุณากรอกข้อมูลให้ครบทุกช่อง'); return; }
-            if (newStudentId.length !== 11) { alert('⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก'); return; }
-            if (newPass.length < 6) { alert('⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร'); return; }
+            if (!newStudentId || !newName || !newMajor || !newPass) {
+                alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+                return;
+            }
+
+            if (newStudentId.length !== 11) {
+                alert('⚠️ รหัสนักศึกษาต้องมีความยาวครบ 11 หลัก');
+                return;
+            }
+
+            if (newPass.length < 6) {
+                alert('⚠️ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');
+                return;
+            }
 
             database.ref('users/' + origKey).once('value', (snap) => {
                 const curr = snap.val() || {};
-                const updatePayload = { studentId: newStudentId, name: newName, username: newName, major: newMajor, year: newYear, password: newPass };
+                const updatePayload = {
+                    studentId: newStudentId,
+                    name: newName,
+                    username: newName,
+                    major: newMajor,
+                    year: newYear,
+                    password: newPass
+                };
 
                 if (newStudentId !== curr.studentId) {
                     const newSafeKey = newStudentId.replace(/[.#$[\]]/g, '_');
@@ -2162,32 +2228,59 @@
                 const maxKb = 1000000;
                 let percentage = (kb / maxKb) * 100;
 
-                if (kb >= 1000) sizeText = `${(kb / 1000).toFixed(2)} MB`;
-                else if (kb >= 1) sizeText = `${kb.toFixed(2)} KB`;
+                if (kb >= 1000) {
+                    sizeText = `${(kb / 1000).toFixed(2)} MB`;
+                } else if (kb >= 1) {
+                    sizeText = `${kb.toFixed(2)} KB`;
+                }
 
                 if (percentage < 0.01 && bytes > 0) percentage = 0.01;
 
-                document.getElementById('storage-size-text').innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
-                document.getElementById('storage-progress-bar').style.width = `${Math.min(percentage, 100)}%`;
+                const sizeEl = document.getElementById('storage-size-text');
+                const barEl = document.getElementById('storage-progress-bar');
+                if (sizeEl) sizeEl.innerText = `${sizeText} / 1 GB (${percentage.toFixed(2)}%)`;
+                if (barEl) barEl.style.width = `${Math.min(percentage, 100)}%`;
             });
         }
 
         function deleteUserPermanently(userKey) {
-            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?`)) return;
+            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?\n\n(ผู้ใช้รายนี้จะไม่สามารถเข้าสู่ระบบได้ และหากต้องการเข้าใช้งานจะต้องทำการลงทะเบียนใหม่ทั้งหมด)`)) {
+                return;
+            }
 
-            const updates = { [`users/${userKey}`]: null, [`chats/${userKey}`]: null };
+            const updates = {};
+            updates[`users/${userKey}`] = null;
+            updates[`chats/${userKey}`] = null;
+
             database.ref('missions').once('value', (mSnapshot) => {
-                mSnapshot.forEach(child => { if (child.val().userIdentifier === userKey) updates[`missions/${child.key}`] = null; });
+                mSnapshot.forEach(child => {
+                    const m = child.val();
+                    if (m.userIdentifier === userKey) {
+                        updates[`missions/${child.key}`] = null;
+                    }
+                });
+
                 database.ref('reward_claims').once('value', (rSnapshot) => {
-                    rSnapshot.forEach(child => { if (child.val().userIdentifier === userKey) updates[`reward_claims/${child.key}`] = null; });
+                    rSnapshot.forEach(child => {
+                        const r = child.val();
+                        if (r.userIdentifier === userKey) {
+                            updates[`reward_claims/${child.key}`] = null;
+                        }
+                    });
+
                     database.ref().update(updates).then(() => {
-                        alert(`✅ ลบบัญชีผู้ใช้สำเร็จ!`);
+                        alert(`✅ ลบบัญชีผู้ใช้ "${userKey}" สำเร็จแล้ว!`);
                         document.getElementById('admin-selected-user-title').innerText = 'โปรดเลือกสมาชิกฝั่งซ้ายมือเพื่อดูประวัติ';
                         document.getElementById('selected-user-actions').classList.add('hidden');
                         document.getElementById('admin-user-detail-table').innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400">ยังไม่ได้เลือกสมาชิก</td></tr>`;
                         document.getElementById('admin-user-detail-footer').classList.add('hidden');
                         selectedAdminViewUserId = null;
-                        if (selectedAdminChatId === userKey) toggleAdminChatModal(false);
+
+                        if (selectedAdminChatId === userKey) {
+                            closeAdminChat();
+                        }
+                    }).catch(err => {
+                        alert("เกิดข้อผิดพลาดในการลบบัญชี: " + err.message);
                     });
                 });
             });
@@ -2195,15 +2288,24 @@
 
         function selectAdminChatUser(userKey) {
             selectedAdminChatId = userKey;
+            
             database.ref('users/' + userKey).once('value', (snap) => {
                 const u = snap.val() || {};
-                document.getElementById('admin-chat-header-title').innerText = `💬 กำลังสนทนากับ: ${u.name || userKey} (${u.studentId || userKey})`;
+                const name = u.name || u.username || userKey;
+                const studentId = u.studentId || userKey;
+                document.getElementById('admin-chat-header-title').innerText = `💬 กำลังสนทนากับ: ${name} (${studentId})`;
             });
+
             document.getElementById('admin-chat-modal').classList.remove('hidden');
 
             database.ref('chats/' + userKey).once('value', (snapshot) => {
+                const messages = snapshot.val() || {};
                 const updates = {};
-                snapshot.forEach(c => { if (c.val().sender !== 'แอดมิน' && !c.val().read) updates[`chats/${userKey}/${c.key}/read`] = true; });
+                Object.entries(messages).forEach(([msgId, msg]) => {
+                    if (msg.sender !== 'แอดมิน' && !msg.read) {
+                        updates[`chats/${userKey}/${msgId}/read`] = true;
+                    }
+                });
                 if (Object.keys(updates).length > 0) database.ref().update(updates);
             });
 
@@ -2211,6 +2313,7 @@
                 const chatBox = document.getElementById('admin-chat-modal-box');
                 if(!chatBox) return;
                 const isAtBottom = chatBox.scrollHeight - chatBox.clientHeight <= chatBox.scrollTop + 50;
+
                 chatBox.innerHTML = '';
                 const messages = snapshot.val() || {};
 
@@ -2221,22 +2324,36 @@
 
                 Object.values(messages).forEach(msg => {
                     const isMe = msg.sender === 'แอดมิน';
+                    const readText = (isMe && msg.read) ? ' ✓ อ่านแล้ว' : '';
+
+                    let msgContent = msg.image 
+                        ? `<img src="${msg.image}" onclick="openImageModal('${msg.image}')" class="max-w-[180px] rounded-lg cursor-pointer border mb-1 hover:opacity-90">`
+                        : `${msg.text}`;
+
                     chatBox.innerHTML += `
                         <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                             <div class="max-w-[85%] p-2 rounded-xl text-xs ${isMe ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white border border-stone-200 text-stone-800 rounded-bl-none shadow-2xs'}">
-                                ${msg.image ? `<img src="${msg.image}" onclick="openImageModal('${msg.image}')" class="max-w-[180px] rounded-lg cursor-pointer border mb-1">` : msg.text}
+                                ${msgContent}
                             </div>
-                            <span class="text-[9px] text-gray-400 mt-0.5 px-1">${msg.timestamp} <strong class="text-blue-600">${isMe && msg.read ? '✓ อ่านแล้ว' : ''}</strong></span>
+                            <span class="text-[9px] text-gray-400 mt-0.5 px-1">${msg.timestamp} <strong class="text-blue-600">${readText}</strong></span>
                         </div>
                     `;
                 });
-                if (isAtBottom) chatBox.scrollTop = chatBox.scrollHeight;
+
+                if (isAtBottom) {
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
             });
         }
 
         function toggleAdminChatModal(show) {
-            document.getElementById('admin-chat-modal').classList.toggle('hidden', !show);
-            if (!show) selectedAdminChatId = null;
+            const modal = document.getElementById('admin-chat-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+                selectedAdminChatId = null;
+            }
         }
 
         let isSendingAdminChat = false;
@@ -2248,34 +2365,52 @@
                 const fileInput = document.getElementById('admin-chat-modal-file');
                 if (fileInput.files.length === 0) return;
                 isSendingAdminChat = true;
+                const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400; let w = img.width, h = img.height;
+                        const MAX_WIDTH = 400;
+                        let w = img.width, h = img.height;
                         if (w > MAX_WIDTH) { h *= MAX_WIDTH / w; w = MAX_WIDTH; }
                         canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const base64 = canvas.toDataURL('image/jpeg', 0.4);
+
+                        const now = new Date();
                         const msgId = Date.now().toString();
                         database.ref(`chats/${userKey}/${msgId}`).set({
-                            sender: 'แอดมิน', image: canvas.toDataURL('image/jpeg', 0.4), read: false,
-                            timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                        }).then(() => { fileInput.value = ''; isSendingAdminChat = false; });
+                            sender: 'แอดมิน',
+                            image: base64,
+                            read: false,
+                            timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                        }).then(() => { 
+                            fileInput.value = ''; 
+                            isSendingAdminChat = false;
+                        }).catch(() => { isSendingAdminChat = false; });
                     };
                     img.src = e.target.result;
                 };
-                reader.readAsDataURL(fileInput.files[0]);
+                reader.readAsDataURL(file);
             } else {
                 const input = document.getElementById('admin-chat-modal-input');
                 const text = input.value.trim();
                 if (!text) return;
+
                 isSendingAdminChat = true;
+                const now = new Date();
                 const msgId = Date.now().toString();
                 database.ref(`chats/${userKey}/${msgId}`).set({
-                    sender: 'แอดมิน', text, read: false,
-                    timestamp: new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-                }).then(() => { input.value = ''; isSendingAdminChat = false; });
+                    sender: 'แอดมิน',
+                    text: text,
+                    read: false,
+                    timestamp: now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
+                }).then(() => { 
+                    input.value = ''; 
+                    isSendingAdminChat = false;
+                }).catch(() => { isSendingAdminChat = false; });
             }
         }
 
@@ -2297,14 +2432,17 @@
                 } else if (action === 'approve') {
                     database.ref('rewards_stock/' + rewardName).once('value', (stockSnap) => {
                         let currentStock = stockSnap.val() || 0;
-                        if (currentStock > 0) database.ref('rewards_stock/' + rewardName).set(currentStock - 1);
+                        if (currentStock > 0) {
+                            database.ref('rewards_stock/' + rewardName).set(currentStock - 1);
+                        }
                     });
                 }
 
-                const updates = { [`reward_claims/${claimId}/status`]: action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืนคะแนน)' };
+                const updates = {};
+                updates['reward_claims/' + claimId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ (คืนคะแนน)';
                 if (action === 'reject') {
-                    updates[`reward_claims/${claimId}/reason`] = reason;
-                    updates[`users/${safeKey}`] = userData;
+                    updates['reward_claims/' + claimId + '/reason'] = reason;
+                    updates['users/' + safeKey] = userData;
                 }
 
                 database.ref().update(updates).then(() => {
@@ -2315,13 +2453,21 @@
 
         function renderAdminUserDetail(userKey) {
             selectedAdminViewUserId = userKey;
+            
             database.ref('users/' + userKey).once('value', (snapshot) => {
                 const u = snapshot.val() || {};
-                document.getElementById('admin-selected-user-title').innerHTML = `📜 ข้อมูลสมาชิก: ${u.name || userKey} (${u.studentId || userKey})<br><span class="text-stone-500 text-xs font-normal">สาขา: ${u.major || 'ไม่ระบุ'} | ปีที่ ${u.year || '-'}</span>`;
+                selectedAdminViewUserData = u;
+                const name = u.name || u.username || userKey;
+                const studentId = u.studentId || userKey;
+                const major = u.major || 'ไม่ระบุสาขา';
+                const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
+                document.getElementById('admin-selected-user-title').innerHTML = `📜 ข้อมูลสมาชิก: ${name} (รหัส: ${studentId})<br><span class="text-stone-500 text-xs font-normal">สาขาวิชา: ${major} | ${year}</span>`;
             });
             
-            document.getElementById('selected-user-actions').classList.remove('hidden');
-            document.getElementById('btn-delete-viewing-user').setAttribute('onclick', `deleteUserPermanently('${userKey}')`);
+            const actionsDiv = document.getElementById('selected-user-actions');
+            actionsDiv.classList.remove('hidden');
+            const btnDelete = document.getElementById('btn-delete-viewing-user');
+            btnDelete.setAttribute('onclick', `deleteUserPermanently('${userKey}')`);
 
             const tbody = document.getElementById('admin-user-detail-table');
             const footer = document.getElementById('admin-user-detail-footer');
@@ -2338,18 +2484,29 @@
             let totalApproved = 0;
             let totalApprovedCo2 = 0;
             userMissions.reverse().forEach(m => {
-                let meta = getMissionMeta(m.missionName);
-                let pts = m.status === 'อนุมัติแล้ว' ? meta.points : 0;
-                let co2 = m.status === 'อนุมัติแล้ว' ? meta.co2 : 0;
-                if (m.status === 'อนุมัติแล้ว') { totalApproved += pts; totalApprovedCo2 += co2; }
+                let badgeStyle = 'text-amber-700 bg-amber-100';
+                let earnedPoints = 0;
+                let earnedCo2 = 0;
+                let reasonText = m.reason ? `<span class="block text-[10px] text-red-500 mt-0.5">เหตุผล: ${m.reason}</span>` : '';
+
+                if (m.status === 'อนุมัติแล้ว') {
+                    badgeStyle = 'text-emerald-700 bg-emerald-100';
+                    const meta = getMissionMeta(m.missionName);
+                    earnedPoints = meta.points;
+                    earnedCo2 = meta.co2;
+                    totalApproved += earnedPoints;
+                    totalApprovedCo2 += earnedCo2;
+                } else if (m.status === 'ปฏิเสธ') {
+                    badgeStyle = 'text-red-700 bg-red-100';
+                }
 
                 tbody.innerHTML += `
                     <tr class="border-b border-stone-100 hover:bg-stone-50">
                         <td class="p-2 text-stone-700">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
                         <td class="p-2"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-10 h-10 object-cover rounded-lg border cursor-pointer"></td>
-                        <td class="p-2"><span class="px-2 py-0.5 rounded-sm font-semibold text-xs ${m.status === 'อนุมัติแล้ว' ? 'text-emerald-700 bg-emerald-100' : m.status === 'ปฏิเสธ' ? 'text-red-700 bg-red-100' : 'text-amber-700 bg-amber-100'}">${m.status}</span>${m.reason ? `<span class="block text-[10px] text-red-500">เหตุผล: ${m.reason}</span>` : ''}</td>
-                        <td class="p-2 text-right font-semibold ${co2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${co2 > 0 ? '+' + co2.toFixed(4) : '0.0000'}</td>
-                        <td class="p-2 text-right font-bold ${pts > 0 ? 'text-emerald-600' : 'text-gray-400'}">${pts > 0 ? '+' + pts : '0'}</td>
+                        <td class="p-2"><span class="px-2 py-0.5 rounded-sm font-semibold text-xs ${badgeStyle}">${m.status}</span>${reasonText}</td>
+                        <td class="p-2 text-right font-semibold ${earnedCo2 > 0 ? 'text-teal-700' : 'text-gray-400'}">${earnedCo2 > 0 ? '+' + earnedCo2.toFixed(4) : '0.0000'}</td>
+                        <td class="p-2 text-right font-bold ${earnedPoints > 0 ? 'text-emerald-600' : 'text-gray-400'}">${earnedPoints > 0 ? '+' + earnedPoints : '0'}</td>
                     </tr>
                 `;
             });
@@ -2382,9 +2539,14 @@
                         userData.co2 = Number((Number(userData.co2 || 0) + meta.co2).toFixed(4));
                     }
 
-                    const updates = { [`missions/${missionId}/status`]: action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ' };
-                    if (action === 'reject') updates[`missions/${missionId}/reason`] = reason;
-                    if (action === 'approve') updates[`users/${safeKey}`] = userData;
+                    const updates = {};
+                    updates['missions/' + missionId + '/status'] = action === 'approve' ? 'อนุมัติแล้ว' : 'ปฏิเสธ';
+                    if (action === 'reject') {
+                        updates['missions/' + missionId + '/reason'] = reason;
+                    }
+                    if (action === 'approve') {
+                        updates['users/' + safeKey] = userData;
+                    }
                     
                     database.ref().update(updates).then(() => {
                         alert(action === 'approve' ? 'อนุมัติภารกิจสำเร็จ!' : 'บันทึกการปฏิเสธภารกิจเรียบร้อย');
@@ -2393,25 +2555,30 @@
             });
         }
 
+        // ================= ฟังก์ชันสร้าง PDF สรุปภาพรวมองค์รวม พร้อมแสดงสาขาและชั้นปีใต้ชื่อ =================
         function generateSystemSummaryPDF() {
             const type = document.getElementById('admin-report-type').value;
             const inputDateVal = document.getElementById('admin-input-date').value;
             const now = new Date();
 
             const approvedMissions = allMissionsCache.filter(m => {
-                if (m.status !== 'อนุมัติแล้ว' || !m.userIdentifier) return false;
+                if (m.status !== 'อนุมัติแล้ว') return false;
+                if (!m.userIdentifier) return false;
+
                 if (type === 'all') return true;
 
                 const mDate = new Date(m.submitTime || 0);
 
                 if (type === 'daily') {
                     const selDate = new Date(inputDateVal);
-                    return mDate.toDateString() === selDate.toDateString();
+                    return mDate.getFullYear() === selDate.getFullYear() &&
+                           mDate.getMonth() === selDate.getMonth() &&
+                           mDate.getDate() === selDate.getDate();
                 } else if (type === 'weekly') {
-                    const selDate = new Date(inputDateVal);
-                    const sevenDaysBefore = new Date(selDate);
-                    sevenDaysBefore.setDate(selDate.getDate() - 7);
-                    return mDate >= sevenDaysBefore && mDate <= selDate;
+                    const selectedDate = new Date(inputDateVal);
+                    const sevenDaysBefore = new Date(selectedDate);
+                    sevenDaysBefore.setDate(selectedDate.getDate() - 7);
+                    return mDate >= sevenDaysBefore && mDate <= selectedDate;
                 } else if (type === 'monthly') {
                     const [selYear, selMonth] = inputDateVal.split('-').map(Number);
                     return mDate.getMonth() + 1 === selMonth && mDate.getFullYear() === selYear;
@@ -2465,33 +2632,45 @@
                 activeUsersMap[uid].co2 += meta.co2;
             });
 
-            let breakdownRows = Object.keys(breakdown).length === 0 ? `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>` : Object.keys(breakdown).map(name => {
-                const item = breakdown[name];
-                return `
-                    <tr style="border-bottom: 1px solid #e5e7eb; font-size: 9.5pt;">
-                        <td style="padding: 8px 10px; color: #374151;">${name}</td>
-                        <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count}</td>
-                        <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(4)}</td>
-                        <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${item.points}</td>
-                    </tr>
-                `;
-            }).join('');
+            let breakdownRows = '';
+            const missionKeys = Object.keys(breakdown);
+            if (missionKeys.length === 0) {
+                breakdownRows = `<tr><td colspan="4" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่พบข้อมูลภารกิจในช่วงเวลานี้</td></tr>`;
+            } else {
+                missionKeys.forEach(name => {
+                    const item = breakdown[name];
+                    breakdownRows += `
+                        <tr style="border-bottom: 1px solid #e5e7eb; font-size: 9.5pt;">
+                            <td style="padding: 8px 10px; color: #374151;">${name}</td>
+                            <td style="padding: 8px 10px; text-align: center; color: #4b5563;">${item.count}</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #047857; font-weight: bold;">${item.co2.toFixed(4)}</td>
+                            <td style="padding: 8px 10px; text-align: right; color: #059669; font-weight: bold;">${item.points}</td>
+                        </tr>
+                    `;
+                });
+            }
 
-            let userSummaryRows = Object.keys(activeUsersMap).length === 0 ? `<tr><td colspan="5" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>` : Object.keys(activeUsersMap).map((uid, idx) => {
-                const usr = activeUsersMap[uid];
-                return `
-                    <tr style="border-bottom: 1px solid #f3f4f6; font-size: 9.5pt;">
-                        <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
-                        <td style="padding: 6px 8px; color: #1f2937;">
-                            <div style="font-weight: 600;">${usr.name} <span style="color: #6b7280; font-weight: normal; font-size: 8.5pt;">(${usr.studentId})</span></div>
-                            <div style="color: #4b5563; font-size: 8.5pt;">สาขา: ${usr.major} ${usr.year ? '| ' + usr.year : ''}</div>
-                        </td>
-                        <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count}</td>
-                        <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(4)}</td>
-                        <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points}</td>
-                    </tr>
-                `;
-            }).join('');
+            let userSummaryRows = '';
+            const userKeys = Object.keys(activeUsersMap);
+            if (userKeys.length === 0) {
+                userSummaryRows = `<tr><td colspan="5" style="padding: 10px; text-align: center; color: #6b7280; font-size: 10pt;">ไม่มีสมาชิกทำภารกิจในช่วงเวลานี้</td></tr>`;
+            } else {
+                userKeys.forEach((uid, idx) => {
+                    const usr = activeUsersMap[uid];
+                    userSummaryRows += `
+                        <tr style="border-bottom: 1px solid #f3f4f6; font-size: 9.5pt;">
+                            <td style="padding: 6px 8px; text-align: center; color: #6b7280;">${idx + 1}</td>
+                            <td style="padding: 6px 8px; color: #1f2937;">
+                                <div style="font-weight: 600;">${usr.name} <span style="color: #6b7280; font-weight: normal; font-size: 8.5pt;">(${usr.studentId})</span></div>
+                                <div style="color: #4b5563; font-size: 8.5pt;">สาขา: ${usr.major} ${usr.year ? '| ' + usr.year : ''}</div>
+                            </td>
+                            <td style="padding: 6px 8px; text-align: center; color: #4b5563;">${usr.count}</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #047857;">${usr.co2.toFixed(4)}</td>
+                            <td style="padding: 6px 8px; text-align: right; color: #059669; font-weight: bold;">${usr.points}</td>
+                        </tr>
+                    `;
+                });
+            }
 
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
@@ -2512,6 +2691,7 @@
                     </style>
                 </head>
                 <body>
+                    <!-- Header (หน้า 1: ถึงตารางสถิติประเภทภารกิจ) -->
                     <div style="border-bottom: 2px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
                         <div>
                             <h1 style="color: #065f46; margin: 0; font-weight: bold;">📗 GREEN PASSPORT — OFFICIAL REPORT</h1>
@@ -2521,14 +2701,18 @@
                             <div>วันที่ออกรายงาน: ${now.toLocaleDateString('th-TH')}</div>
                         </div>
                     </div>
+
+                    <!-- Period Badge -->
                     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 8px 12px; margin-bottom: 15px; font-size: 10.5pt; color: #166534;">
                         <strong>รอบรายงาน:</strong> ${periodTitle}
                     </div>
+
+                    <!-- KPI Boxes -->
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 8px;">📊 สรุปผลการดำเนินงานภาพรวม (KPI Summary)</h3>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
                         <div style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #be185d; font-weight: bold; margin-bottom: 2px;">ผู้เข้าร่วมกิจกรรม</div>
-                            <div style="font-size: 13pt; font-weight: bold; color: #9d174d;">${Object.keys(activeUsersMap).length} <span style="font-size: 8.5pt; font-weight: normal;">คน</span></div>
+                            <div style="font-size: 13pt; font-weight: bold; color: #9d174d;">${userKeys.length} <span style="font-size: 8.5pt; font-weight: normal;">คน</span></div>
                         </div>
                         <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 10px; text-align: center;">
                             <div style="font-size: 8.5pt; color: #b45309; font-weight: bold; margin-bottom: 2px;">ภารกิจที่อนุมัติ</div>
@@ -2543,6 +2727,8 @@
                             <div style="font-size: 13pt; font-weight: bold; color: #065f46;">${totalPoints} <span style="font-size: 8.5pt; font-weight: normal;">คะแนน</span></div>
                         </div>
                     </div>
+
+                    <!-- Breakdown Table -->
                     <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">📈 สถิติแยกตามประเภทภารกิจ</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <thead>
@@ -2553,9 +2739,23 @@
                                 <th style="padding: 8px 10px; text-align: right; width: 90px;">คะแนนรวม (คะแนน)</th>
                             </tr>
                         </thead>
-                        <tbody>${breakdownRows}</tbody>
+                        <tbody>
+                            ${breakdownRows}
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: #ecfdf5; font-weight: bold; font-size: 9.5pt;">
+                                <td style="padding: 8px 10px; text-align: left; color: #065f46;">รวมยอดสุทธิทั้งสิ้น</td>
+                                <td style="padding: 8px 10px; text-align: center; color: #065f46;">${approvedMissions.length} ครั้ง</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #047857;">${totalCo2.toFixed(4)} kgCO₂e</td>
+                                <td style="padding: 8px 10px; text-align: right; color: #059669;">${totalPoints} คะแนน</td>
+                            </tr>
+                        </tfoot>
                     </table>
+
+                    <!-- Page Break (บังคับให้ตารางรายบุคคลไปขึ้นหน้า A4 ใหม่หน้าที่ 2 ทันทีตามต้องการ) -->
                     <div class="page-break"></div>
+
+                    <!-- User Summary Table (หน้า 2: เฉพาะตารางรายชื่อและสถิติรายบุคคล) -->
                     <div style="padding-top: 10px;">
                         <h3 style="font-weight: bold; color: #111827; margin-bottom: 6px;">👥 รายชื่อและสถิติการปฏิบัติงานรายบุคคล</h3>
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
@@ -2565,14 +2765,27 @@
                                     <th style="padding: 6px 8px; text-align: left;">ชื่อ - นามสกุล และรหัสนักศึกษา</th>
                                     <th style="padding: 6px 8px; text-align: center; width: 90px;">จำนวนภารกิจ (ครั้ง)</th>
                                     <th style="padding: 6px 8px; text-align: right; width: 130px;">ปริมาณ CO₂ ที่ลดได้ (kgCO₂e)</th>
-                                    <th style="padding: 6px 8px; text-align: right; width: 90px;">คะแนนรวม (คะแนน)</th>
+                                    <th style="padding: 6px 8px; text-align: right; width: 90px;">คะแนนสะสม (คะแนน)</th>
                                 </tr>
                             </thead>
-                            <tbody>${userSummaryRows}</tbody>
+                            <tbody>
+                                ${userSummaryRows}
+                            </tbody>
                         </table>
                     </div>
+
+                    <!-- Signature & Footer -->
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 45px; padding-top: 12px; border-top: 1px dashed #d1d5db; font-size: 8.5pt; color: #6b7280;">
+                        <div>ระบบประเมินพฤติกรรมสีเขียว Green Passport Project (Official Document)</div>
+                        <div style="text-align: center;">
+                            <div style="border-bottom: 1px solid #9ca3af; width: 140px; margin-bottom: 3px;"></div>
+                            <div>ลงชื่อเจ้าหน้าที่ผู้ตรวจสอบ</div>
+                        </div>
+                    </div>
+
+                    <!-- Print Button -->
                     <div style="text-align: center; margin-top: 30px;">
-                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 10pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif;">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 24px; font-size: 10pt; font-weight: bold; border-radius: 8px; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">🖨️ บันทึกเป็น PDF / พิมพ์เอกสาร</button>
                     </div>
                 </body>
                 </html>
