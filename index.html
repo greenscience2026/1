@@ -1224,7 +1224,7 @@
                             fetchUserRewardHistory();
                             listenToLeaderboard();
                         } else {
-                            alert('⚠️ บัญชีของคุณถูกลบออกจากระบบ กรุณาลงทะเบียนใหม่');
+                            alert('⚠️️ บัญชีของคุณถูกลบออกจากระบบ กรุณาลงทะเบียนใหม่');
                             logout();
                         }
                     });
@@ -1872,25 +1872,150 @@
 
             listenToLeaderboard();
 
-            // 1. ดึงข้อมูลแชทและรายชื่อสมาชิกแบบ Realtime อัปเดตทันทีและเรียงลำดับใหม่ไปเก่าตามข้อความล่าสุด
+            // ดึงข้อมูลภารกิจพร้อมกันเพื่อให้สามารถจัดเรียงหน้าจัดการสมาชิกตามเวลาส่งภารกิจล่าสุดได้ทันที
+            database.ref('missions').on('value', (missionSnapshot) => {
+                if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
+                
+                allMissionsCache = [];
+                let pendingMissionsCount = 0;
+                let totalSystemCo2 = 0;
+                const pendingList = [];
+                const searchPendingMissionTerm = (document.getElementById('search-pending-missions')?.value || '').toLowerCase().trim();
+
+                const userLatestMissionMap = {};
+
+                missionSnapshot.forEach(child => {
+                    const m = child.val();
+                    allMissionsCache.push(m);
+
+                    const uid = m.userIdentifier;
+                    const subTime = m.submitTime || 0;
+                    if (uid) {
+                        if (!userLatestMissionMap[uid] || subTime > userLatestMissionMap[uid]) {
+                            userLatestMissionMap[uid] = subTime;
+                        }
+                    }
+
+                    if (m.status === 'อนุมัติแล้ว') {
+                        const meta = getMissionMeta(m.missionName);
+                        totalSystemCo2 += meta.co2;
+                    }
+
+                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''} ${m.missionName || ''}`.toLowerCase();
+
+                    if(m.status === 'รออนุมัติ') {
+                        pendingMissionsCount++;
+                        if (!searchPendingMissionTerm || searchTarget.includes(searchPendingMissionTerm)) {
+                            pendingList.push(m);
+                        }
+                    }
+                });
+
+                const adminCo2El = document.getElementById('admin-stat-total-co2');
+                if (adminCo2El) adminCo2El.innerText = totalSystemCo2.toFixed(4);
+
+                document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
+                const pillMissions = document.getElementById('card-badge-missions-pill');
+                if (pillMissions) {
+                    if (pendingMissionsCount > 0) {
+                        pillMissions.className = "bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
+                        pillMissions.innerText = `มีค้างตรวจ (${pendingMissionsCount})`;
+                    } else {
+                        pillMissions.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
+                        pillMissions.innerText = `0 ค้างตรวจ`;
+                    }
+                }
+
+                const pendingTbody = document.getElementById('admin-pending-table');
+                if(pendingTbody) {
+                    pendingTbody.innerHTML = '';
+                    if(pendingList.length === 0) {
+                        pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
+                    } else {
+                        pendingList.reverse().forEach(m => {
+                            const uid = m.userIdentifier;
+                            pendingTbody.innerHTML += `
+                                <tr class="border-b border-stone-200 hover:bg-stone-50">
+                                    <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-stone-400">รหัส: ${uid}</span></td>
+                                    <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
+                                    <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
+                                    <td class="p-3 text-center">
+                                        <div class="flex justify-center gap-1.5">
+                                            <button onclick="reviewMission('${m.id}', '${uid}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
+                                            <button onclick="reviewMission('${m.id}', '${uid}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                        });
+                    }
+                }
+
+                // อัปเดตรายชื่อสมาชิกฝั่งซ้ายให้เรียงตามเวลาส่งภารกิจล่าสุด
+                database.ref('users').once('value', (userSnapshot) => {
+                    const usersData = userSnapshot.val() || {};
+                    allUsersCache = usersData;
+                    const userListContainer = document.getElementById('admin-user-list');
+                    if(userListContainer) {
+                        userListContainer.innerHTML = '';
+                        const totalRegCount = Object.keys(usersData).length;
+                        document.getElementById('admin-stat-users').innerText = `${totalRegCount} / 50`;
+
+                        const userEntries = Object.entries(usersData).map(([key, u]) => {
+                            const studentId = u.studentId || key;
+                            const lastMissionTime = userLatestMissionMap[studentId] || 0;
+                            return { key, u, lastMissionTime };
+                        });
+
+                        // เรียงจากใหม่ไปเก่า (ใครส่งภารกิจล่าสุดขึ้นไปอยู่บนสุด)
+                        userEntries.sort((a, b) => b.lastMissionTime - a.lastMissionTime);
+
+                        const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase().trim();
+
+                        userEntries.forEach(({ key, u }) => {
+                            const studentId = u.studentId || key;
+                            const name = u.name || u.username || studentId;
+                            const major = u.major || 'ไม่ระบุสาขา';
+                            const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
+                            const displayName = `${name} (${studentId})`;
+
+                            const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm) || year.toLowerCase().includes(searchUserTerm);
+                            if (matchSearch) {
+                                userListContainer.innerHTML += `
+                                    <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
+                                        <div class="flex justify-between items-start gap-1">
+                                            <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
+                                                👤 ${displayName}<br>
+                                                <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
+                                            </button>
+                                            <button onclick="openAdminEditUserModal('${key}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0" title="แก้ไขข้อมูลสมาชิก">
+                                                ✏️ แก้ไข
+                                            </button>
+                                        </div>
+                                        <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
+                                            <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
+                                            <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
+                                                🗑️ ลบ
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        });
+                    }
+                });
+            });
+
+            // 1. ดึงข้อมูลแชทแบบ Realtime และเรียงห้องแชทตามความล่าสุดจากใหม่ไปเก่า รวมถึงอัปเดตแจ้งเตือนหน้าแรก
             database.ref('chats').on('value', (chatSnapshot) => {
                 if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
                 const allChats = chatSnapshot.val() || {};
                 
                 database.ref('users').on('value', (userSnapshot) => {
                     const usersData = userSnapshot.val() || {};
-                    allUsersCache = usersData;
-                    const userListContainer = document.getElementById('admin-user-list');
                     const chatUserList = document.getElementById('admin-chat-user-list');
-                    
-                    if(!userListContainer || !chatUserList) return;
-                    userListContainer.innerHTML = '';
+                    if(!chatUserList) return;
                     chatUserList.innerHTML = '';
 
-                    const totalRegCount = Object.keys(usersData).length;
-                    document.getElementById('admin-stat-users').innerText = `${totalRegCount} / 50`;
-
-                    let totalPoints = 0;
                     let systemTotalUnread = 0;
 
                     const userChatEntries = Object.entries(usersData).map(([key, u]) => {
@@ -1910,41 +2035,12 @@
                         return { key, u, unreadCount, lastMsgTime };
                     });
 
-                    // เรียงตามความล่าสุด (ใหม่ไปเก่า) จากข้อความล่าสุด
+                    // เรียงตามความล่าสุด (ใหม่ไปเก่า) จากเวลาข้อความล่าสุด
                     userChatEntries.sort((a, b) => b.lastMsgTime - a.lastMsgTime);
 
-                    const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase().trim();
-
                     userChatEntries.forEach(({ key, u, unreadCount }) => {
-                        totalPoints += (u.points || 0);
                         const studentId = u.studentId || key;
                         const name = u.name || u.username || studentId;
-                        const major = u.major || 'ไม่ระบุสาขา';
-                        const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
-                        const displayName = `${name} (${studentId})`;
-
-                        const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm) || year.toLowerCase().includes(searchUserTerm);
-                        if (matchSearch) {
-                            userListContainer.innerHTML += `
-                                <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
-                                    <div class="flex justify-between items-start gap-1">
-                                        <button onclick="renderAdminUserDetail('${key}')" class="truncate font-semibold text-left flex-1 cursor-pointer hover:text-emerald-700">
-                                            👤 ${displayName}<br>
-                                            <span class="text-[11px] font-normal text-stone-500">สาขา: ${major} | ${year}</span>
-                                        </button>
-                                        <button onclick="openAdminEditUserModal('${key}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[11px] transition cursor-pointer shrink-0" title="แก้ไขข้อมูลสมาชิก">
-                                            ✏️ แก้ไข
-                                        </button>
-                                    </div>
-                                    <div class="flex justify-between items-center text-[11px] pt-1 border-t border-stone-100">
-                                        <span class="text-emerald-700 font-bold">✨ ${u.points || 0} คะแนน</span>
-                                        <button onclick="deleteUserPermanently('${key}')" class="bg-red-100 hover:bg-red-200 text-red-600 px-2 py-0.5 rounded-md font-bold transition cursor-pointer" title="ลบบัญชีถาวร">
-                                            🗑️ ลบ
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                        }
 
                         let isSelected = selectedAdminChatId === key;
                         let activeStyle = isSelected ? 'bg-blue-600 text-white font-bold border-blue-600 shadow-sm' : 'hover:bg-blue-50 border-stone-100 text-stone-700 bg-white';
@@ -2042,72 +2138,6 @@
 
                 if(pendingRewardsTbody.innerHTML === '') pendingRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-purple-700 font-medium text-xs md:text-sm">ไม่พบผลการค้นหาคำขอแลกรางวัล</td></tr>`;
                 if(historyRewardsTbody.innerHTML === '') historyRewardsTbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs md:text-sm">ไม่พบผลการค้นหาประวัติแลกรางวัล</td></tr>`;
-            });
-
-            // 3. ดึงข้อมูลภารกิจ รองรับช่องค้นหาภารกิจรอตรวจสอบ
-            database.ref('missions').on('value', (missionSnapshot) => {
-                if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
-                const pendingTbody = document.getElementById('admin-pending-table');
-                if(!pendingTbody) return;
-                
-                pendingTbody.innerHTML = '';
-                let pendingMissionsCount = 0;
-                let totalSystemCo2 = 0;
-                const pendingList = [];
-                allMissionsCache = [];
-                const searchPendingMissionTerm = (document.getElementById('search-pending-missions')?.value || '').toLowerCase().trim();
-
-                missionSnapshot.forEach(child => {
-                    const m = child.val();
-                    allMissionsCache.push(m);
-
-                    if (m.status === 'อนุมัติแล้ว') {
-                        const meta = getMissionMeta(m.missionName);
-                        totalSystemCo2 += meta.co2;
-                    }
-
-                    const searchTarget = `${m.userName || ''} ${m.userIdentifier || ''} ${m.missionName || ''}`.toLowerCase();
-
-                    if(m.status === 'รออนุมัติ') {
-                        pendingMissionsCount++;
-                        if (!searchPendingMissionTerm || searchTarget.includes(searchPendingMissionTerm)) {
-                            pendingList.push(m);
-                        }
-                    }
-                });
-
-                document.getElementById('admin-stat-total-co2').innerText = totalSystemCo2.toFixed(4);
-                document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
-                const pillMissions = document.getElementById('card-badge-missions-pill');
-                if (pillMissions) {
-                    if (pendingMissionsCount > 0) {
-                        pillMissions.className = "bg-amber-500 text-white font-bold text-xs px-2.5 py-1 rounded-full animate-pulse shadow-sm";
-                        pillMissions.innerText = `มีค้างตรวจ (${pendingMissionsCount})`;
-                    } else {
-                        pillMissions.className = "bg-stone-200 text-stone-600 font-bold text-xs px-2.5 py-1 rounded-full shadow-sm";
-                        pillMissions.innerText = `0 ค้างตรวจ`;
-                    }
-                }
-
-                if(pendingList.length === 0) {
-                    pendingTbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-emerald-600 font-medium text-xs md:text-sm">ไม่มีรายการค้างตรวจสอบในขณะนี้ 🎉</td></tr>`;
-                } else {
-                    pendingList.reverse().forEach(m => {
-                        const uid = m.userIdentifier;
-                        pendingTbody.innerHTML += `
-                            <tr class="border-b border-stone-200 hover:bg-stone-50">
-                                <td class="p-3 font-semibold text-stone-700">${m.userName || uid} <span class="block text-[10px] text-stone-400">รหัส: ${uid}</span></td>
-                                <td class="p-3 text-stone-600">${m.missionName} <span class="block text-[10px] text-stone-400">${m.timestamp || '-'}</span></td>
-                                <td class="p-3"><img src="${m.image}" onclick="openImageModal('${m.image}')" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg border border-gray-300 cursor-pointer hover:scale-105 transition"></td>
-                                <td class="p-3 text-center">
-                                    <div class="flex justify-center gap-1.5">
-                                        <button onclick="reviewMission('${m.id}', '${uid}', 'approve')" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">อนุมัติ</button>
-                                        <button onclick="reviewMission('${m.id}', '${uid}', 'reject')" class="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-1.5 px-3 rounded-lg text-xs transition cursor-pointer">ปฏิเสธ</button>
-                                    </div>
-                                </td>
-                            </tr>`;
-                    });
-                }
             });
         }
 
@@ -2213,7 +2243,7 @@
         }
 
         function deleteUserPermanently(userKey) {
-            if (!confirm(`⚠️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?\n\n(ผู้ใช้รายนี้จะไม่สามารถเข้าสู่ระบบได้ และหากต้องการเข้าใช้งานจะต้องทำการลงทะเบียนใหม่ทั้งหมด)`)) {
+            if (!confirm(`⚠️️ คุณแน่ใจหรือไม่ที่จะลบบัญชีผู้ใช้ "${userKey}" ออกจากระบบถาวร?\n\n(ผู้ใช้รายนี้จะไม่สามารถเข้าสู่ระบบได้ และหากต้องการเข้าใช้งานจะต้องทำการลงทะเบียนใหม่ทั้งหมด)`)) {
                 return;
             }
 
