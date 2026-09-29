@@ -453,7 +453,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
                     <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl border border-blue-200 text-center">
                         <p class="text-[11px] md:text-xs text-blue-700 font-medium uppercase tracking-wider">ผู้ใช้งานทั้งหมด</p>
-                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0 / 60</span> <span class="text-xs font-normal">คน</span></p>
+                        <p class="text-xl md:text-3xl font-bold mt-1"><span id="admin-stat-users">0 / 50</span> <span class="text-xs font-normal">คน</span></p>
                     </div>
                     <div class="bg-teal-50 text-teal-900 p-4 rounded-2xl border border-teal-200 text-center">
                         <p class="text-[11px] md:text-xs text-teal-700 font-medium uppercase tracking-wider">ลด CO₂ สะสมทั้งหมด</p>
@@ -974,17 +974,17 @@
             const totalReg = Object.keys(users).length;
             const badge = document.getElementById('reg-counter-badge');
             if(badge) {
-                if(totalReg >= 60) {
-                    badge.innerHTML = `🚨 ระบบเต็มแล้ว (${totalReg} / 60 คน) ปิดรับลงทะเบียนชั่วคราว`;
+                if(totalReg >= 50) {
+                    badge.innerHTML = `🚨 ระบบเต็มแล้ว (${totalReg} / 50 คน) ปิดรับลงทะเบียนชั่วคราว`;
                     badge.className = "text-xs font-bold text-red-600";
                 } else {
-                    badge.innerHTML = `📊 จำนวนผู้ลงทะเบียนใช้งาน: <strong>${totalReg} / 60 คน</strong>`;
+                    badge.innerHTML = `📊 จำนวนผู้ลงทะเบียนใช้งาน: <strong>${totalReg} / 50 คน</strong>`;
                     badge.className = "text-xs font-bold text-emerald-800";
                 }
             }
             const adminStatUsers = document.getElementById('admin-stat-users');
             if(adminStatUsers) {
-                adminStatUsers.innerText = `${totalReg} / 60`;
+                adminStatUsers.innerText = `${totalReg} / 50`;
             }
         });
 
@@ -1116,8 +1116,8 @@
 
             database.ref('users').once('value', (snapshot) => {
                 const users = snapshot.val() || {};
-                if (Object.keys(users).length >= 60 && !users[safeKey]) {
-                    alert('🚨 ขออภัย! ระบบเต็มจำนวนจำกัดผู้ใช้งาน 60 คนแล้ว ไม่สามารถลงทะเบียนเพิ่มได้');
+                if (Object.keys(users).length >= 50 && !users[safeKey]) {
+                    alert('🚨 ขออภัย! ระบบเต็มจำนวนจำกัดผู้ใช้งาน 50 คนแล้ว ไม่สามารถลงทะเบียนเพิ่มได้');
                     return;
                 }
 
@@ -1862,7 +1862,7 @@
             }
         }
 
-        // --- ระบบแอดมิน (แก้ไขให้การค้นหาทำงานได้จริง และแก้ไขปัญหาการโหลดช้าโดยใช้ .on() แบบแคชข้อมูลดิบ) ---
+        // --- ระบบแอดมิน (High Performance Optimized พร้อมระบบค้นหาจริงและเรียงแชทใหม่ขึ้นบนสุดอัตโนมัติ) ---
         let allMissionsCache = [];
 
         function listenToAdminData() {
@@ -1872,7 +1872,7 @@
 
             listenToLeaderboard();
 
-            // 1. ดึงข้อมูลแชทและรายชื่อสมาชิกแบบ Realtime และรองรับช่องค้นหารายชื่อสมาชิก (search-user-list)
+            // 1. ดึงข้อมูลแชทและรายชื่อสมาชิกแบบ Realtime อัปเดตทันทีและเรียงลำดับใหม่ไปเก่าตามข้อความล่าสุด
             database.ref('chats').on('value', (chatSnapshot) => {
                 if (currentUser && currentUser.role === 'admin') updateStorageMeterRealtime();
                 const allChats = chatSnapshot.val() || {};
@@ -1888,7 +1888,7 @@
                     chatUserList.innerHTML = '';
 
                     const totalRegCount = Object.keys(usersData).length;
-                    document.getElementById('admin-stat-users').innerText = `${totalRegCount} / 60`;
+                    document.getElementById('admin-stat-users').innerText = `${totalRegCount} / 50`;
 
                     let totalPoints = 0;
                     let systemTotalUnread = 0;
@@ -1897,19 +1897,20 @@
                         const userMsgs = allChats[key] || {};
                         let lastMsgTime = 0;
                         let unreadCount = 0;
-                        Object.values(userMsgs).forEach(m => {
+                        Object.entries(userMsgs).forEach(([msgId, m]) => {
                             if (m.sender !== 'แอดมิน' && !m.read) {
                                 unreadCount++;
                                 systemTotalUnread++;
                             }
+                            const tNum = parseInt(msgId, 10) || 0;
+                            if (tNum > lastMsgTime) {
+                                lastMsgTime = tNum;
+                            }
                         });
-                        const msgKeys = Object.keys(userMsgs);
-                        if (msgKeys.length > 0) {
-                            lastMsgTime = parseInt(msgKeys[msgKeys.length - 1], 10) || 0;
-                        }
                         return { key, u, unreadCount, lastMsgTime };
                     });
 
+                    // เรียงตามความล่าสุด (ใหม่ไปเก่า) จากข้อความล่าสุด
                     userChatEntries.sort((a, b) => b.lastMsgTime - a.lastMsgTime);
 
                     const searchUserTerm = (document.getElementById('search-user-list')?.value || '').toLowerCase().trim();
@@ -1922,7 +1923,7 @@
                         const year = u.year ? `ปีที่ ${u.year}` : 'ไม่ระบุชั้นปี';
                         const displayName = `${name} (${studentId})`;
 
-                        const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm);
+                        const matchSearch = !searchUserTerm || name.toLowerCase().includes(searchUserTerm) || studentId.toLowerCase().includes(searchUserTerm) || major.toLowerCase().includes(searchUserTerm) || year.toLowerCase().includes(searchUserTerm);
                         if (matchSearch) {
                             userListContainer.innerHTML += `
                                 <div class="p-2.5 hover:bg-emerald-50/70 rounded-xl text-xs md:text-sm text-stone-700 flex flex-col gap-1 transition border border-stone-200 bg-white">
