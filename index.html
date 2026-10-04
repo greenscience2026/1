@@ -818,7 +818,7 @@
                     <button id="cloudinary-migration-btn" onclick="migrateOldMissionImagesToCloudinary()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-xs transition cursor-pointer">
                         ☁️ ย้ายรูปภารกิจเก่าไป Cloudinary
                     </button>
-                    <span id="cloudinary-migration-status" class="text-[11px] text-stone-500">ยังไม่ได้ดำเนินการย้ายรูปเก่า</span>
+                    <span id="cloudinary-migration-status" class="text-[11px] text-stone-500">☁️ เชื่อมแล้ว 0 ภาพ | เหลือ 0 ภาพ | กำลังเชื่อม 0 ภาพ</span>
                 </div>
                 <p class="text-[10px] text-stone-400 mt-1">การย้ายจะเปลี่ยนเฉพาะช่องรูปภาพของภารกิจที่เป็น Base64 หลังอัปโหลดสำเร็จ ข้อมูลส่วนอื่นจะคงเดิม</p>
             </div>
@@ -968,6 +968,13 @@ const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/
         let isUserChatOpen = false;
         let allUsersCache = {};
         let countdownTimerInterval = null;
+
+        // ป้องกันการกดส่งภารกิจซ้ำ/การเรียกฟังก์ชันซ้อนกันในหน้าเดียวกัน
+        const missionSubmitLocks = new Set();
+
+        // สถานะการย้ายรูปเก่าไป Cloudinary
+        let cloudinaryMigrationRunning = false;
+        let cloudinaryAutoMigrationStarted = false;
 
         function getMissionMeta(name) {
             if (name.includes("ใช้ถุงผ้า")) return { points: 1, co2: 0.0139, id: 'box-mission-1' };
@@ -1543,6 +1550,14 @@ const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/
             }
 
             const userIdentifier = currentUser.studentId;
+            const lockKey = `${userIdentifier}::${missionName}`;
+
+            // สำคัญ: ล็อกทันที ก่อน await ทุกตัว เพื่อกันการกด/เรียกฟังก์ชันซ้ำพร้อมกัน
+            if (missionSubmitLocks.has(lockKey)) {
+                return;
+            }
+            missionSubmitLocks.add(lockKey);
+
             const originalText = btnElement.innerText;
             btnElement.disabled = true;
             btnElement.innerText = '⏳ กำลังโหลด...';
@@ -1568,12 +1583,10 @@ const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/
 
                 if (isDuplicateImage) {
                     alert('⚠️ ตรวจพบว่าคุณเคยใช้รูปภาพนี้ส่งภารกิจไปแล้ว! กรุณาใช้รูปถ่ายใหม่ที่ไม่ซ้ำกัน');
-                    btnElement.disabled = false;
-                    btnElement.innerText = originalText;
                     return;
                 }
 
-                btnElement.innerText = '⏳ กำลังโหลด...';
+                btnElement.innerText = '☁️ กำลังเชื่อม Cloudinary...';
 
                 // อัปโหลดรูปที่บีบอัดแล้วไป Cloudinary
                 const uploadResult = await uploadMissionImageToCloudinary(compressedBase64);
@@ -1614,33 +1627,134 @@ const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/
                 console.error('Mission submission error:', err);
                 alert('เกิดข้อผิดพลาด: ' + (err.message || err));
             } finally {
+                missionSubmitLocks.delete(lockKey);
                 btnElement.disabled = false;
                 btnElement.innerText = originalText;
             }
         }
 
-        // ===== Migration: ย้ายรูปเก่าจาก Base64 ใน Firebase ไป Cloudinary =====
+        function updateCloudinaryMigrationStatus(connected, remaining, active, failed = 0) {
+            const statusEl = document.getElementById('cloudinary-migration-status');
+            if (!statusEl) return;
+            statusEl.innerText = `☁️ เชื่อมแล้ว ${connected} ภาพ | เหลือ ${remaining} ภาพ | กำลังเชื่อม ${active} ภาพ${failed > 0 ? ` | ล้มเหลว ${failed} ภาพ` : ''}`;
+        }
+
+        // ย้ายรูปเก่าแบบอัตโนมัติ ใช้ allMissionsCache ที่ Admin โหลดมาแล้ว
+        // จึงไม่ต้องอ่าน missions จาก Firebase ซ้ำอีกครั้ง
+        async function runCloudinaryMigration(missionsToMigrate, options = {}) {
+            if (cloudinaryMigrationRunning) return;
+            cloudinaryMigrationRunning = true;
+
+            const buttonEl = document.getElementById('cloudinary-migration-btn');
+            const total = missionsToMigrate.length;
+            let successCount = 0;
+            let failCount = 0;
+            let activeCount = 0;
+            let nextIndex = 0;
+
+            // จำนวนรูปทั้งหมดใน missions ที่เป็น URL อยู่แล้ว ถือว่าเชื่อม Cloudinary แล้ว
+            const existingCloudinaryCount = (allMissionsCache || []).filter(m =>
+                m && typeof m.image === 'string' && m.image.startsWith('http')
+            ).length;
+
+            if (buttonEl) buttonEl.disabled = true;
+            updateCloudinaryMigrationStatus(existingCloudinaryCount, total, 0, 0);
+
+            const worker = async () => {
+                while (true) {
+                    const index = nextIndex++;
+                    if (index >= total) return;
+
+                    const item = missionsToMigrate[index];
+                    activeCount++;
+                    updateCloudinaryMigrationStatus(existingCloudinaryCount + successCount, total - successCount - failCount, activeCount, failCount);
+
+                    try {
+                        const mission = item.mission;
+                        const imageHash = mission.imageHash || await createMissionImageHash(mission.image);
+                        const uploadResult = await uploadMissionImageToCloudinary(mission.image);
+
+                        // เปลี่ยนเฉพาะ image และ imageHash หลัง Cloudinary สำเร็จ
+                        await database.ref('missions/' + item.key).update({
+                            image: uploadResult.secure_url,
+                            imageHash: imageHash
+                        });
+
+                        successCount++;
+                    } catch (err) {
+                        failCount++;
+                        console.error('Migration failed for mission:', item.key, err);
+                    } finally {
+                        activeCount--;
+                        updateCloudinaryMigrationStatus(existingCloudinaryCount + successCount, total - successCount - failCount, activeCount, failCount);
+                    }
+                }
+            };
+
+            // ทำพร้อมกัน 4 รูป เพื่อให้เร็วขึ้น แต่ไม่ยิงคำขอหนักเกินไป
+            const workerCount = Math.min(4, total);
+            await Promise.all(Array.from({ length: workerCount }, () => worker()));
+
+            cloudinaryMigrationRunning = false;
+            if (buttonEl) buttonEl.disabled = false;
+
+            const finalConnected = existingCloudinaryCount + successCount;
+            updateCloudinaryMigrationStatus(finalConnected, failCount, 0, failCount);
+
+            if (options.showAlert) {
+                alert(
+                    `ดำเนินการย้ายรูปเก่าเสร็จแล้ว\n\n` +
+                    `✅ เชื่อมสำเร็จ: ${successCount} รูป\n` +
+                    `❌ ล้มเหลว: ${failCount} รูป`
+                );
+            }
+        }
+
+        // ทำงานอัตโนมัติเมื่อ Admin โหลด missions แล้ว โดยคงปุ่ม Manual ไว้เป็น fallback
+        async function startAutomaticCloudinaryMigration() {
+            if (cloudinaryAutoMigrationStarted || cloudinaryMigrationRunning) return;
+            if (!currentUser || currentUser.role !== 'admin') return;
+
+            cloudinaryAutoMigrationStarted = true;
+
+            const missionsToMigrate = [];
+            (allMissionsCache || []).forEach((mission, index) => {
+                if (mission && typeof mission.image === 'string' && mission.image.startsWith('data:image/')) {
+                    // หา key จาก id ก่อน หากไม่มีให้ใช้ id เป็น key ตามโครงสร้างปัจจุบัน
+                    missionsToMigrate.push({ key: mission.id || String(index), mission });
+                }
+            });
+
+            if (missionsToMigrate.length === 0) {
+                const connected = (allMissionsCache || []).filter(m => m && typeof m.image === 'string' && m.image.startsWith('http')).length;
+                updateCloudinaryMigrationStatus(connected, 0, 0, 0);
+                return;
+            }
+
+            await runCloudinaryMigration(missionsToMigrate, { showAlert: false });
+        }
+
+        // ===== Migration Manual: ปุ่มสำรองสำหรับรูปที่ตกค้าง =====
         async function migrateOldMissionImagesToCloudinary() {
             if (!currentUser || currentUser.role !== 'admin') {
                 alert('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถย้ายรูปเก่าได้');
                 return;
             }
 
-            const statusEl = document.getElementById('cloudinary-migration-status');
-            const buttonEl = document.getElementById('cloudinary-migration-btn');
+            if (cloudinaryMigrationRunning) {
+                alert('⏳ ระบบกำลังเชื่อมรูปไป Cloudinary อยู่ครับ กรุณารอสักครู่');
+                return;
+            }
 
-            const snapshot = await database.ref('missions').once('value');
-            const missionsToMigrate = [];
-
-            snapshot.forEach(child => {
-                const mission = child.val();
-                if (mission && typeof mission.image === 'string' && mission.image.startsWith('data:image/')) {
-                    missionsToMigrate.push({ key: child.key, mission });
-                }
-            });
+            // ใช้ cache จาก Admin ก่อน เพื่อลดการอ่าน Firebase ซ้ำ
+            let missionsToMigrate = (allMissionsCache || []).map((mission, index) => ({
+                key: mission && mission.id ? mission.id : String(index),
+                mission
+            })).filter(item => item.mission && typeof item.mission.image === 'string' && item.mission.image.startsWith('data:image/'));
 
             if (missionsToMigrate.length === 0) {
-                if (statusEl) statusEl.innerText = 'ไม่มีรูป Base64 ที่ต้องย้ายแล้ว ✅';
+                const statusEl = document.getElementById('cloudinary-migration-status');
+                if (statusEl) statusEl.innerText = '☁️ ไม่มีรูป Base64 ที่ต้องย้ายแล้ว ✅';
                 alert('ไม่พบรูปภารกิจเก่าที่เป็น Base64 แล้วครับ');
                 return;
             }
@@ -1654,46 +1768,19 @@ const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/
 
             if (!confirmed) return;
 
-            if (buttonEl) buttonEl.disabled = true;
-            let successCount = 0;
-            let failCount = 0;
-
-            for (let i = 0; i < missionsToMigrate.length; i++) {
-                const item = missionsToMigrate[i];
-                const mission = item.mission;
-
-                try {
-                    if (statusEl) {
-                        statusEl.innerText = `กำลังย้ายรูป ${i + 1}/${missionsToMigrate.length} ... สำเร็จ ${successCount} | ล้มเหลว ${failCount}`;
+            // บังคับอ่าน missions ใหม่เฉพาะกรณี cache ยังไม่มี เพื่อให้ปุ่ม Manual ยังเป็น fallback จริง
+            if (!allMissionsCache || allMissionsCache.length === 0) {
+                const snapshot = await database.ref('missions').once('value');
+                missionsToMigrate = [];
+                snapshot.forEach(child => {
+                    const mission = child.val();
+                    if (mission && typeof mission.image === 'string' && mission.image.startsWith('data:image/')) {
+                        missionsToMigrate.push({ key: child.key, mission });
                     }
-
-                    const imageHash = mission.imageHash || await createMissionImageHash(mission.image);
-                    const uploadResult = await uploadMissionImageToCloudinary(mission.image);
-
-                    // อัปเดตเฉพาะ image และ imageHash หลังจาก Cloudinary อัปโหลดสำเร็จ
-                    await database.ref('missions/' + item.key).update({
-                        image: uploadResult.secure_url,
-                        imageHash: imageHash
-                    });
-
-                    successCount++;
-                } catch (err) {
-                    failCount++;
-                    console.error('Migration failed for mission:', item.key, err);
-                }
+                });
             }
 
-            if (buttonEl) buttonEl.disabled = false;
-            if (statusEl) {
-                statusEl.innerText = `ย้ายเสร็จแล้ว: สำเร็จ ${successCount} | ล้มเหลว ${failCount}`;
-            }
-
-            alert(
-                `ดำเนินการย้ายรูปเก่าเสร็จแล้ว\n\n` +
-                `✅ สำเร็จ: ${successCount} รูป\n` +
-                `❌ ล้มเหลว: ${failCount} รูป\n\n` +
-                (failCount > 0 ? 'สามารถกดทำรายการอีกครั้งได้ ระบบจะข้ามรูปที่ย้ายสำเร็จแล้ว' : 'รูปที่ย้ายสำเร็จจะถูกเก็บเป็น URL และข้อมูลอื่นยังเหมือนเดิม')
-            );
+            await runCloudinaryMigration(missionsToMigrate, { showAlert: true });
         }
 
         let globalLatestMissionTime = {};
@@ -2092,6 +2179,9 @@ const cloudinaryUploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/
                         pendingList.push(m);
                     }
                 });
+
+                // เริ่มเชื่อมรูปเก่าไป Cloudinary อัตโนมัติทันทีหลัง Admin โหลด missions เสร็จ
+                startAutomaticCloudinaryMigration();
 
                 document.getElementById('admin-stat-total-co2').innerText = totalSystemCo2.toFixed(4);
                 document.getElementById('admin-stat-pending-missions').innerText = pendingMissionsCount;
